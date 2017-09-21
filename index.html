@@ -156,20 +156,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-cs231n_spring2017/Lecture2_image_classfication" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-cs231n-lecture2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/20/cs231n_spring2017/Lecture2_image_classfication/">Image Classfication pipline</a>
+      <a class="article-title" href="/2017/09/21/cs231n-lecture2/">Image Classfication pipline</a>
     </h1>
   
 
         
-        <a href="/2017/09/20/cs231n_spring2017/Lecture2_image_classfication/" class="archive-article-date">
-  	<time datetime="2017-09-20T15:08:22.785Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-20</time>
+        <a href="/2017/09/21/cs231n-lecture2/" class="archive-article-date">
+  	<time datetime="2017-09-21T13:27:39.464Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-21</time>
 </a>
         
       </header>
@@ -223,10 +223,14 @@ L1 Distance or L2 Distance or others?
 1、score function 实现从原始图像数据到各个标签的得分的一个映射。
 2、loss function 用来定量比较分析预测的得分和实际的label的差距。
 我们的最终目的就是通过优化，使得loss function最小，最后确定的score function 的参数作为最终的模型的参数，用来预测label。
+</code></pre><h5 id="Score-function"><a href="#Score-function" class="headerlink" title="Score function"></a>Score function</h5><pre><code>f(xi,W,b)=W*xi+b
+</code></pre><h6 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h6><pre><code>1、W*xi 的结果是一个向量，每个元素代表对应标签的一个预测得分。
+2、我们的目标就是通过训练确定W和b，使得预测结果和真实结果最为接近。也就是使得对于一个输入图像xi，我们要使得其正确分类的得分大于错误分类的得分。
+3、这种方法的好处在于训练集只是用于训练确定参数W和b，我们最后只需要保留W，b的值。之后对于每一幅输入图像，只需要带入确定的W和b值即可预测出其分类结果。所以这种方法的时间效率远大于之前的NN和kNN算法。
+4、实际上，之后的神经网络和卷积神经网络的方法和线性分类器的思想是一致的，只是score function 和 loss function 是另外的函数形式。
+</code></pre><h5 id="解释线性分类器"><a href="#解释线性分类器" class="headerlink" title="解释线性分类器"></a>解释线性分类器</h5><pre><code>线性分类器实际上就是计算一个图像各个像素各个通道的加权和。加权的结果取决于我们设置的W，b的值。
+</code></pre><p><img src="imagemap.jpg" alt=""></p>
 
-大概的思想就是：
-f(x,W)=W*x+b
-</code></pre>
       
 
       
@@ -238,7 +242,7 @@ f(x,W)=W*x+b
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/20/cs231n_spring2017/Lecture2_image_classfication/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/09/21/cs231n-lecture2/">展开全文 >></a>
         </p>
       
 

@@ -6,19 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
-  <title>Archives | Fengyang</title>
+  <title>Image Classfication pipline | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="CV  python  C++  Java  Machine Learning">
+  <meta name="description" content="主要是对图像分类的流程的总体介绍。 图像分类的几大挑战1、Viewpoint Variation:相机移动会造成像素点发生改变。 2、Illumination:同一物体在不同光照条件下差别也比较大。 3、Deformation:同一物体的不同形变也会给分类造成较大影响。 4、Occlusion:遮挡问题，有时只能看见物体局部，难以分辨。 5、Background Clutter:背景干扰，比如动物">
 <meta name="keywords" content="CV  python  C++  Java  Machine Learning">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Fengyang">
-<meta property="og:url" content="https://wwdguu.github.io/archives/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Image Classfication pipline">
+<meta property="og:url" content="https://wwdguu.github.io/2017/09/21/cs231n-lecture2/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="CV  python  C++  Java  Machine Learning">
+<meta property="og:description" content="主要是对图像分类的流程的总体介绍。 图像分类的几大挑战1、Viewpoint Variation:相机移动会造成像素点发生改变。 2、Illumination:同一物体在不同光照条件下差别也比较大。 3、Deformation:同一物体的不同形变也会给分类造成较大影响。 4、Occlusion:遮挡问题，有时只能看见物体局部，难以分辨。 5、Background Clutter:背景干扰，比如动物">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wwdguu.github.io/2017/09/21/cs231n-lecture2/imagemap.jpg">
+<meta property="og:updated_time" content="2017-09-21T13:30:48.626Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Fengyang">
-<meta name="twitter:description" content="CV  python  C++  Java  Machine Learning">
+<meta name="twitter:title" content="Image Classfication pipline">
+<meta name="twitter:description" content="主要是对图像分类的流程的总体介绍。 图像分类的几大挑战1、Viewpoint Variation:相机移动会造成像素点发生改变。 2、Illumination:同一物体在不同光照条件下差别也比较大。 3、Deformation:同一物体的不同形变也会给分类造成较大影响。 4、Occlusion:遮挡问题，有时只能看见物体局部，难以分辨。 5、Background Clutter:背景干扰，比如动物">
+<meta name="twitter:image" content="https://wwdguu.github.io/2017/09/21/cs231n-lecture2/imagemap.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -154,130 +157,209 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-cs231n-lecture2" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Image Classfication pipline
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/21/cs231n-lecture2/" class="archive-article-date">
+
+        
+        <a href="/2017/09/21/cs231n-lecture2/" class="archive-article-date">
   	<time datetime="2017-09-21T13:27:39.464Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-21</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/21/cs231n-lecture2/">Image Classfication pipline</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <pre><code>主要是对图像分类的流程的总体介绍。
+</code></pre><h2 id="图像分类的几大挑战"><a href="#图像分类的几大挑战" class="headerlink" title="图像分类的几大挑战"></a>图像分类的几大挑战</h2><pre><code>1、Viewpoint Variation:相机移动会造成像素点发生改变。
+2、Illumination:同一物体在不同光照条件下差别也比较大。
+3、Deformation:同一物体的不同形变也会给分类造成较大影响。
+4、Occlusion:遮挡问题，有时只能看见物体局部，难以分辨。
+5、Background Clutter:背景干扰，比如动物保护色等让人难以分辨。
+6、Intraclass Variation:同一物种个体之间差异也大。
+</code></pre><h2 id="图像分类的任务"><a href="#图像分类的任务" class="headerlink" title="图像分类的任务"></a>图像分类的任务</h2><pre><code>图像分类的任务就是输入一幅图像，返回其分类结果。此类任务是难以通过显示编程
+制定一些规则来进行的。
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">classify_image</span><span class="params">(image)</span>:</span></div><div class="line">    <span class="comment">#do something</span></div><div class="line">    <span class="keyword">return</span> label</div></pre></td></tr></table></figure>
+<h2 id="具体分类方法"><a href="#具体分类方法" class="headerlink" title="具体分类方法"></a>具体分类方法</h2><h3 id="较为传统的方法"><a href="#较为传统的方法" class="headerlink" title="较为传统的方法"></a>较为传统的方法</h3><pre><code>通过边缘检测，角点检测等方法找出一些特征，然后对特征进行一些统计得出分类结果。
+</code></pre><h3 id="数据驱动的方法-Data-Driven-Approach"><a href="#数据驱动的方法-Data-Driven-Approach" class="headerlink" title="数据驱动的方法(Data-Driven Approach)"></a>数据驱动的方法(Data-Driven Approach)</h3><pre><code>大致的流程就是：
+1、准备图像和标签一一对应的数据集。
+2、通过机器学习的方法去训练一个分类的模型。
+3、在另外的数据上去检验这个模型的准确性。
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#train a model</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(images,labels)</span>:</span></div><div class="line">    <span class="comment">#Machine Learning</span></div><div class="line">    <span class="keyword">return</span> model</div><div class="line"></div><div class="line"><span class="comment">#predict the label</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(model,test_images)</span>:</span></div><div class="line">    <span class="comment">#Use trained model to predict labels</span></div><div class="line">    <span class="keyword">return</span> test_labels</div></pre></td></tr></table></figure>
+<h4 id="Nearest-Neighbor（最近邻法）"><a href="#Nearest-Neighbor（最近邻法）" class="headerlink" title="Nearest Neighbor（最近邻法）"></a>Nearest Neighbor（最近邻法）</h4><pre><code>1、在训练阶段只是将图片和标签载入内存，不做任何额外操作。
+2、预测阶段，将待预测图片和之前载入的图片逐一比较，选取和待预测图片最相似的训练图片的标签作为预测结果。
 
-        <div class="article-info info-on-right">
-          
-          
+如何判断相似性？
+L1 Distance or L2 Distance or others?
+这里简单使用 L1 distance
 
+优点：思想简单，编程实现容易。
+缺点：准确率较低，而且训练时只是读入数据，测试时需要逐一比较，耗时与数据集大小成线性关系，与我们的初衷不符。
+</code></pre><h4 id="K-Nearest-Neighbors-K最近邻法"><a href="#K-Nearest-Neighbors-K最近邻法" class="headerlink" title="K-Nearest Neighbors(K最近邻法)"></a>K-Nearest Neighbors(K最近邻法)</h4><pre><code>其基本思想与 Nearest Neighbor一致，只是我们需要保留前k个最相似的图片的结果
+，然后在这k个结果里面做一个决策。
+这里就会出现两个问题：
+1、如何选取合适的k值使得预测结果更准确？
+2、如何选取distance的算法使得预测结果更准确？ 
+其实这些都叫做 hyperparameters(超参数)，需要我们预先设置。
+</code></pre><h5 id="如何设置超参数？"><a href="#如何设置超参数？" class="headerlink" title="如何设置超参数？"></a>如何设置超参数？</h5><pre><code>方法1：选取超参数使得其在训练集上的效果最好。
+这个方法存在的一个显著问题就是：k=1总是能够使得其在训练集上的效果最好。这种方法显然不可取。
+方法2：将数据集分为训练集和测试集两选取超参数使得在测试集上的效果最好
+这种方法避免了前一个问题，但是又带来了一个新问题，就是它不能预判断算法在新的数据集上的表现情况。
+方法3：分为训练集、验证集和测试集，以验证集选取超参数，在测试集上验证。这种方法比前两种方法都好一点。有效避免了之前的问题。
+方法4：交叉验证。将数据集分为n份，分别以其中一份作为验证集，其他作为训练集，最后得到n个结果，再对结果做一个平均。这种方法是目前来说最好的。这种方法主要还是用于训练样本较小的情况下，对于较大的训练样本，其实方法3就能达到较好效果，用该方法会浪费不少时间。
+</code></pre><h5 id="方法的缺陷"><a href="#方法的缺陷" class="headerlink" title="方法的缺陷"></a>方法的缺陷</h5><pre><code>实际上k-Nearest Neighbor这种方法从来没有被实际采用过，主要有以下几个原因：
+1、正如上面提及过的，时间效率太低。
+2、通过像素差值判断相似性本身就有很大的问题。
+</code></pre><h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><pre><code>1、在图像分类问题上，我们在训练集上训练，之后在测试集上验证结果。对于其他的机器学习问题也是如此。
+2、距离度量方式和K的都是超参数，需要我们事先确定。
+3、用验证集确定超参数，最后在测试集上测试结果。
+</code></pre><h4 id="Linear-Classification-线性分类器"><a href="#Linear-Classification-线性分类器" class="headerlink" title="Linear Classification(线性分类器)"></a>Linear Classification(线性分类器)</h4><pre><code>这种方法将比之前的方法都更有效，并且可以以此来引入之后的Neural Networks(神经网络)和Convolutional Neural Networks(卷积神经网络)。主要由两部分组成：
+1、score function 实现从原始图像数据到各个标签的得分的一个映射。
+2、loss function 用来定量比较分析预测的得分和实际的label的差距。
+我们的最终目的就是通过优化，使得loss function最小，最后确定的score function 的参数作为最终的模型的参数，用来预测label。
+</code></pre><h5 id="Score-function"><a href="#Score-function" class="headerlink" title="Score function"></a>Score function</h5><pre><code>f(xi,W,b)=W*xi+b
+</code></pre><h6 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h6><pre><code>1、W*xi 的结果是一个向量，每个元素代表对应标签的一个预测得分。
+2、我们的目标就是通过训练确定W和b，使得预测结果和真实结果最为接近。也就是使得对于一个输入图像xi，我们要使得其正确分类的得分大于错误分类的得分。
+3、这种方法的好处在于训练集只是用于训练确定参数W和b，我们最后只需要保留W，b的值。之后对于每一幅输入图像，只需要带入确定的W和b值即可预测出其分类结果。所以这种方法的时间效率远大于之前的NN和kNN算法。
+4、实际上，之后的神经网络和卷积神经网络的方法和线性分类器的思想是一致的，只是score function 和 loss function 是另外的函数形式。
+</code></pre><h5 id="解释线性分类器"><a href="#解释线性分类器" class="headerlink" title="解释线性分类器"></a>解释线性分类器</h5><pre><code>线性分类器实际上就是计算一个图像各个像素各个通道的加权和。加权的结果取决于我们设置的W，b的值。
+</code></pre><p><img src="imagemap.jpg" alt=""></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2017/09/21/cs231n-lecture2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/20/Fluent-Python-Chapter01/" class="archive-article-date">
-  	<time datetime="2017-09-20T08:34:12.590Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-20</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2017/09/20/Fluent-Python-Chapter01/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Fluent Python Chapter 1 Python 数据模型</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/20/Fluent-Python-Chapter01/">Fluent Python Chapter 1 Python 数据模型</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/20/useful-links/" class="archive-article-date">
-  	<time datetime="2017-09-20T05:53:31.275Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/20/useful-links/">Useful links</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/20/hello-world/" class="archive-article-date">
-  	<time datetime="2017-09-20T03:14:29.114Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/20/hello-world/">Hello World</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -300,8 +382,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
