@@ -246,7 +246,48 @@ f(xi,W,b)=W*xi+b ——&gt; f(xi,W)=W*xi
 </code></pre><p><img src="wb.jpg" alt=""></p>
 <h6 id="3-2-3-2-4、图像预处理"><a href="#3-2-3-2-4、图像预处理" class="headerlink" title="3.2.3.2.4、图像预处理"></a>3.2.3.2.4、图像预处理</h6><pre><code>在应用中常常需要对图像数据进行预处理，比如 
 [0,255]-&gt;[-127,127]-&gt;[-1,1],关键在于让零值居中，使得数据集中。
-</code></pre>
+</code></pre><h5 id="3-2-3-3、Loss-Function-损失函数"><a href="#3-2-3-3、Loss-Function-损失函数" class="headerlink" title="3.2.3.3、Loss Function(损失函数)"></a>3.2.3.3、Loss Function(损失函数)</h5><pre><code>损失函数的作用是来评价在训练集上分类结果的好坏，当分类结果接近真实结果时，损失函数自然就小，反之则大。损失函数有多种计算方法，下面分别从阐述。
+</code></pre><h6 id="3-2-3-3-1、-Multiclass-Support-Vector-Machine-loss"><a href="#3-2-3-3-1、-Multiclass-Support-Vector-Machine-loss" class="headerlink" title="3.2.3.3.1、 Multiclass Support Vector Machine loss"></a>3.2.3.3.1、 Multiclass Support Vector Machine loss</h6><pre><code>设置 SVM loss的目的是为了让正确分类的得分与错误分类的得分至少相差某一个确定的δ,
+简单来说，其计算公式如下：
+</code></pre><p><img src="svm_loss.jpg" alt=""></p>
+<pre><code>更多细节可以参考 
+</code></pre><p><a href="http://cs231n.github.io/linear-classify/" target="_blank" rel="external">cs231n spring2017 linear_classify notes</a></p>
+<pre><code>其实概括来说就是SVM loss 希望让正确分类的得分大于错误分类的得分至少δ，如果没有 达到要求，那么我们就计算一个loss,如果达到要求，那么loss为0。
+针对线性分类器，我们有如下的计算SVM loss的公式：
+</code></pre><p><img src="linear_svm_loss.jpg" alt=""></p>
+<pre><code>其实形如 max(0,-)这样的损失函数叫做 hinge loss,并且指数项不一定是1次，有时为了让错误结果更明显，可能用指数项为2次得到的效果会更好。具体使用哪种可以通过前面提及的交叉验证来确定。确定了损失函数之后，接下来的工作就是找到一种优化的方法，使得loss尽可能小，然后确定W。
+
+上面提及的SVM loss还存在一个问题：假设我们有一个数据集和W使得对于每一个图像i都满足Li=0,那么显然W 不是唯一的。因为这样的话 λW(λ&gt;1) 也能使得Li=0。那这样我们该选择哪个W作为最终结果呢？这样对于正确的分类没有影响，但是对于错误的分类，就会将loss放大λ倍。
+
+为了解决以上的问题，引入了一个 regularization penalty(正则惩罚项) R(W)。通常的做法是利用L2 norm 来限制W中每个元素的大小。
+如下所示：
+</code></pre><p><img src="l2_regularization.jpg" alt=""></p>
+<pre><code>注意这里的R(W)只和W有关，而和数据集无关。这样SVM loss就有 data loss和 regularization loss 两部分组成：
+</code></pre><p><img src="loss.jpg" alt=""></p>
+<pre><code>在线性分类器中，其形式如下：
+</code></pre><p><img src="linear_loss.jpg" alt=""></p>
+<pre><code>λ作为超参数通常也是要通过交叉验证来确定。
+
+引入正则惩罚项的一个最大的好处是增强模型的泛化能力，让最终的结果尽可能受到更多参数的影响，能够减小过拟合的情况。另外值得注意的是，当引入正则惩罚之后，Loss就不可能为0了，因为如果Loss为0，那么意味着W=0，那将毫无意义。接下来我们将要考虑的就是通过什么方法来使得loss尽可能小。
+
+如何确定超参数δ，实际上我们可以简单设置δ为1。其实δ和λ对于loss的影响是一致的，所以我们其实只需要确定λ就好。
+</code></pre><h6 id="3-2-3-3-2、Softmax-loss"><a href="#3-2-3-3-2、Softmax-loss" class="headerlink" title="3.2.3.3.2、Softmax loss"></a>3.2.3.3.2、Softmax loss</h6><pre><code>这是另一种计算损失函数的方法，和SVM 计算每个分类得分的方法不同，Softmax分类器是对属于每个分类的可能性做评估。
+在这里，将每个分类的得分转化为属于这个分类的概率，并且用 cross-entropy loss(交叉熵损失)代替hinge loss。
+计算形式如下：
+</code></pre><p><img src="softmax.jpg" alt=""></p>
+<pre><code>其中softmax function 形如以下：
+</code></pre><p><img src="softmax_function.jpg" alt=""></p>
+<pre><code>其中的一些理论不再阐述。
+实践的技巧：由于要计算指数项，除以大数可能造成数值不稳定，所以需要归一化的技巧，可以如下操作：
+</code></pre><p><img src="calculate_trick.jpg" alt=""></p>
+<pre><code>比较常用的方法是设置
+</code></pre><p><img src="c.jpg" alt="">  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">f = np.array([<span class="number">123</span>, <span class="number">456</span>, <span class="number">789</span>]) <span class="comment"># example with 3 classes and each having large scores</span></div><div class="line">p = np.exp(f) / np.sum(np.exp(f)) <span class="comment"># Bad: Numeric problem, potential blowup</span></div><div class="line"></div><div class="line"><span class="comment"># instead: first shift the values of f so that the highest number is 0:</span></div><div class="line">f -= np.max(f) <span class="comment"># f becomes [-666, -333, 0]</span></div><div class="line">p = np.exp(f) / np.sum(np.exp(f)) <span class="comment"># safe to do, gives the correct answer</span></div></pre></td></tr></table></figure>
+<h6 id="3-2-3-3-3、SVM-loss-和-Softmax-loss-的比较"><a href="#3-2-3-3-3、SVM-loss-和-Softmax-loss-的比较" class="headerlink" title="3.2.3.3.3、SVM loss 和 Softmax loss 的比较"></a>3.2.3.3.3、SVM loss 和 Softmax loss 的比较</h6><p><img src="compare.jpg" alt=""></p>
+<pre><code>具体分析见 
+</code></pre><p><a href="http://cs231n.github.io/linear-classify/" target="_blank" rel="external">cs231n spring2017 linear_classify notes</a></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>1、<a href="http://cs231n.github.io/linear-classify/" target="_blank" rel="external">cs231n spring 2017 linear_classify notes</a><br>2、<a href="http://cs231n.github.io/classification/" target="_blank" rel="external">cs231n spring 2017 classification notes</a><br>3、<a href="http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture2.pdf" target="_blank" rel="external">cs231n spring 2017 lecture2 slides</a><br>4、<a href="http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture3.pdf" target="_blank" rel="external">cs231n spring 2017 lecture3 slides</a></p>
+
       
 
       
@@ -347,7 +388,29 @@ f(xi,W,b)=W*xi+b ——&gt; f(xi,W)=W*xi
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Fluent-python//" class="article-tag-list-link color4">Fluent-python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
 
       
         <p class="article-more-link">
@@ -413,82 +476,33 @@ f(xi,W,b)=W*xi+b ——&gt; f(xi,W)=W*xi
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">link</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/link//" class="article-tag-list-link color5">link</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
 
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/09/20/useful-links/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/20/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/20/hello-world/" class="archive-article-date">
-  	<time datetime="2017-09-20T03:14:29.114Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/20/hello-world/">展开全文 >></a>
         </p>
       
 
@@ -612,6 +626,14 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
             
             <div class="clearfix"></div>
