@@ -24,7 +24,7 @@
 <meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/sigmoid2.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/sigmoid3.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/sigmoid4.jpg">
-<meta property="og:updated_time" content="2017-09-30T09:21:29.504Z">
+<meta property="og:updated_time" content="2017-09-30T14:08:04.258Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Backpropagation">
 <meta name="twitter:description" content="引言主要介绍一些关于backpropagation(反向传播)的知识，反向传播主要就是利用chain rule(链式法则)计算关于weights的梯度，通过梯度计算的结果对网络进行梯度下降的优化。这对于我们设计和debug神经网络都很有用处。 值得注意的是，通常情况下我们计算对于W的梯度以便根据梯度下降进行参数更新，但是在一些特殊情况下，我们也有可能计算关于输入x的梯度，目的是解释和可视化神经网络">
@@ -186,7 +186,7 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引言"><span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概念"><span class="toc-text">概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单的解释和举例"><span class="toc-text">简单的解释和举例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块化操作"><span class="toc-text">模块化操作</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引言"><span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概念"><span class="toc-text">概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单的解释和举例"><span class="toc-text">简单的解释和举例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块化操作"><span class="toc-text">模块化操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实践中的一些技巧"><span class="toc-text">实践中的一些技巧</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#扩展到矢量计算梯度"><span class="toc-text">扩展到矢量计算梯度</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#计算矩阵相乘的梯度"><span class="toc-text">计算矩阵相乘的梯度</span></a></li></ol></li></ol>
 </div>
 
         <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><pre><code>主要介绍一些关于backpropagation(反向传播)的知识，反向传播主要就是利用chain rule(链式法则)计算关于weights的梯度，通过梯度计算的结果对网络进行梯度下降的优化。这对于我们设计和debug神经网络都很有用处。
@@ -202,7 +202,14 @@
 </code></pre><p><img src="sigmoid.jpg" alt=""><br>    通过将此函数分解为一系列函数的复合：<br><img src="sigmoid2.jpg" alt=""><br>    最后的一个计算过程如下：<br><img src="sigmoid3.jpg" alt=""><br>    可以看出这个流程还是比较复杂，但是通过将其中的一个sigmoid函数模块化之后，我们会得到更加简明的结果。<br><img src="sigmoid4.jpg" alt=""></p>
 <pre><code>最后编程实现如下：
 </code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">w = [<span class="number">2</span>,<span class="number">-3</span>,<span class="number">-3</span>] <span class="comment"># assume some random weights and data</span></div><div class="line">x = [<span class="number">-1</span>, <span class="number">-2</span>]</div><div class="line"></div><div class="line"><span class="comment"># forward pass</span></div><div class="line">dot = w[<span class="number">0</span>]*x[<span class="number">0</span>] + w[<span class="number">1</span>]*x[<span class="number">1</span>] + w[<span class="number">2</span>]</div><div class="line">f = <span class="number">1.0</span> / (<span class="number">1</span> + math.exp(-dot)) <span class="comment"># sigmoid function</span></div><div class="line"></div><div class="line"><span class="comment"># backward pass through the neuron (backpropagation)</span></div><div class="line">ddot = (<span class="number">1</span> - f) * f <span class="comment"># gradient on dot variable, using the sigmoid gradient derivation</span></div><div class="line">dx = [w[<span class="number">0</span>] * ddot, w[<span class="number">1</span>] * ddot] <span class="comment"># backprop into x</span></div><div class="line">dw = [x[<span class="number">0</span>] * ddot, x[<span class="number">1</span>] * ddot, <span class="number">1.0</span> * ddot] <span class="comment"># backprop into w</span></div><div class="line"><span class="comment"># we're done! we have the gradients on the inputs to the circuit</span></div></pre></td></tr></table></figure>
-
+<h1 id="实践中的一些技巧"><a href="#实践中的一些技巧" class="headerlink" title="实践中的一些技巧"></a>实践中的一些技巧</h1><pre><code>1、在实践中，我们需要根据实际情况对整个函数进行拆分，分成便于计算梯度的函数的一个复合。
+2、为了反向计算方便，通常在正向计算的时候需要保存一些中间结果，便于反向计算梯度的时候使用它们。
+3、前向计算需要使用x,y变量多次，在反向传播的时候应该用+=而不是=来累加结果。
+</code></pre><h1 id="扩展到矢量计算梯度"><a href="#扩展到矢量计算梯度" class="headerlink" title="扩展到矢量计算梯度"></a>扩展到矢量计算梯度</h1><pre><code>对矢量计算梯度的方法和上面所提及的并无二致，但是在处理时可能需要加入转置运算以便维数匹配。
+</code></pre><h2 id="计算矩阵相乘的梯度"><a href="#计算矩阵相乘的梯度" class="headerlink" title="计算矩阵相乘的梯度"></a>计算矩阵相乘的梯度</h2><pre><code>下面这个例子里面就是根据维数匹配的原则对表达式加入一些转置的操作。
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># forward pass</span></div><div class="line">W = np.random.randn(<span class="number">5</span>, <span class="number">10</span>)</div><div class="line">X = np.random.randn(<span class="number">10</span>, <span class="number">3</span>)</div><div class="line">D = W.dot(X)</div><div class="line"></div><div class="line"><span class="comment"># now suppose we had the gradient on D from above in the circuit</span></div><div class="line">dD = np.random.randn(*D.shape) <span class="comment"># same shape as D</span></div><div class="line">dW = dD.dot(X.T) <span class="comment">#.T gives the transpose of the matrix</span></div><div class="line">dX = W.T.dot(dD)</div></pre></td></tr></table></figure>
+<pre><code>而对于一些一时难以看出梯度表达式的情况，可以利用实际的比较小的矩阵手动演算，根据结果推理出合适的表达式。
+</code></pre>
       
 
       
@@ -449,11 +456,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -462,10 +473,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>
