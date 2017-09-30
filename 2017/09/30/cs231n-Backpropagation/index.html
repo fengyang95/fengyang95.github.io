@@ -6,20 +6,29 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
-  <title>How to use git | Fengyang</title>
+  <title>Backpropagation | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="创建本地仓库并上传代码到GitHub*1）新建Text文件夹作为仓库根目录（文件夹名字随意命名）  *2）将需要上传的代码文件加入到Text根目录  *3）在根目录下建立仓库 使用命令行或Git Bash，输入下面命令：先进入到Text根目录下，再输入git init（初始化一个仓库）  *4）将所有文件添加到仓库 使用命令行或Git Bash，输入下面命令：git add .  *5）提交 使用">
-<meta name="keywords" content="git">
+  <meta name="description" content="引言主要介绍一些关于backpropagation(反向传播)的知识，反向传播主要就是利用chain rule(链式法则)计算关于weights的梯度，通过梯度计算的结果对网络进行梯度下降的优化。这对于我们设计和debug神经网络都很有用处。 值得注意的是，通常情况下我们计算对于W的梯度以便根据梯度下降进行参数更新，但是在一些特殊情况下，我们也有可能计算关于输入x的梯度，目的是解释和可视化神经网络">
+<meta name="keywords" content="cs231n">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How to use git">
-<meta property="og:url" content="https://wwdguu.github.io/2017/09/22/how-to-use-git/index.html">
+<meta property="og:title" content="Backpropagation">
+<meta property="og:url" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="创建本地仓库并上传代码到GitHub*1）新建Text文件夹作为仓库根目录（文件夹名字随意命名）  *2）将需要上传的代码文件加入到Text根目录  *3）在根目录下建立仓库 使用命令行或Git Bash，输入下面命令：先进入到Text根目录下，再输入git init（初始化一个仓库）  *4）将所有文件添加到仓库 使用命令行或Git Bash，输入下面命令：git add .  *5）提交 使用">
+<meta property="og:description" content="引言主要介绍一些关于backpropagation(反向传播)的知识，反向传播主要就是利用chain rule(链式法则)计算关于weights的梯度，通过梯度计算的结果对网络进行梯度下降的优化。这对于我们设计和debug神经网络都很有用处。 值得注意的是，通常情况下我们计算对于W的梯度以便根据梯度下降进行参数更新，但是在一些特殊情况下，我们也有可能计算关于输入x的梯度，目的是解释和可视化神经网络">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-09-24T12:55:17.928Z">
+<meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/interpratation.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/multiply.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/add.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/max.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/sigmoid.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/sigmoid2.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/sigmoid3.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/sigmoid4.jpg">
+<meta property="og:updated_time" content="2017-09-30T09:21:29.504Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How to use git">
-<meta name="twitter:description" content="创建本地仓库并上传代码到GitHub*1）新建Text文件夹作为仓库根目录（文件夹名字随意命名）  *2）将需要上传的代码文件加入到Text根目录  *3）在根目录下建立仓库 使用命令行或Git Bash，输入下面命令：先进入到Text根目录下，再输入git init（初始化一个仓库）  *4）将所有文件添加到仓库 使用命令行或Git Bash，输入下面命令：git add .  *5）提交 使用">
+<meta name="twitter:title" content="Backpropagation">
+<meta name="twitter:description" content="引言主要介绍一些关于backpropagation(反向传播)的知识，反向传播主要就是利用chain rule(链式法则)计算关于weights的梯度，通过梯度计算的结果对网络进行梯度下降的优化。这对于我们设计和debug神经网络都很有用处。 值得注意的是，通常情况下我们计算对于W的梯度以便根据梯度下降进行参数更新，但是在一些特殊情况下，我们也有可能计算关于输入x的梯度，目的是解释和可视化神经网络">
+<meta name="twitter:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/interpratation.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -155,20 +164,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-how-to-use-git" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-cs231n-Backpropagation" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      How to use git
+      Backpropagation
     </h1>
   
 
         
-        <a href="/2017/09/22/how-to-use-git/" class="archive-article-date">
-  	<time datetime="2017-09-22T10:39:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-22</time>
+        <a href="/2017/09/30/cs231n-Backpropagation/" class="archive-article-date">
+  	<time datetime="2017-09-30T08:18:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-30</time>
 </a>
         
       </header>
@@ -177,28 +186,23 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建本地仓库并上传代码到GitHub"><span class="toc-text">创建本地仓库并上传代码到GitHub</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引言"><span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概念"><span class="toc-text">概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单的解释和举例"><span class="toc-text">简单的解释和举例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块化操作"><span class="toc-text">模块化操作</span></a></li></ol>
 </div>
 
-        <h1 id="创建本地仓库并上传代码到GitHub"><a href="#创建本地仓库并上传代码到GitHub" class="headerlink" title="创建本地仓库并上传代码到GitHub"></a>创建本地仓库并上传代码到GitHub</h1><pre><code>*1）新建Text文件夹作为仓库根目录（文件夹名字随意命名）
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><pre><code>主要介绍一些关于backpropagation(反向传播)的知识，反向传播主要就是利用chain rule(链式法则)计算关于weights的梯度，通过梯度计算的结果对网络进行梯度下降的优化。这对于我们设计和debug神经网络都很有用处。
+值得注意的是，通常情况下我们计算对于W的梯度以便根据梯度下降进行参数更新，但是在一些特殊情况下，我们也有可能计算关于输入x的梯度，目的是解释和可视化神经网络的过程。
+</code></pre><h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><pre><code>当我们使用前馈神经网络接收输入x并产生输出y时，信息通过网络向前流动。输入x提供初始信息，然后传播到每一层的隐藏单元，最后产生输出y。这叫做 前向传播(forward prapagation)。而在训练过程中，前向传播可以持续向前知道计算出代价函数。反向传播算法则允许来自代价函数的信息通过网络向后流动，以便于计算梯度。
+</code></pre><h1 id="简单的解释和举例"><a href="#简单的解释和举例" class="headerlink" title="简单的解释和举例"></a>简单的解释和举例</h1><pre><code>实际上，每个变量的导数反映了整个表达式对这个变量的变化的敏感程度。其定义如下：
+</code></pre><p><img src="interpratation.jpg" alt=""><br>    比较常见的有以下3种函数。<br><img src="multiply.jpg" alt=""><br><img src="add.jpg" alt=""><br><img src="max.jpg" alt=""></p>
+<pre><code>以上这些是针对简单的情况，针对复杂的复合函数的情况，往往需要使用链式法则来求解梯度。
 
-*2）将需要上传的代码文件加入到Text根目录
+一种比较直观的理解是：反向传播可以看做一组彼此之间通过梯度信号通信的门，每个门可以选择让通过自己的信号增加或者减小，并且可以决定增加或者减小的幅度。最后的目的是通过改变输入，经过这一系列门之后使得总的输出最大或者最小。
+</code></pre><h1 id="模块化操作"><a href="#模块化操作" class="headerlink" title="模块化操作"></a>模块化操作</h1><pre><code>在实际计算反向传播的时候，我们可以通过一些模块化的操作使得计算和理解都更为简便直观。
+如下面所示的一个例子：
+</code></pre><p><img src="sigmoid.jpg" alt=""><br>    通过将此函数分解为一系列函数的复合：<br><img src="sigmoid2.jpg" alt=""><br>    最后的一个计算过程如下：<br><img src="sigmoid3.jpg" alt=""><br>    可以看出这个流程还是比较复杂，但是通过将其中的一个sigmoid函数模块化之后，我们会得到更加简明的结果。<br><img src="sigmoid4.jpg" alt=""></p>
+<pre><code>最后编程实现如下：
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">w = [<span class="number">2</span>,<span class="number">-3</span>,<span class="number">-3</span>] <span class="comment"># assume some random weights and data</span></div><div class="line">x = [<span class="number">-1</span>, <span class="number">-2</span>]</div><div class="line"></div><div class="line"><span class="comment"># forward pass</span></div><div class="line">dot = w[<span class="number">0</span>]*x[<span class="number">0</span>] + w[<span class="number">1</span>]*x[<span class="number">1</span>] + w[<span class="number">2</span>]</div><div class="line">f = <span class="number">1.0</span> / (<span class="number">1</span> + math.exp(-dot)) <span class="comment"># sigmoid function</span></div><div class="line"></div><div class="line"><span class="comment"># backward pass through the neuron (backpropagation)</span></div><div class="line">ddot = (<span class="number">1</span> - f) * f <span class="comment"># gradient on dot variable, using the sigmoid gradient derivation</span></div><div class="line">dx = [w[<span class="number">0</span>] * ddot, w[<span class="number">1</span>] * ddot] <span class="comment"># backprop into x</span></div><div class="line">dw = [x[<span class="number">0</span>] * ddot, x[<span class="number">1</span>] * ddot, <span class="number">1.0</span> * ddot] <span class="comment"># backprop into w</span></div><div class="line"><span class="comment"># we're done! we have the gradients on the inputs to the circuit</span></div></pre></td></tr></table></figure>
 
-*3）在根目录下建立仓库
-使用命令行或Git Bash，输入下面命令：先进入到Text根目录下，再输入git init（初始化一个仓库）
-
-*4）将所有文件添加到仓库
-使用命令行或Git Bash，输入下面命令：git add .
-
-*5）提交
-使用命令行或Git Bash，输入下面命令：git commit -m “CommitInfo”
-
-*6）添加源到GitHub
-git remote add origin git@github.com:YourName/YourRepositroy.git
-
-*7）上传源到GitHub
-git push -u origin master
-</code></pre>
       
 
       
@@ -232,7 +236,7 @@ git push -u origin master
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
         		</li>
       		
 		</ul>
@@ -244,7 +248,7 @@ git push -u origin master
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/git//" class="article-tag-list-link color4">git</a>
+        			<a href="/categories/cs231n//" class="article-tag-list-link color2">cs231n</a>
         		</li>
       		
 		</ul>
@@ -299,7 +303,7 @@ git push -u origin master
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2017/09/22/how-to-use-git/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2017/09/30/cs231n-Backpropagation/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -313,18 +317,9 @@ git push -u origin master
   
 <nav id="article-nav">
   
-    <a href="/2017/09/23/cs231n-assignment1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          cs231n assignment1
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/09/20/Fluent-Python-Chapter01/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Fluent Python Chapter 1 Python 数据模型</div>
+    <a href="/2017/09/24/java-string/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">String、StringBuider and StringBuffer</div>
       <i class="icon-circle-right"></i>
     </a>
   
