@@ -23,7 +23,7 @@
 <meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Convolutional-Neural-Networks/local_connectivity.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Convolutional-Neural-Networks/calculate.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/09/30/cs231n-Convolutional-Neural-Networks/pooling.jpg">
-<meta property="og:updated_time" content="2017-10-02T07:17:13.404Z">
+<meta property="og:updated_time" content="2017-10-02T15:23:40.897Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Convolutional-Neural-Networks">
 <meta name="twitter:description" content="主要介绍神经网络和卷积神经网络的一些东西。 神经网络(Neural Networks)之前的线性score function 是 f=Wx，现在扩展到2层的神经网络的表示是：f=W2*max(0,W1*x)。类似的，如果扩展到3层网络可以这样表示：f=W3*max(0,W2*max(0,W1*x))。  一个简单的2层神经网络可以这样实现： 1234567891011121314151617181">
@@ -407,15 +407,6 @@ INPUT -&gt; [[CONV -&gt; RELU]*N -&gt; POOL?]*M -&gt; [FC -&gt; RELU]*K -&gt; FC
   
 <nav id="article-nav">
   
-    <a href="/2017/10/02/Training-Neural-Networks/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Training-Neural-Networks
-        
-      </div>
-    </a>
-  
   
     <a href="/2017/09/30/cs231n-Backpropagation/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">Backpropagation</div>
@@ -564,15 +555,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -581,6 +568,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>
