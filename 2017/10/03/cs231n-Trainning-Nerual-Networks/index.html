@@ -20,7 +20,10 @@
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/tanh.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/relu.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/maxout.jpg">
-<meta property="og:updated_time" content="2017-10-03T08:13:02.807Z">
+<meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/data_preprocessing1.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/data_preprocessing2.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/data_preprocessing3.jpg">
+<meta property="og:updated_time" content="2017-10-03T11:16:32.451Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Trainning-Nerual-Networks">
 <meta name="twitter:description" content="主要介绍训练神经网络的一些技巧。 激活函数激活函数的作用就是引入一个非线性变换，起到一个激活作用。常见的激活函数有sigmoid,tanh,ReLU,Leaky ReLU等。下面分别介绍。 sigmoidsigmoid的表达式是 σ(x)=1/(1+exp(-x))。其图像如下图所示：它有两个明显的缺点使得现在已经不适用了： 1、当x过大或者过小时，曲线趋于饱和，使得梯度很小，可能导致很少数据被激">
@@ -182,7 +185,7 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#激活函数"><span class="toc-text">激活函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sigmoid"><span class="toc-text">sigmoid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tanh"><span class="toc-text">tanh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReLU"><span class="toc-text">ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leaky-ReLU"><span class="toc-text">Leaky ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maxout"><span class="toc-text">Maxout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用建议"><span class="toc-text">使用建议</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#激活函数"><span class="toc-text">激活函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sigmoid"><span class="toc-text">sigmoid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tanh"><span class="toc-text">tanh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReLU"><span class="toc-text">ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leaky-ReLU"><span class="toc-text">Leaky ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maxout"><span class="toc-text">Maxout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用建议"><span class="toc-text">使用建议</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据预处理"><span class="toc-text">数据预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mean-subtraction"><span class="toc-text">Mean subtraction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Normalization"><span class="toc-text">Normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCA-and-Whitening"><span class="toc-text">PCA and Whitening</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体例子"><span class="toc-text">具体例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实际使用"><span class="toc-text">实际使用</span></a></li></ol></li></ol>
 </div>
 
         <p>主要介绍训练神经网络的一些技巧。</p>
@@ -200,6 +203,24 @@
 </code></pre><p><img src="maxout.jpg" alt=""></p>
 <pre><code>它是对ReLU和LeakyReLU的推广，它有着ReLU函数的优点，却不存在ReLU函数的缺点。不过相对而言，其参数个数会翻倍。
 </code></pre><h2 id="使用建议"><a href="#使用建议" class="headerlink" title="使用建议"></a>使用建议</h2><pre><code>优先选用ReLU,如果效果不好，可以尝试Leaky ReLU或者Maxout，也可以尝试tanh(但是它的效果在绝大多数情况会比ReLU/Maxout差)。sigmoid就千万别用了，已经被时代抛弃~
+</code></pre><h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1><pre><code>主要有3中常用的数据预处理方法，对于数据矩阵X,大小是[NxD],N是数据数量，D是维度。
+</code></pre><h2 id="Mean-subtraction"><a href="#Mean-subtraction" class="headerlink" title="Mean subtraction"></a>Mean subtraction</h2><pre><code>这是最常用的一种方法。就是做一个减去平均值的处理。在python中这样实现：
+X-=np.mean(X,axis=0)
+</code></pre><h2 id="Normalization"><a href="#Normalization" class="headerlink" title="Normalization"></a>Normalization</h2><pre><code>做法是把数据维度规范化，一种做法是将所有数据除以标准差：X/=np.std(X,axis=0)；另一种做法是规范化使得最大值为1，最小值为-1。
+下图中左边是原始数据，中间是做Mean subtraction处理，右边是做Normalization(具体方法是除以标准差的做法)处理。
+</code></pre><p><img src="data_preprocessing1.jpg" alt=""></p>
+<h2 id="PCA-and-Whitening"><a href="#PCA-and-Whitening" class="headerlink" title="PCA and Whitening"></a>PCA and Whitening</h2><pre><code>PCA(主成分分析)和Whtening的做法都是先利用Mean subtraction方法将数据零对称，然后计算协方差矩阵，将协方差矩阵进行特征值分解之后再进一步处理。
+它们相同的步骤是：
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Assume input data matrix X of size [N x D]</span></div><div class="line">X -= np.mean(X, axis = <span class="number">0</span>) <span class="comment"># zero-center the data (important)</span></div><div class="line">cov = np.dot(X.T, X) / X.shape[<span class="number">0</span>] <span class="comment"># get the data covariance matrix</span></div><div class="line"></div><div class="line">U,S,V = np.linalg.svd(cov)</div><div class="line">Xrot = np.dot(X, U) <span class="comment"># decorrelate the data</span></div></pre></td></tr></table></figure>
+<pre><code>之后，PCA的处理是用主成分代替整个数据已达到降维的目的，可以以最小的精度损失代价换取较快的计算。
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Xrot_reduced = np.dot(X, U[:,:<span class="number">100</span>]) <span class="comment"># Xrot_reduced becomes [N x 100]</span></div></pre></td></tr></table></figure>
+<pre><code>而Whitening的处理方式是：
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># whiten the data:</span></div><div class="line"><span class="comment"># divide by the eigenvalues (which are square roots of the singular values)</span></div><div class="line">Xwhite = Xrot / np.sqrt(S + <span class="number">1e-5</span>)</div></pre></td></tr></table></figure>
+<pre><code>值得注意的是：我们在实现的过程中为了防止除零，在分母加了一个小常数，这样带来了一个问题就是它放大了噪声的影响。这个问题可以通过将这个常数增大来减轻。下图中左边是原始数据，中间和右边分别是PCA和Whitening的处理结果。
+</code></pre><p><img src="data_preprocessing2.jpg" alt=""></p>
+<h2 id="具体例子"><a href="#具体例子" class="headerlink" title="具体例子"></a>具体例子</h2><pre><code>下面是对CIFAR-10中的一些数据进行预处理结果。
+</code></pre><p><img src="data_preprocessing3.jpg" alt=""></p>
+<h2 id="实际使用"><a href="#实际使用" class="headerlink" title="实际使用"></a>实际使用</h2><pre><code>实际上在卷积网络中，是不使用PCA和Whitening作为预处理的。而Mean subtraction和Normalization通常是必须要做的。另外值得注意的一点是：预处理步骤中的一些统计信息的计算，比如求均值等，只能在训练集上计算，然后应用到测试集上。
 </code></pre>
       
 
@@ -463,15 +484,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -479,7 +500,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
             
             <div class="clearfix"></div>
