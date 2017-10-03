@@ -156,6 +156,113 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-cs231n-Trainning-Nerual-Networks" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/03/cs231n-Trainning-Nerual-Networks/">Trainning-Nerual-Networks</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/03/cs231n-Trainning-Nerual-Networks/" class="archive-article-date">
+  	<time datetime="2017-10-03T02:44:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#激活函数"><span class="toc-text">激活函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sigmoid"><span class="toc-text">sigmoid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tanh"><span class="toc-text">tanh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReLU"><span class="toc-text">ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leaky-ReLU"><span class="toc-text">Leaky ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maxout"><span class="toc-text">Maxout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用建议"><span class="toc-text">使用建议</span></a></li></ol></li></ol>
+</div>
+
+        <p>主要介绍训练神经网络的一些技巧。</p>
+<h1 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h1><pre><code>激活函数的作用就是引入一个非线性变换，起到一个激活作用。常见的激活函数有sigmoid,tanh,ReLU,Leaky ReLU等。下面分别介绍。
+</code></pre><h2 id="sigmoid"><a href="#sigmoid" class="headerlink" title="sigmoid"></a>sigmoid</h2><pre><code>sigmoid的表达式是 σ(x)=1/(1+exp(-x))。其图像如下图所示：它有两个明显的缺点使得现在已经不适用了：
+1、当x过大或者过小时，曲线趋于饱和，使得梯度很小，可能导致很少数据被激活。而且这也给参数初始化造成困难，参数初始化过大或者过小都不好。
+2、它不过原点，一般来说我们希望激活函数能过原点。当然，这相比第一个缺点来说，负面影响会小一点。
+</code></pre><p><img src="sigmoid.jpg" alt=""></p>
+<h2 id="tanh"><a href="#tanh" class="headerlink" title="tanh"></a>tanh</h2><pre><code>tanh其实就是将sigmoid函数变换到以0为中心，它和sigmoid函数一样有着饱和的问题，不过有所改进的是它没有sigmoid函数的第二个缺点。其表达式是：tanh(x)=2σ(2x)-1,图像如下所示：
+</code></pre><p><img src="tanh.jpg" alt=""></p>
+<h2 id="ReLU"><a href="#ReLU" class="headerlink" title="ReLU"></a>ReLU</h2><pre><code>过去几年比价流行的激活函数是ReLU,其表达式非常简单:f(x)=max(0,x),图像如图所示：
+</code></pre><p><img src="relu.jpg" alt=""><br>    相比之前的激活函数，ReLU函数有以下特点：<br>    优点：计算简单快速，实现容易。而且没有趋于饱和的问题。<br>    缺点：由于在x小于0时，其数值是0，这可能造成有些神经元会在训练过程中由于参数更新使得永久不能被激活。如果学习率设置得比较高，最后可能会有高达40%的神经元不会被激活。</p>
+<h2 id="Leaky-ReLU"><a href="#Leaky-ReLU" class="headerlink" title="Leaky ReLU"></a>Leaky ReLU</h2><pre><code>为了解决ReLU函数部分神经元不能起作用的问题，在x小于0的部分引入一个比较小的斜率(一般设置为0.01)。这在有些场合是比ReLU函数表现好的。
+</code></pre><h2 id="Maxout"><a href="#Maxout" class="headerlink" title="Maxout"></a>Maxout</h2><pre><code>另一种激活函数形式是这样的:
+</code></pre><p><img src="maxout.jpg" alt=""></p>
+<pre><code>它是对ReLU和LeakyReLU的推广，它有着ReLU函数的优点，却不存在ReLU函数的缺点。不过相对而言，其参数个数会翻倍。
+</code></pre><h2 id="使用建议"><a href="#使用建议" class="headerlink" title="使用建议"></a>使用建议</h2><pre><code>优先选用ReLU,如果效果不好，可以尝试Leaky ReLU或者Maxout，也可以尝试tanh(但是它的效果在绝大多数情况会比ReLU/Maxout差)。sigmoid就千万别用了，已经被时代抛弃~
+</code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/03/cs231n-Trainning-Nerual-Networks/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-cs231n-Convolutional-Neural-Networks" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -799,107 +906,6 @@ f(xi,W,b)=W*xi+b ——&gt; f(xi,W)=W*xi
 
 
   
-    <article id="post-cs231n-assignment1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/23/cs231n-assignment1/">cs231n assignment1</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/23/cs231n-assignment1/" class="archive-article-date">
-  	<time datetime="2017-09-23T09:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#k-Nearest-Neighbor-classifier"><span class="toc-text">k-Nearest Neighbor classifier</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#compute-distances"><span class="toc-text">compute distances</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#compute-distances-with-two-loops"><span class="toc-text">compute distances with two loops</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#compute-distances-with-one-loop"><span class="toc-text">compute distances with one loop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#compute-distances-with-no-loop"><span class="toc-text">compute distances with no loop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cross-validation"><span class="toc-text">Cross-validation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Split-up-the-training-data-into-folds"><span class="toc-text">Split up the training data into folds</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Perform-k-fold-cross-validation"><span class="toc-text">Perform k-fold cross validation</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
-</div>
-
-        <h1 id="k-Nearest-Neighbor-classifier"><a href="#k-Nearest-Neighbor-classifier" class="headerlink" title="k-Nearest Neighbor classifier"></a>k-Nearest Neighbor classifier</h1><h2 id="compute-distances"><a href="#compute-distances" class="headerlink" title="compute distances"></a>compute distances</h2><h3 id="compute-distances-with-two-loops"><a href="#compute-distances-with-two-loops" class="headerlink" title="compute distances with two loops"></a>compute distances with two loops</h3><pre><code>思想很简单，但是耗时较长，代码如下。
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_distances_two_loops</span><span class="params">(X,X_train)</span>:</span></div><div class="line">    <span class="keyword">assert</span>(X.shape[<span class="number">1</span>]==X_train.shape[<span class="number">1</span>])</div><div class="line">    num_test=X.shape[<span class="number">0</span>]</div><div class="line">    num_train=X_train.shape[<span class="number">0</span>]</div><div class="line">    dists=np.zeros((num_test,num_train))</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_test):</div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(num_train):</div><div class="line">            dists[i][j]=np.linalg.norm(X[i,:]-X_train[j,:])</div><div class="line">    <span class="keyword">return</span> dists</div></pre></td></tr></table></figure>
-<h3 id="compute-distances-with-one-loop"><a href="#compute-distances-with-one-loop" class="headerlink" title="compute distances with one loop"></a>compute distances with one loop</h3><pre><code>利用numpy.sum代替一个循环，但是在测试中比第一种方法更耗时。
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_distances_one_loop</span><span class="params">(X,X_train)</span>:</span></div><div class="line">    <span class="keyword">assert</span>(X.shape[<span class="number">1</span>]==X_train.shape[<span class="number">1</span>])</div><div class="line">    num_test=X.shape[<span class="number">0</span>]</div><div class="line">    num_train=X_train.shape[<span class="number">0</span>]</div><div class="line">    dists=np.zeros((num_test,num_train))</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_test):</div><div class="line">        dists[i,:]=np.linalg.norm(X[i,:]-X_train,axis=<span class="number">1</span>)</div><div class="line">    <span class="keyword">return</span> dists</div></pre></td></tr></table></figure>
-<h3 id="compute-distances-with-no-loop"><a href="#compute-distances-with-no-loop" class="headerlink" title="compute distances with no loop"></a>compute distances with no loop</h3><pre><code>利用矩阵运算代替循环，用时极短但是不容易理解。
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_distances_no_loop</span><span class="params">(X,X_train)</span>:</span></div><div class="line">    <span class="keyword">assert</span>(X.shape[<span class="number">1</span>]==X_train.shape[<span class="number">1</span>])</div><div class="line">    num_test=X.shape[<span class="number">0</span>]</div><div class="line">    num_train=X_train.shape[<span class="number">0</span>]</div><div class="line">    dists=np.zeros((num_test,num_train))</div><div class="line">    M=X.dot(X_train.T)</div><div class="line">    te=np.square(X).sum(axis=<span class="number">1</span>)</div><div class="line">    tr=np.square(X_train).sum(axis=<span class="number">1</span>)</div><div class="line">    dists = np.sqrt(<span class="number">-2</span>*M+tr+np.matrix(te).T)</div><div class="line">    <span class="keyword">return</span> dists</div></pre></td></tr></table></figure>
-<h2 id="Cross-validation"><a href="#Cross-validation" class="headerlink" title="Cross-validation"></a>Cross-validation</h2><h3 id="Split-up-the-training-data-into-folds"><a href="#Split-up-the-training-data-into-folds" class="headerlink" title="Split up the training data into folds"></a>Split up the training data into folds</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">y_train_ = y_train.reshape(<span class="number">-1</span>, <span class="number">1</span>)</div><div class="line">X_train_folds , y_train_folds = np.array_split(X_train,num_folds),p.array_split(y_train_,num_folds)</div></pre></td></tr></table></figure>
-<h3 id="Perform-k-fold-cross-validation"><a href="#Perform-k-fold-cross-validation" class="headerlink" title="Perform k-fold cross validation"></a>Perform k-fold cross validation</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> k_ <span class="keyword">in</span> k_choices:</div><div class="line">    k_to_accuracies.setdefault(k_, [])</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(num_folds):</div><div class="line">    classifier = KNearestNeighbor()</div><div class="line">    X_val_train = np.vstack(X_train_folds[<span class="number">0</span>:i] + X_train_folds[i+<span class="number">1</span>:])</div><div class="line">    y_val_train = np.vstack(y_train_folds[<span class="number">0</span>:i] + y_train_folds[i+<span class="number">1</span>:])</div><div class="line">    y_val_train = y_val_train[:,<span class="number">0</span>]</div><div class="line">    classifier.train(X_val_train, y_val_train)</div><div class="line">    <span class="keyword">for</span> k_ <span class="keyword">in</span> k_choices:</div><div class="line">        y_val_pred = classifier.predict(X_train_folds[i], k=k_)</div><div class="line">        num_correct = np.sum(y_val_pred == y_train_folds[i][:,<span class="number">0</span>])</div><div class="line">        accuracy = float(num_correct) / len(y_val_pred)</div><div class="line">        k_to_accuracies[k_] = k_to_accuracies[k_] + [accuracy]</div></pre></td></tr></table></figure>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="">完整代码</a><br><a href="http://cs231n.github.io/assignments2017/assignment1/" target="_blank" rel="external">Assignment1</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/cs231n//" class="article-tag-list-link color2">cs231n</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/23/cs231n-assignment1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1006,11 +1012,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
