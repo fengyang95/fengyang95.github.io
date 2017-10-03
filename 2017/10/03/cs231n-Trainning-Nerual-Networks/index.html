@@ -23,7 +23,7 @@
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/data_preprocessing1.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/data_preprocessing2.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/data_preprocessing3.jpg">
-<meta property="og:updated_time" content="2017-10-03T11:16:32.451Z">
+<meta property="og:updated_time" content="2017-10-03T15:11:01.562Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Trainning-Nerual-Networks">
 <meta name="twitter:description" content="主要介绍训练神经网络的一些技巧。 激活函数激活函数的作用就是引入一个非线性变换，起到一个激活作用。常见的激活函数有sigmoid,tanh,ReLU,Leaky ReLU等。下面分别介绍。 sigmoidsigmoid的表达式是 σ(x)=1/(1+exp(-x))。其图像如下图所示：它有两个明显的缺点使得现在已经不适用了： 1、当x过大或者过小时，曲线趋于饱和，使得梯度很小，可能导致很少数据被激">
@@ -185,7 +185,7 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#激活函数"><span class="toc-text">激活函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sigmoid"><span class="toc-text">sigmoid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tanh"><span class="toc-text">tanh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReLU"><span class="toc-text">ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leaky-ReLU"><span class="toc-text">Leaky ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maxout"><span class="toc-text">Maxout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用建议"><span class="toc-text">使用建议</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据预处理"><span class="toc-text">数据预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mean-subtraction"><span class="toc-text">Mean subtraction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Normalization"><span class="toc-text">Normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCA-and-Whitening"><span class="toc-text">PCA and Whitening</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体例子"><span class="toc-text">具体例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实际使用"><span class="toc-text">实际使用</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#激活函数"><span class="toc-text">激活函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sigmoid"><span class="toc-text">sigmoid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tanh"><span class="toc-text">tanh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReLU"><span class="toc-text">ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leaky-ReLU"><span class="toc-text">Leaky ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maxout"><span class="toc-text">Maxout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用建议"><span class="toc-text">使用建议</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据预处理"><span class="toc-text">数据预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mean-subtraction"><span class="toc-text">Mean subtraction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Normalization"><span class="toc-text">Normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCA-and-Whitening"><span class="toc-text">PCA and Whitening</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体例子"><span class="toc-text">具体例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实际使用"><span class="toc-text">实际使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#权重初始化"><span class="toc-text">权重初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#陷阱：全部初始化为0"><span class="toc-text">陷阱：全部初始化为0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随机小数初始化"><span class="toc-text">随机小数初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用sqrt-N-校正"><span class="toc-text">用sqrt(N)校正</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏置量的初始化"><span class="toc-text">偏置量的初始化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Regularization-正则化"><span class="toc-text">Regularization(正则化)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#L2-regularization"><span class="toc-text">L2 regularization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#L1-regularization"><span class="toc-text">L1 regularization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Max-norm-constraints"><span class="toc-text">Max norm constraints</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dropout"><span class="toc-text">Dropout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏置正则化"><span class="toc-text">偏置正则化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实践技巧"><span class="toc-text">实践技巧</span></a></li></ol></li></ol>
 </div>
 
         <p>主要介绍训练神经网络的一些技巧。</p>
@@ -221,6 +221,19 @@ X-=np.mean(X,axis=0)
 <h2 id="具体例子"><a href="#具体例子" class="headerlink" title="具体例子"></a>具体例子</h2><pre><code>下面是对CIFAR-10中的一些数据进行预处理结果。
 </code></pre><p><img src="data_preprocessing3.jpg" alt=""></p>
 <h2 id="实际使用"><a href="#实际使用" class="headerlink" title="实际使用"></a>实际使用</h2><pre><code>实际上在卷积网络中，是不使用PCA和Whitening作为预处理的。而Mean subtraction和Normalization通常是必须要做的。另外值得注意的一点是：预处理步骤中的一些统计信息的计算，比如求均值等，只能在训练集上计算，然后应用到测试集上。
+</code></pre><h1 id="权重初始化"><a href="#权重初始化" class="headerlink" title="权重初始化"></a>权重初始化</h1><pre><code>训练神经网络的一个很重要的步骤是参数的初始化工作，理想的初始权重是满足高斯分布。主要有以下几种初始化的方法，下面将分别讨论。
+</code></pre><h2 id="陷阱：全部初始化为0"><a href="#陷阱：全部初始化为0" class="headerlink" title="陷阱：全部初始化为0"></a>陷阱：全部初始化为0</h2><pre><code>如果全部初始化为0的话，那么每个神经元都会有相同的输出，这样在反向传播的过程中它们也会有相同的梯度，最后就会执行相同的参数更新。那么最终的优化后的参数也会全部都是一样的，很明显这样的网络是没有价值的。所以这种初始化方式是错误的。
+</code></pre><h2 id="随机小数初始化"><a href="#随机小数初始化" class="headerlink" title="随机小数初始化"></a>随机小数初始化</h2><pre><code>另一种方式就是随机小数初始化，W=0.01*np.random.randn(D,H)。但是事实上这种初始化方式并没有更好的表现。因为如果一个神经网络层具有很小的权重，那么计算出的梯度也会逐渐。考虑一个10层的网络结果，有500个神经元，tanh作为激活函数。实验中出现，随着层数增加，最后就会出现绝大多数参数为0的情况，这又遇到了和全初始化为零一样的问题。有一种设想是改变随机数前面的系数从0.01改为1，这样在实践中又会造成几乎所有神经元的饱和，其值不是-1就是1，而梯度都为0。
+</code></pre><h2 id="用sqrt-N-校正"><a href="#用sqrt-N-校正" class="headerlink" title="用sqrt(N)校正"></a>用sqrt(N)校正</h2><pre><code>初始化为W=np.random.randn(n)/sqrt(n)，这在以tanh为激活函数的时候有比较好的效果，但是在以ReLU为激活函数的时候效果就不太好了。其实目前在实践中最推荐的初始化方式是W=np.random.randn(n)/sqrt(2/n),激活函数为ReLU。
+</code></pre><h2 id="偏置量的初始化"><a href="#偏置量的初始化" class="headerlink" title="偏置量的初始化"></a>偏置量的初始化</h2><pre><code>最常用的方式就是将偏置初始化为0，当然也有做法将偏置统一初始化为一个小数，比如0.01。
+</code></pre><h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><h1 id="Regularization-正则化"><a href="#Regularization-正则化" class="headerlink" title="Regularization(正则化)"></a>Regularization(正则化)</h1><pre><code>正则化的目的就是防止过拟合。主要有以下几种方式。
+</code></pre><h2 id="L2-regularization"><a href="#L2-regularization" class="headerlink" title="L2 regularization"></a>L2 regularization</h2><pre><code>这是一种比较常用的正则化方法，对每个权重的平方都进行正则化惩罚，常常设置为0.5*λ*W*W，λ是一个超参数，前面加一个0.5的系数是为了方便反向传播的时候求导为λ*W。
+</code></pre><h2 id="L1-regularization"><a href="#L1-regularization" class="headerlink" title="L1 regularization"></a>L1 regularization</h2><pre><code>L1 regularization   也是常用的正则化方法，也可以同时使用这两种方法，设置惩罚项为
+λ1*abs(W)+λ2*W*W。
+</code></pre><h2 id="Max-norm-constraints"><a href="#Max-norm-constraints" class="headerlink" title="Max norm constraints"></a>Max norm constraints</h2><pre><code>正则化的另一种形式是强制每个神经元的权重向量的绝对上限，并使用预测的梯度下降来强制约束。这种方法的好处就是即便学习率设置得很高，网络也不会出现问题，因为参数更新受到极大限制。
+</code></pre><h2 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h2><pre><code>这是一种比较新的防止过拟合的正则化的方法。通过每次执行参数更新时随机抛弃每一层的一定数量的神经元来达到防止过拟合的目的。决定神经元是否激活的概率p是一个超参数。具体实现的时候需要注意只是在训练的时候需要执行dropout，在测试的时候并不dropout,所以测试时还需要做一个尺度变换，乘上一个p。但是实践中是在训练时执行一次Inverted dropout，而在测试中不做任何处理。
+</code></pre><h2 id="偏置正则化"><a href="#偏置正则化" class="headerlink" title="偏置正则化"></a>偏置正则化</h2><p>   偏置的正则化是不常见的，因为它们不通过乘法相互作用与数据交互，对于最终的输出没有什么影响。然而，在实际应用中（通过适当的数据预处理），正则化偏差很少会导致性能显着降低。</p>
+<h2 id="实践技巧"><a href="#实践技巧" class="headerlink" title="实践技巧"></a>实践技巧</h2><pre><code>实践中常用的是L2 regularization，其系数λ通过交叉验证来设置。也可以将其和dropout相结合，dropout的概率p一般设置为0.5。
 </code></pre>
       
 
@@ -492,7 +505,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -500,7 +513,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>
