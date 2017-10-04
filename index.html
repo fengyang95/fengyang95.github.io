@@ -178,10 +178,10 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#激活函数"><span class="toc-text">激活函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sigmoid"><span class="toc-text">sigmoid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tanh"><span class="toc-text">tanh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReLU"><span class="toc-text">ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leaky-ReLU"><span class="toc-text">Leaky ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maxout"><span class="toc-text">Maxout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用建议"><span class="toc-text">使用建议</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据预处理"><span class="toc-text">数据预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mean-subtraction"><span class="toc-text">Mean subtraction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Normalization"><span class="toc-text">Normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCA-and-Whitening"><span class="toc-text">PCA and Whitening</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体例子"><span class="toc-text">具体例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实际使用"><span class="toc-text">实际使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#权重初始化"><span class="toc-text">权重初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#陷阱：全部初始化为0"><span class="toc-text">陷阱：全部初始化为0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随机小数初始化"><span class="toc-text">随机小数初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用sqrt-N-校正"><span class="toc-text">用sqrt(N)校正</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏置量的初始化"><span class="toc-text">偏置量的初始化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Regularization-正则化"><span class="toc-text">Regularization(正则化)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#L2-regularization"><span class="toc-text">L2 regularization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#L1-regularization"><span class="toc-text">L1 regularization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Max-norm-constraints"><span class="toc-text">Max norm constraints</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dropout"><span class="toc-text">Dropout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏置正则化"><span class="toc-text">偏置正则化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实践技巧"><span class="toc-text">实践技巧</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#激活函数"><span class="toc-text">激活函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sigmoid"><span class="toc-text">sigmoid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tanh"><span class="toc-text">tanh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReLU"><span class="toc-text">ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leaky-ReLU"><span class="toc-text">Leaky ReLU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maxout"><span class="toc-text">Maxout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用建议"><span class="toc-text">使用建议</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据预处理"><span class="toc-text">数据预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mean-subtraction"><span class="toc-text">Mean subtraction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Normalization"><span class="toc-text">Normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCA-and-Whitening"><span class="toc-text">PCA and Whitening</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体例子"><span class="toc-text">具体例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实际使用"><span class="toc-text">实际使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#权重初始化"><span class="toc-text">权重初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#陷阱：全部初始化为0"><span class="toc-text">陷阱：全部初始化为0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随机小数初始化"><span class="toc-text">随机小数初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用sqrt-N-校正"><span class="toc-text">用sqrt(N)校正</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏置量的初始化"><span class="toc-text">偏置量的初始化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Regularization-正则化"><span class="toc-text">Regularization(正则化)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#L2-regularization"><span class="toc-text">L2 regularization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#L1-regularization"><span class="toc-text">L1 regularization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Max-norm-constraints"><span class="toc-text">Max norm constraints</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dropout"><span class="toc-text">Dropout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏置正则化"><span class="toc-text">偏置正则化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实践技巧"><span class="toc-text">实践技巧</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Loss-Function"><span class="toc-text">Loss Function</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Classfication"><span class="toc-text">Classfication</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Attribute-classfication"><span class="toc-text">Attribute classfication</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Regression"><span class="toc-text">Regression</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Gradient-Checks"><span class="toc-text">Gradient Checks</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#sanity-checks"><span class="toc-text">sanity checks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Look-for-correct-loss-at-chance-performance"><span class="toc-text">Look for correct loss at chance performance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Overfitting-a-tiny-subset-of-data"><span class="toc-text">Overfitting a tiny subset of data</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#监视学习过程"><span class="toc-text">监视学习过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#loss-function"><span class="toc-text">loss function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Train-Val-accuracy"><span class="toc-text">Train/Val accuracy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ratio-of-weights-updates"><span class="toc-text">Ratio of weights:updates</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activation-Gradient-distributions-per-layer"><span class="toc-text">Activation/Gradient distributions per layer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#First-layer-Visulization"><span class="toc-text">First-layer Visulization</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参数更新"><span class="toc-text">参数更新</span></a></li></ol>
 </div>
 
-        <p>主要介绍训练神经网络的一些技巧。</p>
+        <p>主要介绍训练神经网络的一些技巧。、</p>
 <h1 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h1><pre><code>激活函数的作用就是引入一个非线性变换，起到一个激活作用。常见的激活函数有sigmoid,tanh,ReLU,Leaky ReLU等。下面分别介绍。
 </code></pre><h2 id="sigmoid"><a href="#sigmoid" class="headerlink" title="sigmoid"></a>sigmoid</h2><pre><code>sigmoid的表达式是 σ(x)=1/(1+exp(-x))。其图像如下图所示：它有两个明显的缺点使得现在已经不适用了：
 1、当x过大或者过小时，曲线趋于饱和，使得梯度很小，可能导致很少数据被激活。而且这也给参数初始化造成困难，参数初始化过大或者过小都不好。
@@ -225,8 +225,58 @@ X-=np.mean(X,axis=0)
 λ1*abs(W)+λ2*W*W。
 </code></pre><h2 id="Max-norm-constraints"><a href="#Max-norm-constraints" class="headerlink" title="Max norm constraints"></a>Max norm constraints</h2><pre><code>正则化的另一种形式是强制每个神经元的权重向量的绝对上限，并使用预测的梯度下降来强制约束。这种方法的好处就是即便学习率设置得很高，网络也不会出现问题，因为参数更新受到极大限制。
 </code></pre><h2 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h2><pre><code>这是一种比较新的防止过拟合的正则化的方法。通过每次执行参数更新时随机抛弃每一层的一定数量的神经元来达到防止过拟合的目的。决定神经元是否激活的概率p是一个超参数。具体实现的时候需要注意只是在训练的时候需要执行dropout，在测试的时候并不dropout,所以测试时还需要做一个尺度变换，乘上一个p。但是实践中是在训练时执行一次Inverted dropout，而在测试中不做任何处理。
-</code></pre><h2 id="偏置正则化"><a href="#偏置正则化" class="headerlink" title="偏置正则化"></a>偏置正则化</h2><p>   偏置的正则化是不常见的，因为它们不通过乘法相互作用与数据交互，对于最终的输出没有什么影响。然而，在实际应用中（通过适当的数据预处理），正则化偏差很少会导致性能显着降低。</p>
-<h2 id="实践技巧"><a href="#实践技巧" class="headerlink" title="实践技巧"></a>实践技巧</h2><pre><code>实践中常用的是L2 regularization，其系数λ通过交叉验证来设置。也可以将其和dropout相结合，dropout的概率p一般设置为0.5。
+</code></pre><h2 id="偏置正则化"><a href="#偏置正则化" class="headerlink" title="偏置正则化"></a>偏置正则化</h2><pre><code>偏置的正则化是不常见的，因为它们不通过乘法相互作用与数据交互，对于最终的输出没有什么影响。然而，在实际应用中（通过适当的数据预处理），正则化偏差很少会导致性能显着降低。
+</code></pre><h2 id="实践技巧"><a href="#实践技巧" class="headerlink" title="实践技巧"></a>实践技巧</h2><pre><code>实践中常用的是L2 regularization，其系数λ通过交叉验证来设置。也可以将其和dropout相结合，dropout的概率p一般设置为0.5。
+</code></pre><h1 id="Loss-Function"><a href="#Loss-Function" class="headerlink" title="Loss Function"></a>Loss Function</h1><pre><code>loss function就是对ground truth和我们的预测结果之间差异的度量，我们在训练中做的事情就是使得其最小化。我们需要针对不同的场景选择适合的loss function以达到我们的目的。
+</code></pre><h2 id="Classfication"><a href="#Classfication" class="headerlink" title="Classfication"></a>Classfication</h2><pre><code>在分类任务中，我们常用的loss function有 SVM loss：
+其形式如下：
+</code></pre><p><img src="svm_loss.jpg" alt=""><br>    实际应用中也有使用它的平方项达到较好效果的例子。<br>    另外一种常见的是Softmax loss,如下所示：<br><img src="softmax_loss.jpg" alt=""><br>    实际上当分类任务中标签太多时，更推荐使用Hierarchical Softmax loss的计算方法，具体细节见<br><a href="https://arxiv.org/pdf/1310.4546.pdf" target="_blank" rel="external">参考</a></p>
+<h2 id="Attribute-classfication"><a href="#Attribute-classfication" class="headerlink" title="Attribute classfication"></a>Attribute classfication</h2><pre><code>上面介绍的loss function都是针对一个物品只有一个标签的情况，对于一个物体有多个标签的情况，我们需要用另外一种度量方法。解决这种的一个比较好的方法是独立地为每个单独的属性构建一个二进制分类器。例如，每个类别的二进制分类器将独立采用以下形式：
+</code></pre><p><img src="binary1.jpg" alt=""></p>
+<pre><code>其中y(ij)的值取决于第i个物体是否属于类别j,如果是，其值为1，否则为-1。
+这种损失的替代方案是独立地为每个属性训练逻辑回归分类器。二元逻辑回归分类器只有两个类（0,1），并且将类1的概率计算为：
+</code></pre><p><img src="binary2.jpg" alt=""></p>
+<pre><code>这可以最终简化得到
+</code></pre><p><img src="binary3.jpg" alt=""></p>
+<pre><code>这种方法看起来麻烦，实际上它的梯度计算非常简单，为：
+</code></pre><p><img src="binary4.jpg" alt=""></p>
+<h2 id="Regression"><a href="#Regression" class="headerlink" title="Regression"></a>Regression</h2><pre><code>这类任务需要预测一个东西的准确值，比如预测房价等。常常使用L1 loss或者L2 loss。实际上，L2 loss相比softmax loss更难优化。除非绝对必要，否则不要使用回归任务，如果能够将这类任务转化为分类任务，那是再好不过的。
+</code></pre><h1 id="Gradient-Checks"><a href="#Gradient-Checks" class="headerlink" title="Gradient Checks"></a>Gradient Checks</h1><pre><code>梯度检查实际就是将analytic gradient 和 numerical gradient 进行比价，用numerical gradient检查 analytic gradient是否计算正确。这个过程很关键，而且容易出错，这里介绍一点处理的技巧。
+1、Use teh centered formula
+</code></pre><p><img src="gradient_check1.jpg" alt=""><br><img src="gradient_check2.jpg" alt=""></p>
+<pre><code>2、Use relative error for the comparison
+比较两种梯度时，比较绝对误差是没有任何意义的，实践中是比较相对误差。
+</code></pre><p><img src="gradient_check3.jpg" alt=""></p>
+<pre><code>通常情况下这个error&gt;1e-2说明梯度有问题，需要检查；1e-2&gt;error&gt;1e-4,勉强能够接受;1e-4&gt;error，在一般情况下算是比较好的;如果error&lt;1e-7,那么肯定是正确的了。但是这个误差与网络层数也有关系，网络越深，很明显这个误差会越大，比如对于一个10层的网络，这个error在1e-2的量级也许都是可以接受的，但是对于只有一层的网络这显然太高。所以还要根据实际情况尽心考虑。
+3、Use double precision
+进行梯度检查时应该使用double,用float精度不够。
+4、Stick around active range of floating point
+在运算过程中将中间数据浮点数控制在有效范围，太小的数据可能会造成一些数值问题(1e-10甚至更小的数据是没有意义的)。遇到这样的中间结果时，需要暂时进行一个缩放将数值扩大到一个适当的范围，比如到1e0量级。
+5、Kinks in the objective
+对于某些激活函数，比如ReLU,会出现梯度不连续的问题，在执行梯度检查的时候需要格外注意，否则可能造成意外的结果。
+6、Use only few datapoints
+解决上述问题的一个方法就是使用更少的数据点，这样既可以有效避免上述问题，还可以使得梯度检查更加快速，效率更高。
+7、Be careful with the step size h
+h并不是越小越好，如果h太小的话反而可能会造成一些数值问题。
+8、Gradcheck during a “characteristic” mode of operation
+9、Don&apos;t let the regularization overwhelm the data
+10、Remember to turn off dropout/augmentations
+11、Check only few dimensions
+</code></pre><h1 id="sanity-checks"><a href="#sanity-checks" class="headerlink" title="sanity checks"></a>sanity checks</h1><pre><code>在开始进行训练之前，需要先对网络进行一些简单的健壮性检查。
+</code></pre><h2 id="Look-for-correct-loss-at-chance-performance"><a href="#Look-for-correct-loss-at-chance-performance" class="headerlink" title="Look for correct loss at chance performance"></a>Look for correct loss at chance performance</h2><pre><code>当进行参数初始化时，我们需要保证初始的loss达到我们的预期。所以需要我们单独检查loss(这时要忽略正则化项)。如果loss和我们的预期不符，这时需要检查是否初始化存在问题等。
+</code></pre><p>##<br>    增加正则化项的权重会增加loss，也可以一次为标准进行检查。</p>
+<h2 id="Overfitting-a-tiny-subset-of-data"><a href="#Overfitting-a-tiny-subset-of-data" class="headerlink" title="Overfitting a tiny subset of data"></a>Overfitting a tiny subset of data</h2><pre><code>正式开始训练之前，可以用较小的数据集进行训练，看看能不能使得loss为0(注意这时不要考虑正则化项)。如果不能使得loss为0，那么这个网络应该是存在问题的。当然即便能够使得loss为0，也不代表网络是正确的，不排除有其他bug的情况。
+</code></pre><h1 id="监视学习过程"><a href="#监视学习过程" class="headerlink" title="监视学习过程"></a>监视学习过程</h1><pre><code>在训练神经网络时应该监视多种有用的数量。这些图是进入训练过程的窗口，应该被用来获得有关不同超级参数设置的直观性，以及如何改变它们以提高学习效率。下面的图的x轴总是以epoch为单位，其测量在期望的训练期间每个示例已经看到多少次（例如，一个时期意味着每个示例已经被看到一次),优选的是epoch而不是迭代次数，因为迭代次数取决于批量大小的任意设置。
+</code></pre><h2 id="loss-function"><a href="#loss-function" class="headerlink" title="loss function"></a>loss function</h2><pre><code>我们训练的目的就是使得loss最小化，所以loss是最需要跟踪的一个参数。如下图所示：损失曲线通常会出现摆动，这和batch size有关，如果batch size是1，那么这个摆动会很厉害，如果batch size是整个数据集，那么将不会出现摆动。
+</code></pre><p><img src="loss1.jpg" alt=""></p>
+<h2 id="Train-Val-accuracy"><a href="#Train-Val-accuracy" class="headerlink" title="Train/Val accuracy"></a>Train/Val accuracy</h2><pre><code>训练分类器时跟踪的第二个重要数量是验证/训练准确性。这让我们更直观了解到过拟合现象。过拟合简单来说就是在训练集上表现好，但是在测试集上表现差的现象。从下图可以直观看出。
+</code></pre><p><img src="overfitting1.jpg" alt=""></p>
+<h2 id="Ratio-of-weights-updates"><a href="#Ratio-of-weights-updates" class="headerlink" title="Ratio of weights:updates"></a>Ratio of weights:updates</h2><pre><code>最后一个需要关心的参数是更新幅度与整个值的幅度的比例。这个幅度最好在1e-3左右，如果这个值太小，说明学习率设置太低，反之则太高。我们需要对此作出调整。代码如下所示：
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># assume parameter vector W and its gradient vector dW</span></div><div class="line">param_scale = np.linalg.norm(W.ravel())</div><div class="line">update = -learning_rate*dW <span class="comment"># simple SGD update</span></div><div class="line">update_scale = np.linalg.norm(update.ravel())</div><div class="line">W += update <span class="comment"># the actual update</span></div><div class="line"><span class="keyword">print</span> update_scale / param_scale <span class="comment"># want ~1e-3</span></div></pre></td></tr></table></figure>
+<h2 id="Activation-Gradient-distributions-per-layer"><a href="#Activation-Gradient-distributions-per-layer" class="headerlink" title="Activation/Gradient distributions per layer"></a>Activation/Gradient distributions per layer</h2><pre><code>初始化不正确可能会减慢甚至完全停止学习过程。幸运的是，这个问题可以比较容易地诊断出来。 一种方法是绘制网络的所有层的激活/梯度直方图。直观地看，看到任何奇怪的分布并不是一个好兆头。 如果是tanh神经元，我们希望在[-1,1]的全范围内看到神经元激活的分布，而不是看到所有神经元输出零，或者所有神经元在-1或1完全饱和。
+</code></pre><h2 id="First-layer-Visulization"><a href="#First-layer-Visulization" class="headerlink" title="First-layer Visulization"></a>First-layer Visulization</h2><pre><code>处理图像问题时，绘制第一层的特征还是很有用的，可以以此为根据判断参数好坏。
+</code></pre><p><img src="visualization.jpg" alt=""></p>
+<h1 id="参数更新"><a href="#参数更新" class="headerlink" title="参数更新"></a>参数更新</h1><pre><code>当通过反向传播计算出analytic gradient后，我们可以以此进行参数更新。具体的更新方法下面将详细介绍。
 </code></pre>
       
 
@@ -1035,10 +1085,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
@@ -1047,11 +1093,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
             
             <div class="clearfix"></div>
