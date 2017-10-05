@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/overfitting1.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/visualization.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/compare_update.jpg">
-<meta property="og:updated_time" content="2017-10-05T07:28:40.852Z">
+<meta property="og:updated_time" content="2017-10-05T07:30:53.928Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Trainning-Nerual-Networks">
 <meta name="twitter:description" content="主要介绍训练神经网络的一些技巧，是对cs231n spring 2017 课程 lecture 6、7两节内容的一个整理。 激活函数激活函数的作用就是引入一个非线性变换，起到一个激活作用。常见的激活函数有sigmoid,tanh,ReLU,Leaky ReLU等。下面分别介绍。 sigmoidsigmoid的表达式是 σ(x)=1/(1+exp(-x))。其图像如下图所示：它有两个明显的缺点使得现">
@@ -210,8 +210,11 @@
 <h2 id="tanh"><a href="#tanh" class="headerlink" title="tanh"></a>tanh</h2><pre><code>tanh其实就是将sigmoid函数变换到以0为中心，它和sigmoid函数一样有着饱和的问题，不过有所改进的是它没有sigmoid函数的第二个缺点。其表达式是：tanh(x)=2σ(2x)-1,图像如下所示：
 </code></pre><p><img src="tanh.jpg" alt=""></p>
 <h2 id="ReLU"><a href="#ReLU" class="headerlink" title="ReLU"></a>ReLU</h2><pre><code>过去几年比价流行的激活函数是ReLU,其表达式非常简单:f(x)=max(0,x),图像如图所示：
-</code></pre><p><img src="relu.jpg" alt=""><br>    相比之前的激活函数，ReLU函数有以下特点：<br>    优点：计算简单快速，实现容易。而且没有趋于饱和的问题。<br>    缺点：由于在x小于0时，其数值是0，这可能造成有些神经元会在训练过程中由于参数更新使得永久不能被激活。如果学习率设置得比较高，最后可能会有高达40%的神经元不会被激活。</p>
-<h2 id="Leaky-ReLU"><a href="#Leaky-ReLU" class="headerlink" title="Leaky ReLU"></a>Leaky ReLU</h2><pre><code>为了解决ReLU函数部分神经元不能起作用的问题，在x小于0的部分引入一个比较小的斜率(一般设置为0.01)。这在有些场合是比ReLU函数表现好的。
+</code></pre><p><img src="relu.jpg" alt=""></p>
+<pre><code>相比之前的激活函数，ReLU函数有以下特点：
+优点：计算简单快速，实现容易。而且没有趋于饱和的问题。
+缺点：由于在x小于0时，其数值是0，这可能造成有些神经元会在训练过程中由于参数更新使得永久不能被激活。如果学习率设置得比较高，最后可能会有高达40%的神经元不会被激活。
+</code></pre><h2 id="Leaky-ReLU"><a href="#Leaky-ReLU" class="headerlink" title="Leaky ReLU"></a>Leaky ReLU</h2><pre><code>为了解决ReLU函数部分神经元不能起作用的问题，在x小于0的部分引入一个比较小的斜率(一般设置为0.01)。这在有些场合是比ReLU函数表现好的。
 </code></pre><h2 id="Maxout"><a href="#Maxout" class="headerlink" title="Maxout"></a>Maxout</h2><pre><code>另一种激活函数形式是这样的:
 </code></pre><p><img src="maxout.jpg" alt=""></p>
 <pre><code>它是对ReLU和LeakyReLU的推广，它有着ReLU函数的优点，却不存在ReLU函数的缺点。不过相对而言，其参数个数会翻倍。
