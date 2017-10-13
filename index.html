@@ -492,7 +492,7 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><span class="toc-text">在linux下可以通过设置PYTHONPATH的方法指定python工程目录</span></a></li></ol>
 </div>
 
         <pre><code>整理一些使用Python过程中遇到的问题和解决方法。
@@ -506,6 +506,8 @@
 4、升级pip3.5版本
     pip3.5 install --upgrade pip
 5、注意：遇到失败情况时可能是由于没有权限，可以尝试在命令前加sudo
+</code></pre><h1 id="在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><a href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录" class="headerlink" title="在linux下可以通过设置PYTHONPATH的方法指定python工程目录"></a>在linux下可以通过设置PYTHONPATH的方法指定python工程目录</h1><pre><code>命令如下：
+    export PYTHONPATH=&quot;${PYTHONPATH}:/my/other/path&quot;
 </code></pre>
       
 
@@ -602,6 +604,8 @@
 </code></pre><h1 id="linux常用命令"><a href="#linux常用命令" class="headerlink" title="linux常用命令"></a>linux常用命令</h1><pre><code>1、ctrl+z可以将正在执行的前台命令放到后台并暂停。
 2、fg将后台命令调到前台继续执行。
 3、htop可以实现监控
+4、查看硬盘剩余空间 #df -h #df -H
+5、查看目录占用空间 #du -hs 目录名
 </code></pre>
       
 
@@ -767,11 +771,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
