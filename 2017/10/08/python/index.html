@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Fengyang">
 <meta property="og:description" content="整理一些使用Python过程中遇到的问题和解决方法。 Python3cPicklepython3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。 ubuntu下为python3.5安装pip3.51、下载setuptools,easy_install安装包     wget https:/">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-13T02:56:29.940Z">
+<meta property="og:updated_time" content="2017-10-13T12:17:47.375Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python使用问题">
 <meta name="twitter:description" content="整理一些使用Python过程中遇到的问题和解决方法。 Python3cPicklepython3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。 ubuntu下为python3.5安装pip3.51、下载setuptools,easy_install安装包     wget https:/">
@@ -193,6 +193,11 @@
 5、注意：遇到失败情况时可能是由于没有权限，可以尝试在命令前加sudo
 </code></pre><h1 id="在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><a href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录" class="headerlink" title="在linux下可以通过设置PYTHONPATH的方法指定python工程目录"></a>在linux下可以通过设置PYTHONPATH的方法指定python工程目录</h1><pre><code>命令如下：也可在 ~/.bashrc 中 添加以下命令达到永久指定的效果
     export PYTHONPATH=&quot;${PYTHONPATH}:/my/other/path&quot;
+遇到不能为root添加PYTHONPATH的情况，用了一下方法解决：
+    sudo visudo(which open the /etc/sudoers file in a safe way)
+    然后添加：
+    Default env_keep+=&quot;PYTHONPATH&quot;
+    保存之后生效
 </code></pre>
       
 
@@ -465,15 +470,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -482,10 +491,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
