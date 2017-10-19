@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Fengyang">
 <meta property="og:description" content="整理一些使用Python过程中遇到的问题和解决方法。 Python3cPicklepython3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。 ubuntu下为python3.5安装pip3.51、下载setuptools,easy_install安装包     wget https:/">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-15T16:21:43.919Z">
+<meta property="og:updated_time" content="2017-10-19T08:05:19.625Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python使用问题">
 <meta name="twitter:description" content="整理一些使用Python过程中遇到的问题和解决方法。 Python3cPicklepython3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。 ubuntu下为python3.5安装pip3.51、下载setuptools,easy_install安装包     wget https:/">
@@ -177,7 +177,7 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><span class="toc-text">在linux下可以通过设置PYTHONPATH的方法指定python工程目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><span class="toc-text">UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><span class="toc-text">在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><span class="toc-text">在linux下可以通过设置PYTHONPATH的方法指定python工程目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><span class="toc-text">UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><span class="toc-text">在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pycharm切换python版本"><span class="toc-text">pycharm切换python版本</span></a></li></ol>
 </div>
 
         <pre><code>整理一些使用Python过程中遇到的问题和解决方法。
@@ -201,6 +201,7 @@
 </code></pre><h1 id="UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><a href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte" class="headerlink" title="UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte"></a>UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</h1><pre><code>image_data = tf.gfile.FastGFile(filenames[i], &apos;r&apos;).read()
 我使用的是python3,后来在python2下就没有出现这个问题。
 </code></pre><h1 id="在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><a href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。" class="headerlink" title="在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。"></a>在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</h1><pre><code>解决方法是打开vs自带的Command Prompt工具运行setup.py文件
+</code></pre><h1 id="pycharm切换python版本"><a href="#pycharm切换python版本" class="headerlink" title="pycharm切换python版本"></a>pycharm切换python版本</h1><pre><code>settings-&gt;project-&gt;project interpreter 
 </code></pre>
       
 
@@ -473,23 +474,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -497,11 +486,23 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
             <div class="clearfix"></div>
