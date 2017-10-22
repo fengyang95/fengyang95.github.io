@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Fengyang">
 <meta property="og:description" content="整理一些使用Python过程中遇到的问题和解决方法。 Python3cPicklepython3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。 ubuntu下为python3.5安装pip3.51、下载setuptools,easy_install安装包     wget https:/">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-21T06:45:07.394Z">
+<meta property="og:updated_time" content="2017-10-22T11:45:50.090Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python使用问题">
 <meta name="twitter:description" content="整理一些使用Python过程中遇到的问题和解决方法。 Python3cPicklepython3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。 ubuntu下为python3.5安装pip3.51、下载setuptools,easy_install安装包     wget https:/">
@@ -204,7 +204,7 @@
 </code></pre><h1 id="pycharm切换python版本"><a href="#pycharm切换python版本" class="headerlink" title="pycharm切换python版本"></a>pycharm切换python版本</h1><pre><code>settings-&gt;project-&gt;project interpreter 
 </code></pre><h1 id="使用cx-Freeze-打包python程序成exe文件"><a href="#使用cx-Freeze-打包python程序成exe文件" class="headerlink" title="使用cx_Freeze 打包python程序成exe文件"></a>使用cx_Freeze 打包python程序成exe文件</h1><pre><code>期间遇到了一些坑，最后顺利解决。
 主要就是在要打包的脚本文件夹内编写以下脚本，并执行
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># setup.py</span></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">from</span> cx_Freeze <span class="keyword">import</span> setup, Executable</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">os.environ[<span class="string">'TCL_LIBRARY'</span>] = <span class="string">r'C:\Users\ThinkPad\AppData\Local\Programs\Python\Python36\tcl\tcl8.6'</span></div><div class="line">os.environ[<span class="string">'TK_LIBRARY'</span>] = <span class="string">r'C:\Users\ThinkPad\AppData\Local\Programs\Python\Python36\tcl\tk8.6'</span></div><div class="line"></div><div class="line">Base=<span class="keyword">None</span></div><div class="line">setup(name = <span class="string">'labelme'</span>,</div><div class="line">      version = <span class="string">'0.0.1'</span>,</div><div class="line">      executables = [Executable(<span class="string">'app.py'</span>),base=Base],</div><div class="line">      options = &#123;<span class="string">'build_exe'</span>: &#123;<span class="string">'includes'</span>: [<span class="string">'atexit'</span>]&#125;&#125;)</div></pre></td></tr></table></figure>
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># setup.py</span></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">from</span> cx_Freeze <span class="keyword">import</span> setup, Executable</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">os.environ[<span class="string">'TCL_LIBRARY'</span>] = <span class="string">r'C:\Users\ThinkPad\AppData\Local\Programs\Python\Python36\tcl\tcl8.6'</span></div><div class="line">os.environ[<span class="string">'TK_LIBRARY'</span>] = <span class="string">r'C:\Users\ThinkPad\AppData\Local\Programs\Python\Python36\tcl\tk8.6'</span></div><div class="line"></div><div class="line">Base=<span class="keyword">None</span></div><div class="line">setup(name = <span class="string">'labelme'</span>,</div><div class="line">      version = <span class="string">'0.0.1'</span>,</div><div class="line">      executables = [Executable(<span class="string">'app.py'</span>,base=Base)],</div><div class="line">      options = &#123;<span class="string">'build_exe'</span>: &#123;<span class="string">'includes'</span>: [<span class="string">'atexit'</span>]&#125;&#125;)</div></pre></td></tr></table></figure>
 <pre><code>然后 python setup.py build 运行此脚本即可在 build 找到打包好的程序。
 注意python的根目录应该是包含此脚本的文件夹。之前因为不是这样导致打包的程序不能正确运行。
 这样打包出来的程序运行起来会有黑框，如果不想要那个黑框，可以把Base=None改为
@@ -212,7 +212,7 @@ Base=&apos;Win32GUI&apos;
 </code></pre><h1 id="python3-中的一些编码问题一定要注意"><a href="#python3-中的一些编码问题一定要注意" class="headerlink" title="python3 中的一些编码问题一定要注意"></a>python3 中的一些编码问题一定要注意</h1><pre><code>with open(filename, &apos;w&apos;) as f 
 with open(filename, &apos;wb&apos;) as f 
 b64encode(imageData.encode(&apos;utf-8&apos;))
-.encode(&apos;ascii&apos;)
+b64encode(imageData).encode(&apos;ascii&apos;)
 </code></pre>
       
 
@@ -493,11 +493,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -505,15 +505,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
             
             <div class="clearfix"></div>
