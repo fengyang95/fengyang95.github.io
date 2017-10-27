@@ -156,6 +156,119 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-cs231n-Backpropagation" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/30/cs231n-Backpropagation/">Backpropagation</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/30/cs231n-Backpropagation/" class="archive-article-date">
+  	<time datetime="2017-09-30T08:18:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引言"><span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概念"><span class="toc-text">概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单的解释和举例"><span class="toc-text">简单的解释和举例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块化操作"><span class="toc-text">模块化操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实践中的一些技巧"><span class="toc-text">实践中的一些技巧</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#扩展到矢量计算梯度"><span class="toc-text">扩展到矢量计算梯度</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#计算矩阵相乘的梯度"><span class="toc-text">计算矩阵相乘的梯度</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><pre><code>主要介绍一些关于backpropagation(反向传播)的知识，反向传播主要就是利用chain rule(链式法则)计算关于weights的梯度，通过梯度计算的结果对网络进行梯度下降的优化。这对于我们设计和debug神经网络都很有用处。
+值得注意的是，通常情况下我们计算对于W的梯度以便根据梯度下降进行参数更新，但是在一些特殊情况下，我们也有可能计算关于输入x的梯度，目的是解释和可视化神经网络的过程。
+</code></pre><h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><pre><code>当我们使用前馈神经网络接收输入x并产生输出y时，信息通过网络向前流动。输入x提供初始信息，然后传播到每一层的隐藏单元，最后产生输出y。这叫做 前向传播(forward prapagation)。而在训练过程中，前向传播可以持续向前知道计算出代价函数。反向传播算法则允许来自代价函数的信息通过网络向后流动，以便于计算梯度。
+</code></pre><h1 id="简单的解释和举例"><a href="#简单的解释和举例" class="headerlink" title="简单的解释和举例"></a>简单的解释和举例</h1><pre><code>实际上，每个变量的导数反映了整个表达式对这个变量的变化的敏感程度。其定义如下：
+</code></pre><p><img src="interpratation.jpg" alt=""><br>    比较常见的有以下3种函数。<br><img src="multiply.jpg" alt=""><br><img src="add.jpg" alt=""><br><img src="max.jpg" alt=""></p>
+<pre><code>以上这些是针对简单的情况，针对复杂的复合函数的情况，往往需要使用链式法则来求解梯度。
+
+一种比较直观的理解是：反向传播可以看做一组彼此之间通过梯度信号通信的门，每个门可以选择让通过自己的信号增加或者减小，并且可以决定增加或者减小的幅度。最后的目的是通过改变输入，经过这一系列门之后使得总的输出最大或者最小。
+</code></pre><h1 id="模块化操作"><a href="#模块化操作" class="headerlink" title="模块化操作"></a>模块化操作</h1><pre><code>在实际计算反向传播的时候，我们可以通过一些模块化的操作使得计算和理解都更为简便直观。
+如下面所示的一个例子：
+</code></pre><p><img src="sigmoid.jpg" alt=""><br>    通过将此函数分解为一系列函数的复合：<br><img src="sigmoid2.jpg" alt=""><br>    最后的一个计算过程如下：<br><img src="sigmoid3.jpg" alt=""><br>    可以看出这个流程还是比较复杂，但是通过将其中的一个sigmoid函数模块化之后，我们会得到更加简明的结果。<br><img src="sigmoid4.jpg" alt=""></p>
+<pre><code>最后编程实现如下：
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">w = [<span class="number">2</span>,<span class="number">-3</span>,<span class="number">-3</span>] <span class="comment"># assume some random weights and data</span></div><div class="line">x = [<span class="number">-1</span>, <span class="number">-2</span>]</div><div class="line"></div><div class="line"><span class="comment"># forward pass</span></div><div class="line">dot = w[<span class="number">0</span>]*x[<span class="number">0</span>] + w[<span class="number">1</span>]*x[<span class="number">1</span>] + w[<span class="number">2</span>]</div><div class="line">f = <span class="number">1.0</span> / (<span class="number">1</span> + math.exp(-dot)) <span class="comment"># sigmoid function</span></div><div class="line"></div><div class="line"><span class="comment"># backward pass through the neuron (backpropagation)</span></div><div class="line">ddot = (<span class="number">1</span> - f) * f <span class="comment"># gradient on dot variable, using the sigmoid gradient derivation</span></div><div class="line">dx = [w[<span class="number">0</span>] * ddot, w[<span class="number">1</span>] * ddot] <span class="comment"># backprop into x</span></div><div class="line">dw = [x[<span class="number">0</span>] * ddot, x[<span class="number">1</span>] * ddot, <span class="number">1.0</span> * ddot] <span class="comment"># backprop into w</span></div><div class="line"><span class="comment"># we're done! we have the gradients on the inputs to the circuit</span></div></pre></td></tr></table></figure>
+<h1 id="实践中的一些技巧"><a href="#实践中的一些技巧" class="headerlink" title="实践中的一些技巧"></a>实践中的一些技巧</h1><pre><code>1、在实践中，我们需要根据实际情况对整个函数进行拆分，分成便于计算梯度的函数的一个复合。
+2、为了反向计算方便，通常在正向计算的时候需要保存一些中间结果，便于反向计算梯度的时候使用它们。
+3、前向计算需要使用x,y变量多次，在反向传播的时候应该用+=而不是=来累加结果。
+</code></pre><h1 id="扩展到矢量计算梯度"><a href="#扩展到矢量计算梯度" class="headerlink" title="扩展到矢量计算梯度"></a>扩展到矢量计算梯度</h1><pre><code>对矢量计算梯度的方法和上面所提及的并无二致，但是在处理时可能需要加入转置运算以便维数匹配。
+</code></pre><h2 id="计算矩阵相乘的梯度"><a href="#计算矩阵相乘的梯度" class="headerlink" title="计算矩阵相乘的梯度"></a>计算矩阵相乘的梯度</h2><pre><code>下面这个例子里面就是根据维数匹配的原则对表达式加入一些转置的操作。
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># forward pass</span></div><div class="line">W = np.random.randn(<span class="number">5</span>, <span class="number">10</span>)</div><div class="line">X = np.random.randn(<span class="number">10</span>, <span class="number">3</span>)</div><div class="line">D = W.dot(X)</div><div class="line"></div><div class="line"><span class="comment"># now suppose we had the gradient on D from above in the circuit</span></div><div class="line">dD = np.random.randn(*D.shape) <span class="comment"># same shape as D</span></div><div class="line">dW = dD.dot(X.T) <span class="comment">#.T gives the transpose of the matrix</span></div><div class="line">dX = W.T.dot(dD)</div></pre></td></tr></table></figure>
+<pre><code>而对于一些一时难以看出梯度表达式的情况，可以利用实际的比较小的矩阵手动演算，根据结果推理出合适的表达式。
+</code></pre><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、<a href="http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture4.pdf" target="_blank" rel="external">cs231n 2017 lecture4 slides</a><br>2、<a href="http://cs231n.github.io/optimization-2/" target="_blank" rel="external">cs231n 2017 backpropagation notes</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/30/cs231n-Backpropagation/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-java-string" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -701,107 +814,6 @@ git push -u origin master
 
 
   
-    <article id="post-Fluent-Python-Chapter01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/20/Fluent-Python-Chapter01/">Fluent Python Chapter 1 Python 数据模型</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/20/Fluent-Python-Chapter01/" class="archive-article-date">
-  	<time datetime="2017-09-20T08:34:12.590Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#getitem-and-len"><span class="toc-text">__getitem__  and __len__</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#example"><span class="toc-text">example</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
-</div>
-
-        <p>数据模型其实是对 Python 框架的描述，它规范了这门语言自身构建模块的接口，这些模块包括但不限于序列、迭代器、函数、类和上下文管理器。</p>
-<h2 id="getitem-and-len"><a href="#getitem-and-len" class="headerlink" title="__getitem__  and __len__"></a>__getitem__  and __len__</h2><h3 id="example"><a href="#example" class="headerlink" title="example"></a>example</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> collecitons</div><div class="line"></div><div class="line">Card=collections.namedtuple(<span class="string">'Card'</span>,[<span class="string">'rank'</span>,<span class="string">'suit'</span>])</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">FrenchDeck</span>:</span></div><div class="line">    ranks=[str(n) <span class="keyword">for</span> n <span class="keyword">in</span> range(<span class="number">2</span>,<span class="number">11</span>) + list(<span class="string">'JQKA'</span>)]</div><div class="line">    suits=<span class="string">'spades diamonds clubs hearts'</span>.split()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self._cards=[Card(rank,suit) <span class="keyword">for</span> suit <span class="keyword">in</span> self.suits</div><div class="line">                                    <span class="keyword">for</span> ranks <span class="keyword">in</span> self.ranks]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> len(self._cards)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self,position)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._cards[position]</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Fluent-python//" class="article-tag-list-link color4">Fluent-python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/20/Fluent-Python-Chapter01/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -908,15 +920,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -924,11 +928,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
             
             <div class="clearfix"></div>
