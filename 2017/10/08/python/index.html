@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Fengyang">
 <meta property="og:description" content="整理一些使用Python过程中遇到的问题和解决方法。 Python3cPicklepython3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。 ubuntu下为python3.5安装pip3.51、下载setuptools,easy_install安装包     wget https:/">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-22T11:45:50.090Z">
+<meta property="og:updated_time" content="2017-10-29T04:50:30.758Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python使用问题">
 <meta name="twitter:description" content="整理一些使用Python过程中遇到的问题和解决方法。 Python3cPicklepython3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。 ubuntu下为python3.5安装pip3.51、下载setuptools,easy_install安装包     wget https:/">
@@ -177,7 +177,7 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><span class="toc-text">在linux下可以通过设置PYTHONPATH的方法指定python工程目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><span class="toc-text">UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><span class="toc-text">在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pycharm切换python版本"><span class="toc-text">pycharm切换python版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用cx-Freeze-打包python程序成exe文件"><span class="toc-text">使用cx_Freeze 打包python程序成exe文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#python3-中的一些编码问题一定要注意"><span class="toc-text">python3 中的一些编码问题一定要注意</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><span class="toc-text">在linux下可以通过设置PYTHONPATH的方法指定python工程目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><span class="toc-text">UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><span class="toc-text">在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pycharm切换python版本"><span class="toc-text">pycharm切换python版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用cx-Freeze-打包python程序成exe文件"><span class="toc-text">使用cx_Freeze 打包python程序成exe文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#python3-中的一些编码问题一定要注意"><span class="toc-text">python3 中的一些编码问题一定要注意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#opencv读图片Premature-end-of-JPEG-file？"><span class="toc-text">opencv读图片Premature end of JPEG file？</span></a></li></ol>
 </div>
 
         <pre><code>整理一些使用Python过程中遇到的问题和解决方法。
@@ -213,7 +213,10 @@ Base=&apos;Win32GUI&apos;
 with open(filename, &apos;wb&apos;) as f 
 b64encode(imageData.encode(&apos;utf-8&apos;))
 b64encode(imageData).encode(&apos;ascii&apos;)
-</code></pre>
+</code></pre><h1 id="opencv读图片Premature-end-of-JPEG-file？"><a href="#opencv读图片Premature-end-of-JPEG-file？" class="headerlink" title="opencv读图片Premature end of JPEG file？"></a>opencv读图片Premature end of JPEG file？</h1><pre><code>主要是由于图片不完整造成的，可以用以下脚本检验图片是否有效。
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_pic</span><span class="params">(path)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        Image.open(path).load() </div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">print</span> <span class="string">'ERROR: %s'</span> % path</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
+<p><a href="https://www.zhihu.com/question/30372655/answer/157762216" target="_blank" rel="external">知乎回答</a></p>
+
       
 
       
@@ -497,7 +500,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -506,14 +521,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
             
             <div class="clearfix"></div>
