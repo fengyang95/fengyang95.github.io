@@ -197,6 +197,8 @@
     在TensorFlow中，一个tensor具备静态和动态两种shape。静态的shape可以用tf.Tensor.get_shape()方法读出：这种shape是由此tensor在创建时使用的操作推导得出的，可能是partially complete的。如果静态shape没有完整定义的话，则一个tensor的动态shape可通过求tf.shape(t)的值得到。tf.Tensor.set_shape()方法会更新一个Tensor对象的静态shape，当静态shape信息不能够直接推导得出的时候，此方法常用来提供额外的shape信息。它不改变此tensor动态shape的信息。tf.reshape()操作会以不同的动态shape创建一个新的tensor。
     tensor.get_shape()返回tuple,可以通过tensor.get_shape().as_list()得到list。
 </code></pre><p><a href="http://www.tensorfly.cn/bbs/forum.php?mod=viewthread&amp;tid=18" target="_blank" rel="external">tf中文社区</a></p>
+<pre><code>5、How to convert .meta, .data and .index model files into one graph.pb file?
+</code></pre><p><a href="https://github.com/tensorflow/models/issues/2283" target="_blank" rel="external">tf models issues 2283</a><br><a href="https://stackoverflow.com/questions/45864363/tensorflow-how-to-convert-meta-data-and-index-model-files-into-one-graph-pb" target="_blank" rel="external">stackoverflow answer</a><br><a href="http://blog.csdn.net/lujiandong1/article/details/53385092" target="_blank" rel="external">csdn blog</a></p>
 
       
 
@@ -939,6 +941,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
@@ -951,19 +957,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>
