@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
-  <title>tensorflow遇到的问题记录 | Fengyang</title>
+  <title>use-opencv | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="主要记录一些使用tensorflow的一些问题。  1、 What is the difference between ‘SAME’ and ‘VALID’ padding in tf.nn.max_pool of tensorflow? 2、使用config文件时，文件夹分隔符用&amp;apos;/&amp;apos;,之前用成了&amp;apos;\&amp;apos;导致出现编码错误。  3、遇到类似这种错误：">
-<meta name="keywords" content="tensorflow">
+  <meta name="description" content="主要记录一些使用opencv过程中遇到的问题。 1、What does OpenCV’s cvWaitKey( ) function do? 2、Ubuntu16.04编译opencv3.2.0+contribcsdn博客。 3、idea配置opencv java环境 1、添加liabrary java jar文件 2、VM 命令输入：-Djava.library.path=E:\opencv32">
+<meta name="keywords" content="cv">
 <meta property="og:type" content="article">
-<meta property="og:title" content="tensorflow遇到的问题记录">
-<meta property="og:url" content="https://wwdguu.github.io/2017/10/09/use-tensorflow/index.html">
+<meta property="og:title" content="use-opencv">
+<meta property="og:url" content="https://wwdguu.github.io/2017/11/09/use-opencv/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="主要记录一些使用tensorflow的一些问题。  1、 What is the difference between ‘SAME’ and ‘VALID’ padding in tf.nn.max_pool of tensorflow? 2、使用config文件时，文件夹分隔符用&amp;apos;/&amp;apos;,之前用成了&amp;apos;\&amp;apos;导致出现编码错误。  3、遇到类似这种错误：">
+<meta property="og:description" content="主要记录一些使用opencv过程中遇到的问题。 1、What does OpenCV’s cvWaitKey( ) function do? 2、Ubuntu16.04编译opencv3.2.0+contribcsdn博客。 3、idea配置opencv java环境 1、添加liabrary java jar文件 2、VM 命令输入：-Djava.library.path=E:\opencv32">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-11-04T02:54:38.371Z">
+<meta property="og:updated_time" content="2017-11-09T15:01:02.985Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tensorflow遇到的问题记录">
-<meta name="twitter:description" content="主要记录一些使用tensorflow的一些问题。  1、 What is the difference between ‘SAME’ and ‘VALID’ padding in tf.nn.max_pool of tensorflow? 2、使用config文件时，文件夹分隔符用&amp;apos;/&amp;apos;,之前用成了&amp;apos;\&amp;apos;导致出现编码错误。  3、遇到类似这种错误：">
+<meta name="twitter:title" content="use-opencv">
+<meta name="twitter:description" content="主要记录一些使用opencv过程中遇到的问题。 1、What does OpenCV’s cvWaitKey( ) function do? 2、Ubuntu16.04编译opencv3.2.0+contribcsdn博客。 3、idea配置opencv java环境 1、添加liabrary java jar文件 2、VM 命令输入：-Djava.library.path=E:\opencv32">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -155,20 +155,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-use-tensorflow" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-use-opencv" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      tensorflow遇到的问题记录
+      use-opencv
     </h1>
   
 
         
-        <a href="/2017/10/09/use-tensorflow/" class="archive-article-date">
-  	<time datetime="2017-10-09T07:56:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-09</time>
+        <a href="/2017/11/09/use-opencv/" class="archive-article-date">
+  	<time datetime="2017-11-09T13:35:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-09</time>
 </a>
         
       </header>
@@ -180,27 +180,13 @@
   
 </div>
 
-        <pre><code>主要记录一些使用tensorflow的一些问题。
-
-1、
-</code></pre><p><a href="https://stackoverflow.com/questions/37674306/what-is-the-difference-between-same-and-valid-padding-in-tf-nn-max-pool-of-t" target="_blank" rel="external">What is the difference between ‘SAME’ and ‘VALID’ padding in tf.nn.max_pool of tensorflow?</a></p>
-<pre><code>2、使用config文件时，文件夹分隔符用&apos;/&apos;,之前用成了&apos;\&apos;导致出现编码错误。
-
-3、遇到类似这种错误：
-    ValueError: Cannot feed value of shape (784,) for Tensor &apos;input:0&apos;, which has shape &apos;(?, 784)&apos;
-是由于输入维数不匹配造成的，解决方法是将输入加1维，比如原来是：
-    result = sess.run(y_conv, feed_dict= {x:img})
-改为：
-    result = sess.run(y_conv, feed_dict= {x:[img]})
-4、tensor.get_shape() 和 tf.shape(tensor)
-    在TensorFlow中，一个tensor具备静态和动态两种shape。静态的shape可以用tf.Tensor.get_shape()方法读出：这种shape是由此tensor在创建时使用的操作推导得出的，可能是partially complete的。如果静态shape没有完整定义的话，则一个tensor的动态shape可通过求tf.shape(t)的值得到。tf.Tensor.set_shape()方法会更新一个Tensor对象的静态shape，当静态shape信息不能够直接推导得出的时候，此方法常用来提供额外的shape信息。它不改变此tensor动态shape的信息。tf.reshape()操作会以不同的动态shape创建一个新的tensor。
-    tensor.get_shape()返回tuple,可以通过tensor.get_shape().as_list()得到list。
-</code></pre><p><a href="http://www.tensorfly.cn/bbs/forum.php?mod=viewthread&amp;tid=18" target="_blank" rel="external">tf中文社区</a></p>
-<pre><code>5、How to convert .meta, .data and .index model files into one graph.pb file?
-</code></pre><p><a href="https://github.com/tensorflow/models/issues/2283" target="_blank" rel="external">tf models issues 2283</a><br><a href="https://stackoverflow.com/questions/45864363/tensorflow-how-to-convert-meta-data-and-index-model-files-into-one-graph-pb" target="_blank" rel="external">stackoverflow answer</a><br><a href="http://blog.csdn.net/lujiandong1/article/details/53385092" target="_blank" rel="external">csdn blog</a></p>
-<pre><code>6、
-</code></pre><p><a href="https://stackoverflow.com/questions/43405358/tensorflow-slim-multi-gpu-training" target="_blank" rel="external">TensorFlow-Slim Multi-GPU training</a></p>
-
+        <pre><code>主要记录一些使用opencv过程中遇到的问题。
+</code></pre><p>1、<a href="https://stackoverflow.com/questions/5217519/what-does-opencvs-cvwaitkey-function-do" target="_blank" rel="external">What does OpenCV’s cvWaitKey( ) function do?</a></p>
+<p>2、Ubuntu16.04编译opencv3.2.0+contrib<br><a href="http://blog.csdn.net/li_wen01/article/details/71641408" target="_blank" rel="external">csdn博客</a>。</p>
+<p>3、idea配置opencv java环境</p>
+<pre><code>1、添加liabrary java jar文件
+2、VM 命令输入：-Djava.library.path=E:\opencv320_64\build\java\x64;E:\opencv320_64\build\x64\vc14\bin（）//路径根据实际情况修改
+</code></pre>
       
 
       
@@ -234,7 +220,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
         		</li>
       		
 		</ul>
@@ -246,7 +232,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
+        			<a href="/categories/cv//" class="article-tag-list-link color3">cv</a>
         		</li>
       		
 		</ul>
@@ -301,7 +287,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2017/10/09/use-tensorflow/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2017/11/09/use-opencv/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -315,18 +301,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/10/11/Object-Detection/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Object Detection with CNN
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/10/09/cnn-architecture/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">常用卷积神经网络结构</div>
+    <a href="/2017/10/27/motion-detection/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">motion-detection</div>
       <i class="icon-circle-right"></i>
     </a>
   
