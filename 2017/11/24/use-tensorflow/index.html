@@ -12,11 +12,11 @@
 <meta name="keywords" content="tensorflow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="tensorflow遇到的问题记录">
-<meta property="og:url" content="https://wwdguu.github.io/2017/10/09/use-tensorflow/index.html">
+<meta property="og:url" content="https://wwdguu.github.io/2017/11/24/use-tensorflow/index.html">
 <meta property="og:site_name" content="Fengyang">
 <meta property="og:description" content="主要记录一些使用tensorflow的一些问题。  1、 What is the difference between ‘SAME’ and ‘VALID’ padding in tf.nn.max_pool of tensorflow? 2、使用config文件时，文件夹分隔符用&amp;apos;/&amp;apos;,之前用成了&amp;apos;\&amp;apos;导致出现编码错误。  3、遇到类似这种错误：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-11-04T02:54:38.371Z">
+<meta property="og:updated_time" content="2017-11-24T15:47:38.412Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tensorflow遇到的问题记录">
 <meta name="twitter:description" content="主要记录一些使用tensorflow的一些问题。  1、 What is the difference between ‘SAME’ and ‘VALID’ padding in tf.nn.max_pool of tensorflow? 2、使用config文件时，文件夹分隔符用&amp;apos;/&amp;apos;,之前用成了&amp;apos;\&amp;apos;导致出现编码错误。  3、遇到类似这种错误：">
@@ -167,8 +167,8 @@
   
 
         
-        <a href="/2017/10/09/use-tensorflow/" class="archive-article-date">
-  	<time datetime="2017-10-09T07:56:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-09</time>
+        <a href="/2017/11/24/use-tensorflow/" class="archive-article-date">
+  	<time datetime="2017-11-24T07:56:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-24</time>
 </a>
         
       </header>
@@ -200,7 +200,16 @@
 </code></pre><p><a href="https://github.com/tensorflow/models/issues/2283" target="_blank" rel="external">tf models issues 2283</a><br><a href="https://stackoverflow.com/questions/45864363/tensorflow-how-to-convert-meta-data-and-index-model-files-into-one-graph-pb" target="_blank" rel="external">stackoverflow answer</a><br><a href="http://blog.csdn.net/lujiandong1/article/details/53385092" target="_blank" rel="external">csdn blog</a></p>
 <pre><code>6、
 </code></pre><p><a href="https://stackoverflow.com/questions/43405358/tensorflow-slim-multi-gpu-training" target="_blank" rel="external">TensorFlow-Slim Multi-GPU training</a></p>
+<pre><code>7、在本地查看tensorboard
+</code></pre><p><a href="https://stackoverflow.com/questions/38513333/is-it-possible-to-see-tensorboard-over-ssh" target="_blank" rel="external">see tensorboard over ssh</a></p>
+<pre><code>简单来说分两步进行：
 
+1、通过以下命令连接服务器：
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh -L 16006:127.0.0.1:6006 account@server.address</div></pre></td></tr></table></figure>
+<pre><code>2、正常使用tensorboard命令
+3、即可在本地 http://127.0.0.1:16006 查看信息
+其中16006端口可以是其他任意端口。
+</code></pre>
       
 
       
@@ -301,7 +310,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2017/10/09/use-tensorflow/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2017/11/24/use-tensorflow/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -315,18 +324,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/10/11/Object-Detection/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Object Detection with CNN
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/10/09/cnn-architecture/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">常用卷积神经网络结构</div>
+    <a href="/2017/11/23/cs179notes-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">cs179notes_1</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -476,15 +476,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -493,6 +489,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">cv</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -508,7 +508,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
             <div class="clearfix"></div>
