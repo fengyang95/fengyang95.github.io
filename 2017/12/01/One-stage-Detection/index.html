@@ -6,20 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
-  <title>How to use git | Fengyang</title>
+  <title>One Stage Object Detection | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="创建本地仓库并上传代码到GitHub*1）新建Text文件夹作为仓库根目录（文件夹名字随意命名）  *2）将需要上传的代码文件加入到Text根目录  *3）在根目录下建立仓库 使用命令行或Git Bash，输入下面命令：先进入到Text根目录下，再输入git init（初始化一个仓库）  *4）将所有文件添加到仓库 使用命令行或Git Bash，输入下面命令：git add .  *5）提交 使用">
-<meta name="keywords" content="git">
+  <meta name="description" content="SSD论文链接SSD: Single Shot MultiBox Detector 分析blog链接 SSD(Single Shot MultiBox Detector)不得不说的那些事 YOLO论文链接YOLO9000:Better, Faster, StrongerFast YOLO: A Fast You Only Look Once System for Real-time Embedde">
+<meta name="keywords" content="cv">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How to use git">
-<meta property="og:url" content="https://wwdguu.github.io/2017/09/22/how-to-use-git/index.html">
+<meta property="og:title" content="One Stage Object Detection">
+<meta property="og:url" content="https://wwdguu.github.io/2017/12/01/One-stage-Detection/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="创建本地仓库并上传代码到GitHub*1）新建Text文件夹作为仓库根目录（文件夹名字随意命名）  *2）将需要上传的代码文件加入到Text根目录  *3）在根目录下建立仓库 使用命令行或Git Bash，输入下面命令：先进入到Text根目录下，再输入git init（初始化一个仓库）  *4）将所有文件添加到仓库 使用命令行或Git Bash，输入下面命令：git add .  *5）提交 使用">
+<meta property="og:description" content="SSD论文链接SSD: Single Shot MultiBox Detector 分析blog链接 SSD(Single Shot MultiBox Detector)不得不说的那些事 YOLO论文链接YOLO9000:Better, Faster, StrongerFast YOLO: A Fast You Only Look Once System for Real-time Embedde">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-09-24T12:55:17.928Z">
+<meta property="og:image" content="https://wwdguu.github.io/2017/12/01/One-stage-Detection/compare.png">
+<meta property="og:updated_time" content="2017-12-01T14:02:23.825Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How to use git">
-<meta name="twitter:description" content="创建本地仓库并上传代码到GitHub*1）新建Text文件夹作为仓库根目录（文件夹名字随意命名）  *2）将需要上传的代码文件加入到Text根目录  *3）在根目录下建立仓库 使用命令行或Git Bash，输入下面命令：先进入到Text根目录下，再输入git init（初始化一个仓库）  *4）将所有文件添加到仓库 使用命令行或Git Bash，输入下面命令：git add .  *5）提交 使用">
+<meta name="twitter:title" content="One Stage Object Detection">
+<meta name="twitter:description" content="SSD论文链接SSD: Single Shot MultiBox Detector 分析blog链接 SSD(Single Shot MultiBox Detector)不得不说的那些事 YOLO论文链接YOLO9000:Better, Faster, StrongerFast YOLO: A Fast You Only Look Once System for Real-time Embedde">
+<meta name="twitter:image" content="https://wwdguu.github.io/2017/12/01/One-stage-Detection/compare.png">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -155,20 +157,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-how-to-use-git" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-One-stage-Detection" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      How to use git
+      One Stage Object Detection
     </h1>
   
 
         
-        <a href="/2017/09/22/how-to-use-git/" class="archive-article-date">
-  	<time datetime="2017-09-22T10:39:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-22</time>
+        <a href="/2017/12/01/One-stage-Detection/" class="archive-article-date">
+  	<time datetime="2017-11-30T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-01</time>
 </a>
         
       </header>
@@ -177,28 +179,32 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建本地仓库并上传代码到GitHub"><span class="toc-text">创建本地仓库并上传代码到GitHub</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SSD"><span class="toc-text">SSD</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#论文链接"><span class="toc-text">论文链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析blog链接"><span class="toc-text">分析blog链接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#YOLO"><span class="toc-text">YOLO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#论文链接-1"><span class="toc-text">论文链接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLO-1"><span class="toc-text">YOLO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLO9000"><span class="toc-text">YOLO9000</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Better"><span class="toc-text">Better</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传统YOLO缺陷"><span class="toc-text">传统YOLO缺陷</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#YOLOv2相对YOLO的改进"><span class="toc-text">YOLOv2相对YOLO的改进</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#High-Resolution-Classifier"><span class="toc-text">High Resolution Classifier</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Convolutional-With-Anchor-Boxes"><span class="toc-text">Convolutional With Anchor Boxes</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#和YOLO相比的性能"><span class="toc-text">和YOLO相比的性能</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Dimension-Clusters"><span class="toc-text">Dimension Clusters</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Direct-Location-Prediction"><span class="toc-text">Direct Location Prediction</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Fine-Grained-Features"><span class="toc-text">Fine-Grained Features</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Multi-Scale-Training"><span class="toc-text">Multi-Scale Training</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Further-Experiments"><span class="toc-text">Further Experiments</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Faster"><span class="toc-text">Faster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stronger"><span class="toc-text">Stronger</span></a></li></ol></li></ol></li></ol>
 </div>
 
-        <h1 id="创建本地仓库并上传代码到GitHub"><a href="#创建本地仓库并上传代码到GitHub" class="headerlink" title="创建本地仓库并上传代码到GitHub"></a>创建本地仓库并上传代码到GitHub</h1><pre><code>*1）新建Text文件夹作为仓库根目录（文件夹名字随意命名）
-
-*2）将需要上传的代码文件加入到Text根目录
-
-*3）在根目录下建立仓库
-使用命令行或Git Bash，输入下面命令：先进入到Text根目录下，再输入git init（初始化一个仓库）
-
-*4）将所有文件添加到仓库
-使用命令行或Git Bash，输入下面命令：git add .
-
-*5）提交
-使用命令行或Git Bash，输入下面命令：git commit -m “CommitInfo”
-
-*6）添加源到GitHub
-git remote add origin git@github.com:YourName/YourRepositroy.git
-
-*7）上传源到GitHub
-git push -u origin master
-</code></pre>
+        <h1 id="SSD"><a href="#SSD" class="headerlink" title="SSD"></a>SSD</h1><h2 id="论文链接"><a href="#论文链接" class="headerlink" title="论文链接"></a>论文链接</h2><p><a href="https://arxiv.org/pdf/1512.02325.pdf" target="_blank" rel="external">SSD: Single Shot MultiBox Detector</a></p>
+<h2 id="分析blog链接"><a href="#分析blog链接" class="headerlink" title="分析blog链接"></a>分析blog链接</h2><p><a href="http://blog.csdn.net/qq_14845119/article/details/53331581" target="_blank" rel="external"> SSD(Single Shot MultiBox Detector)不得不说的那些事</a></p>
+<h1 id="YOLO"><a href="#YOLO" class="headerlink" title="YOLO"></a>YOLO</h1><h2 id="论文链接-1"><a href="#论文链接-1" class="headerlink" title="论文链接"></a>论文链接</h2><p><a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8100173" target="_blank" rel="external">YOLO9000:Better, Faster, Stronger</a><br><a href="https://arxiv.org/pdf/1709.05943.pdf" target="_blank" rel="external">Fast YOLO: A Fast You Only Look Once System for Real-time Embedded Object Detection in Video</a><br><a href="https://pjreddie.com/media/files/papers/yolo.pdf" target="_blank" rel="external">You Only Look Once:Unified, Real-Time Object Detection</a></p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><h2 id="YOLO-1"><a href="#YOLO-1" class="headerlink" title="YOLO"></a>YOLO</h2><p><a href="https://zhuanlan.zhihu.com/p/25045711" target="_blank" rel="external">YOLO论文解读</a></p>
+<h2 id="YOLO9000"><a href="#YOLO9000" class="headerlink" title="YOLO9000"></a>YOLO9000</h2><p><a href="https://zhuanlan.zhihu.com/p/25052190" target="_blank" rel="external">YOLO9000论文解读</a></p>
+<h3 id="Better"><a href="#Better" class="headerlink" title="Better"></a>Better</h3><h4 id="传统YOLO缺陷"><a href="#传统YOLO缺陷" class="headerlink" title="传统YOLO缺陷"></a>传统YOLO缺陷</h4><pre><code>Significant number of localization errors compared to Fast-RCNN
+Low recall compared to region proposal-based mothods
+</code></pre><h4 id="YOLOv2相对YOLO的改进"><a href="#YOLOv2相对YOLO的改进" class="headerlink" title="YOLOv2相对YOLO的改进"></a>YOLOv2相对YOLO的改进</h4><h5 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h5><pre><code>adding  batch normalization on all of the convolutional layers in YOLO
+2% improvement in mAP
+then we can remove dropout without overfitting
+</code></pre><h5 id="High-Resolution-Classifier"><a href="#High-Resolution-Classifier" class="headerlink" title="High Resolution Classifier"></a>High Resolution Classifier</h5><pre><code>increase of almost 4% mAP
+</code></pre><h5 id="Convolutional-With-Anchor-Boxes"><a href="#Convolutional-With-Anchor-Boxes" class="headerlink" title="Convolutional With Anchor Boxes"></a>Convolutional With Anchor Boxes</h5><pre><code>remove fully connected layers from YOLO and use anchor boxes to predict bounding boxes.
+eliminate one pooling layer to make the output of the network&apos;s convolutional layers higher resolution.
+shrink the network to operate on 416x416 input images instead of 448x448。这样使得输出的feature map大小为13x13,代替原来的14x14使得中心只有一个。
+</code></pre><h6 id="和YOLO相比的性能"><a href="#和YOLO相比的性能" class="headerlink" title="和YOLO相比的性能"></a>和YOLO相比的性能</h6><pre><code>mAP: 69.5-&gt;69.2
+recall: 81%-&gt;88%
+</code></pre><h5 id="Dimension-Clusters"><a href="#Dimension-Clusters" class="headerlink" title="Dimension Clusters"></a>Dimension Clusters</h5><pre><code>使用k-means自动挑选box的尺寸代替原来YOLO方案的手动挑选尺寸。
+</code></pre><h5 id="Direct-Location-Prediction"><a href="#Direct-Location-Prediction" class="headerlink" title="Direct Location Prediction"></a>Direct Location Prediction</h5><pre><code>YOLO使用anchor boxes的过程中会遇到模型不稳定的问题。通过改变预测box位置的方法改进。
+ Using dimension clusters along with directly predicting the bounding box center location improves YOLO by almost 5% over the version with anchor boxes.
+</code></pre><h5 id="Fine-Grained-Features"><a href="#Fine-Grained-Features" class="headerlink" title="Fine-Grained Features"></a>Fine-Grained Features</h5><pre><code>This gives a modest 1% performance increase.
+</code></pre><h5 id="Multi-Scale-Training"><a href="#Multi-Scale-Training" class="headerlink" title="Multi-Scale Training"></a>Multi-Scale Training</h5><pre><code>由于模型只有卷积层和池化层，我们可以随意调整大小。 Every 10 batches our network randomly chooses new image dimensions。
+</code></pre><h5 id="Further-Experiments"><a href="#Further-Experiments" class="headerlink" title="Further Experiments"></a>Further Experiments</h5><p><img src="compare.png" alt="The path from YOLO to YOLOv2"></p>
+<h3 id="Faster"><a href="#Faster" class="headerlink" title="Faster"></a>Faster</h3><h3 id="Stronger"><a href="#Stronger" class="headerlink" title="Stronger"></a>Stronger</h3>
       
 
       
@@ -232,7 +238,7 @@ git push -u origin master
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
         		</li>
       		
 		</ul>
@@ -244,7 +250,7 @@ git push -u origin master
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/git//" class="article-tag-list-link color4">git</a>
+        			<a href="/categories/cv//" class="article-tag-list-link color3">cv</a>
         		</li>
       		
 		</ul>
@@ -299,7 +305,7 @@ git push -u origin master
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2017/09/22/how-to-use-git/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2017/12/01/One-stage-Detection/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -313,18 +319,9 @@ git push -u origin master
   
 <nav id="article-nav">
   
-    <a href="/2017/09/23/cs231n-assignment1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          cs231n assignment1
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/09/20/Fluent-Python-Chapter01/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Fluent Python Chapter 1 Python 数据模型</div>
+    <a href="/2017/11/24/use-tensorflow/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">tensorflow遇到的问题记录</div>
       <i class="icon-circle-right"></i>
     </a>
   
