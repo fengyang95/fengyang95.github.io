@@ -156,6 +156,99 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-java-settings" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/10/java-settings/">java-settings</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/10/java-settings/" class="archive-article-date">
+  	<time datetime="2018-01-10T02:09:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#配置Java项目时的一些方法"><span class="toc-text">配置Java项目时的一些方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#maven指定JDK版本"><span class="toc-text">maven指定JDK版本</span></a></li></ol></li></ol>
+</div>
+
+        <h1 id="配置Java项目时的一些方法"><a href="#配置Java项目时的一些方法" class="headerlink" title="配置Java项目时的一些方法"></a>配置Java项目时的一些方法</h1><h2 id="maven指定JDK版本"><a href="#maven指定JDK版本" class="headerlink" title="maven指定JDK版本"></a>maven指定JDK版本</h2><pre><code>在pom.xml中如下配置
+</code></pre><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/10/java-settings/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-java-programming-language-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -178,15 +271,16 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java语言程序设计第10版笔记"><span class="toc-text">Java语言程序设计第10版笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#第1章-计算机、程序和Java概述"><span class="toc-text">第1章 计算机、程序和Java概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第2章-基本程序设计"><span class="toc-text">第2章 基本程序设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-1"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第3章-选择"><span class="toc-text">第3章 选择</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-2"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第4章-数学函数、字符和字符串"><span class="toc-text">第4章 数学函数、字符和字符串</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-3"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第6章-方法"><span class="toc-text">第6章 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-4"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第7章-一维数组"><span class="toc-text">第7章 一维数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-5"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第9章-对象和类"><span class="toc-text">第9章 对象和类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-6"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第10章-面向对象思考"><span class="toc-text">第10章 面向对象思考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-7"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第11章-继承和多态"><span class="toc-text">第11章 继承和多态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-8"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第12章-异常处理和文本IO"><span class="toc-text">第12章 异常处理和文本IO</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-9"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第13章-抽象类和接口"><span class="toc-text">第13章 抽象类和接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-10"><span class="toc-text">部分章节小结</span></a></li></ol></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java语言程序设计第10版笔记"><span class="toc-text">Java语言程序设计第10版笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#第1章-计算机、程序和Java概述"><span class="toc-text">第1章 计算机、程序和Java概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第2章-基本程序设计"><span class="toc-text">第2章 基本程序设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-1"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第3章-选择"><span class="toc-text">第3章 选择</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-2"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第4章-数学函数、字符和字符串"><span class="toc-text">第4章 数学函数、字符和字符串</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-3"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第6章-方法"><span class="toc-text">第6章 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-4"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第7章-一维数组"><span class="toc-text">第7章 一维数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-5"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第9章-对象和类"><span class="toc-text">第9章 对象和类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-6"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第10章-面向对象思考"><span class="toc-text">第10章 面向对象思考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-7"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第11章-继承和多态"><span class="toc-text">第11章 继承和多态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-8"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第12章-异常处理和文本IO"><span class="toc-text">第12章 异常处理和文本IO</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-9"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第13章-抽象类和接口"><span class="toc-text">第13章 抽象类和接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-10"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第19章-泛型"><span class="toc-text">第19章 泛型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-11"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
 </div>
 
-        <h1 id="Java语言程序设计第10版笔记"><a href="#Java语言程序设计第10版笔记" class="headerlink" title="Java语言程序设计第10版笔记"></a>Java语言程序设计第10版笔记</h1><h2 id="第1章-计算机、程序和Java概述"><a href="#第1章-计算机、程序和Java概述" class="headerlink" title="第1章 计算机、程序和Java概述"></a>第1章 计算机、程序和Java概述</h2><h3 id="部分章节小结"><a href="#部分章节小结" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>编程错误可以分为三类：语法错误、运行时错误和逻辑错误。编译器报告的错误称为语法错误或者编译错误；运行时错误指引起程序非正常结束的错误；而当一个程序没有按照预期的方式执行时，产生逻辑错误 。
+        <h1 id="Java语言程序设计第10版笔记"><a href="#Java语言程序设计第10版笔记" class="headerlink" title="Java语言程序设计第10版笔记"></a>Java语言程序设计第10版笔记</h1><h2 id="第1章-计算机、程序和Java概述"><a href="#第1章-计算机、程序和Java概述" class="headerlink" title="第1章 计算机、程序和Java概述"></a>第1章 计算机、程序和Java概述</h2><h3 id="部分章节小结"><a href="#部分章节小结" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、编程错误可以分为三类：语法错误、运行时错误和逻辑错误。编译器报告的错误称为语法错误或者编译错误；运行时错误指引起程序非正常结束的错误；而当一个程序没有按照预期的方式执行时，产生逻辑错误 。
 </code></pre><h2 id="第2章-基本程序设计"><a href="#第2章-基本程序设计" class="headerlink" title="第2章 基本程序设计"></a>第2章 基本程序设计</h2><h3 id="部分章节小结-1"><a href="#部分章节小结-1" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、拓宽类型不需要显式转换，缩窄类型必须显式完成。
-2、计算机科学中，1970年1月1日午夜零点为UNIX时间戳。
-</code></pre><h2 id="第3章-选择"><a href="#第3章-选择" class="headerlink" title="第3章 选择"></a>第3章 选择</h2><h3 id="部分章节小结-2"><a href="#部分章节小结-2" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、除开赋值操作符的所有二元操作符都是左结合的，赋值操作符是右结合的。
-(此处的结合指的是结合律)
-</code></pre><h2 id="第4章-数学函数、字符和字符串"><a href="#第4章-数学函数、字符和字符串" class="headerlink" title="第4章 数学函数、字符和字符串"></a>第4章 数学函数、字符和字符串</h2><h3 id="部分章节小结-3"><a href="#部分章节小结-3" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、字符 &apos; &apos; 、\t、 \f、 \r 和 \n 都称为空白字符。
+</code></pre><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//拓宽类型转换</span></div><div class="line"><span class="keyword">int</span> i=<span class="number">9</span>;</div><div class="line"><span class="keyword">double</span> d=i;</div><div class="line"><span class="comment">//缩窄类型转换</span></div><div class="line"><span class="keyword">double</span> d=<span class="number">9.0</span>;</div><div class="line"><span class="keyword">int</span> i=(<span class="keyword">int</span>)d;</div></pre></td></tr></table></figure>
+<pre><code>2、计算机科学中，1970年1月1日午夜零点为UNIX时间戳。
+</code></pre><h2 id="第3章-选择"><a href="#第3章-选择" class="headerlink" title="第3章 选择"></a>第3章 选择</h2><h3 id="部分章节小结-2"><a href="#部分章节小结-2" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、除开赋值操作符的所有二元操作符都是左结合的，赋值操作符是右结合的。(此处的结合指的是结合律)
+</code></pre><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//以下两个表达等价</span></div><div class="line">a-b+c-d</div><div class="line">((a-b)+c)-d</div><div class="line"><span class="comment">//以下两个表达等价</span></div><div class="line">a=b+=c=<span class="number">5</span></div><div class="line">a=(b+=(c=<span class="number">5</span>))</div></pre></td></tr></table></figure>
+<h2 id="第4章-数学函数、字符和字符串"><a href="#第4章-数学函数、字符和字符串" class="headerlink" title="第4章 数学函数、字符和字符串"></a>第4章 数学函数、字符和字符串</h2><h3 id="部分章节小结-3"><a href="#部分章节小结-3" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、字符 &apos; &apos; 、\t、 \f、 \r 和 \n 都称为空白字符。
 2、字符可以基于它们的Unicode码使用关系操作符进行比较。
 </code></pre><h2 id="第6章-方法"><a href="#第6章-方法" class="headerlink" title="第6章 方法"></a>第6章 方法</h2><h3 id="部分章节小结-4"><a href="#部分章节小结-4" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、程序模块化和可重用性是软件工程的中心目标之一。
 2、方法可以重载，这意味着两个方法可以拥有相同的方法名，只要它们的参数列表不同即可。
@@ -196,6 +290,8 @@
 </code></pre><h2 id="第7章-一维数组"><a href="#第7章-一维数组" class="headerlink" title="第7章 一维数组"></a>第7章 一维数组</h2><h3 id="部分章节小结-5"><a href="#部分章节小结-5" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、创建数组时推荐使用 elementType[] arrayRefVar风格
 2、不同于基本数据类型变量的声明，声明数组变量并不会给数组分配任何空间。数组变量不是基本数据类型变量。数组变量包含的是对数组的引用。
 3、将数组参数传递给方法时，实际上传递的是数组的引用；更准确地说，被调用的方法可以修改调用者的原始数组的元素。
+4、数组初始化语法：
+    elementType[] arrayRefVar={value0,value1,...,valuek};
 </code></pre><h2 id="第9章-对象和类"><a href="#第9章-对象和类" class="headerlink" title="第9章 对象和类"></a>第9章 对象和类</h2><h3 id="部分章节小结-6"><a href="#部分章节小结-6" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、类是一种数据类型。可以用它声明对象引用变量。对象引用变量中似乎存放了一个对象，但是事实上，它包含的只是对该对象的引用。严格来说，对象引用变量和对象是不同的，但是大多数情况下，它们的区别是可以忽略的。
 2、所有传递给方法的参数都是值传递的，对于基本类型的参数，传递的是实际值；而如果参数是引用数据类型，则传递的是对象的引用。
 </code></pre><h2 id="第10章-面向对象思考"><a href="#第10章-面向对象思考" class="headerlink" title="第10章 面向对象思考"></a>第10章 面向对象思考</h2><h3 id="部分章节小结-7"><a href="#部分章节小结-7" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、面向过程范式重在设计方法。面向对象范式将数据和方法耦合在对象中。使用面向对象范式的软件设计重在对象和对象的操作。面向对象方法结合了面向过程范式的功能以及将数据和操作集成在对象中的特点。
@@ -225,6 +321,19 @@
 8、接口 java.lang.Cloneable 是一个标记接口。实现Cloneable接口的类的对象是可克隆的。
 9、个类仅能继承一个父类，但一个类却可以实现一个或多个接口。
 10、一个接口可以继承一个或多个接口。
+</code></pre><h2 id="第19章-泛型"><a href="#第19章-泛型" class="headerlink" title="第19章 泛型"></a>第19章 泛型</h2><h3 id="部分章节小结-11"><a href="#部分章节小结-11" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><pre><code>1、泛型具有参数化类型的能力。可以定义使用泛型类型的类或方法，编译器会用具体类型来替代泛型类型。
+2、泛型的主要优势是能够在编译时而不是运行时检测错误。
+3、泛型类或者方法允许指定这个类或者方法可以带有的对象类型。如果试图使用带有不兼容对象的类或者方法，编译器会检测出这个错误。
+4、定义在类、接口或者静态方法中的泛型称为形式泛型类型，随后可以用一个实际具体类型来替换它。替换泛型类型的过程称为泛型实例化。
+5、不使用类型参数的泛型类称为原始类型，例如ArrayList。使用原始类型是为了向后兼容Java较早的版本。
+6、通配泛型类型有三种形式：?、? extends T 和 ? super T,这里的T代表一个泛型类型。第一种形式?称为非受限通配，它和 ? extends Object是一样的。第二种形式 ? extends T 称为受限通配，代表T 或者T的一个子类型。第三种类型 ? super T 称为下限通配，表示T或者T的一个父类型。
+7、使用称为类型消除的方法来实现泛型。编译器使用泛型类型信息来编译代码，但是随后消除它。因此，泛型信息在运行时是不可用的。这个方法能够使泛型代码向后兼容使用原始类型的遗留代码。
+8、不能使用泛型类型参数来创建实例。
+9、不能使用泛型类型参数来创建数组。
+10、不能再静态环境中使用类的泛型类型参数。
+11、在异常类中不能使用泛型类型参数。
+</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><pre><code>Java语言程序设计（基础篇 原书第10版）
+Java语言程序设计（进阶篇 原书第10版）
 </code></pre>
       
 
@@ -238,7 +347,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
@@ -250,7 +359,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/java//" class="article-tag-list-link color5">java</a>
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
@@ -569,127 +678,6 @@ recall: 81%-&gt;88%
 
 
   
-    <article id="post-use-tensorflow" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/24/use-tensorflow/">tensorflow遇到的问题记录</a>
-    </h1>
-  
-
-        
-        <a href="/2017/11/24/use-tensorflow/" class="archive-article-date">
-  	<time datetime="2017-11-24T07:56:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  
-</div>
-
-        <pre><code>主要记录一些使用tensorflow的一些问题。
-
-1、
-</code></pre><p><a href="https://stackoverflow.com/questions/37674306/what-is-the-difference-between-same-and-valid-padding-in-tf-nn-max-pool-of-t" target="_blank" rel="external">What is the difference between ‘SAME’ and ‘VALID’ padding in tf.nn.max_pool of tensorflow?</a></p>
-<pre><code>2、使用config文件时，文件夹分隔符用&apos;/&apos;,之前用成了&apos;\&apos;导致出现编码错误。
-
-3、遇到类似这种错误：
-    ValueError: Cannot feed value of shape (784,) for Tensor &apos;input:0&apos;, which has shape &apos;(?, 784)&apos;
-是由于输入维数不匹配造成的，解决方法是将输入加1维，比如原来是：
-    result = sess.run(y_conv, feed_dict= {x:img})
-改为：
-    result = sess.run(y_conv, feed_dict= {x:[img]})
-4、tensor.get_shape() 和 tf.shape(tensor)
-    在TensorFlow中，一个tensor具备静态和动态两种shape。静态的shape可以用tf.Tensor.get_shape()方法读出：这种shape是由此tensor在创建时使用的操作推导得出的，可能是partially complete的。如果静态shape没有完整定义的话，则一个tensor的动态shape可通过求tf.shape(t)的值得到。tf.Tensor.set_shape()方法会更新一个Tensor对象的静态shape，当静态shape信息不能够直接推导得出的时候，此方法常用来提供额外的shape信息。它不改变此tensor动态shape的信息。tf.reshape()操作会以不同的动态shape创建一个新的tensor。
-    tensor.get_shape()返回tuple,可以通过tensor.get_shape().as_list()得到list。
-</code></pre><p><a href="http://www.tensorfly.cn/bbs/forum.php?mod=viewthread&amp;tid=18" target="_blank" rel="external">tf中文社区</a></p>
-<pre><code>5、How to convert .meta, .data and .index model files into one graph.pb file?
-</code></pre><p><a href="https://github.com/tensorflow/models/issues/2283" target="_blank" rel="external">tf models issues 2283</a><br><a href="https://stackoverflow.com/questions/45864363/tensorflow-how-to-convert-meta-data-and-index-model-files-into-one-graph-pb" target="_blank" rel="external">stackoverflow answer</a><br><a href="http://blog.csdn.net/lujiandong1/article/details/53385092" target="_blank" rel="external">csdn blog</a></p>
-<pre><code>6、
-</code></pre><p><a href="https://stackoverflow.com/questions/43405358/tensorflow-slim-multi-gpu-training" target="_blank" rel="external">TensorFlow-Slim Multi-GPU training</a></p>
-<pre><code>7、在本地查看tensorboard
-</code></pre><p><a href="https://stackoverflow.com/questions/38513333/is-it-possible-to-see-tensorboard-over-ssh" target="_blank" rel="external">see tensorboard over ssh</a></p>
-<pre><code>简单来说分两步进行：
-
-1、通过以下命令连接服务器：
-</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh -L 16006:127.0.0.1:6006 account@server.address</div></pre></td></tr></table></figure>
-<pre><code>2、正常使用tensorboard命令
-3、即可在本地 http://127.0.0.1:16006 查看信息
-其中16006端口可以是其他任意端口。
-</code></pre>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/11/24/use-tensorflow/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -792,11 +780,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -808,19 +796,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
