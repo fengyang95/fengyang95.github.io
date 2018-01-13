@@ -156,6 +156,206 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-effective-java-lambdas-and-streams" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/13/effective-java-lambdas-and-streams/">Effective Java-&gt; Lambdas and Streams</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/13/effective-java-lambdas-and-streams/" class="archive-article-date">
+  	<time datetime="2018-01-13T14:48:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lambdas-in-Java"><span class="toc-text">Lambdas in Java</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduce"><span class="toc-text">Introduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items"><span class="toc-text">Effective Java Items</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item42-Prefer-lambdas-to-anonymous-classes"><span class="toc-text">Item42: Prefer lambdas to anonymous classes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item43-Prefer-method-references-to-lambdas"><span class="toc-text">Item43: Prefer method references to lambdas</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item44-Favor-the-use-of-standard-functional-interfaces"><span class="toc-text">Item44: Favor the use of standard functional interfaces</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Streams-in-Java"><span class="toc-text">Streams in Java</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-1"><span class="toc-text">Effective Java Items</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item45-Use-streams-judiciously"><span class="toc-text">Item45: Use streams judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item46-Prefer-side-effect-free-functions-in-streams"><span class="toc-text">Item46: Prefer side-effect-free functions in streams</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item47-Prefer-Collections-to-Streams-as-a-return-type"><span class="toc-text">Item47: Prefer Collections to Streams as a return type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item48-Use-caution-when-making-streams-parallel"><span class="toc-text">Item48: Use caution when making streams parallel</span></a></li></ol></li></ol></li></ol>
+</div>
+
+        <h1 id="Lambdas-in-Java"><a href="#Lambdas-in-Java" class="headerlink" title="Lambdas in Java"></a>Lambdas in Java</h1><h2 id="Introduce"><a href="#Introduce" class="headerlink" title="Introduce"></a>Introduce</h2><pre><code>lambda表达式的固定格式如下： parameter -&gt; expression body
+一个lambda表达式有如下特点：可不声明参数类型，编译器会自动推导；单个参数无需加括号，多个参数必须加括号；单条语句无需加花括号；return关键词可省略。
+实例可参考：
+</code></pre><p><a href="https://www.tutorialspoint.com/java8/java8_lambda_expressions.htm" target="_blank" rel="external">Lambda Expressions</a></p>
+<h2 id="Effective-Java-Items"><a href="#Effective-Java-Items" class="headerlink" title="Effective Java Items"></a>Effective Java Items</h2><h3 id="Item42-Prefer-lambdas-to-anonymous-classes"><a href="#Item42-Prefer-lambdas-to-anonymous-classes" class="headerlink" title="Item42: Prefer lambdas to anonymous classes"></a>Item42: Prefer lambdas to anonymous classes</h3><h3 id="Item43-Prefer-method-references-to-lambdas"><a href="#Item43-Prefer-method-references-to-lambdas" class="headerlink" title="Item43: Prefer method references to lambdas"></a>Item43: Prefer method references to lambdas</h3><h3 id="Item44-Favor-the-use-of-standard-functional-interfaces"><a href="#Item44-Favor-the-use-of-standard-functional-interfaces" class="headerlink" title="Item44: Favor the use of standard functional interfaces"></a>Item44: Favor the use of standard functional interfaces</h3><h1 id="Streams-in-Java"><a href="#Streams-in-Java" class="headerlink" title="Streams in Java"></a>Streams in Java</h1><h2 id="Effective-Java-Items-1"><a href="#Effective-Java-Items-1" class="headerlink" title="Effective Java Items"></a>Effective Java Items</h2><h3 id="Item45-Use-streams-judiciously"><a href="#Item45-Use-streams-judiciously" class="headerlink" title="Item45: Use streams judiciously"></a>Item45: Use streams judiciously</h3><h3 id="Item46-Prefer-side-effect-free-functions-in-streams"><a href="#Item46-Prefer-side-effect-free-functions-in-streams" class="headerlink" title="Item46: Prefer side-effect-free functions in streams"></a>Item46: Prefer side-effect-free functions in streams</h3><h3 id="Item47-Prefer-Collections-to-Streams-as-a-return-type"><a href="#Item47-Prefer-Collections-to-Streams-as-a-return-type" class="headerlink" title="Item47: Prefer Collections to Streams as a return type"></a>Item47: Prefer Collections to Streams as a return type</h3><h3 id="Item48-Use-caution-when-making-streams-parallel"><a href="#Item48-Use-caution-when-making-streams-parallel" class="headerlink" title="Item48: Use caution when making streams parallel"></a>Item48: Use caution when making streams parallel</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/13/effective-java-lambdas-and-streams/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-effective-java-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/13/effective-java-notes/">一些Java编码规范条款</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/13/effective-java-notes/" class="archive-article-date">
+  	<time datetime="2018-01-13T02:22:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#记录一些Java编码条款，方便查看"><span class="toc-text">记录一些Java编码条款，方便查看</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java（3rd-Edition）中的编码条款"><span class="toc-text">Effective Java（3rd Edition）中的编码条款</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-and-Destroying-Objects"><span class="toc-text">Create and Destroying Objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mothods-Common-to-All-Objects"><span class="toc-text">Mothods Common to All Objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Classes-and-Interfaces"><span class="toc-text">Classes and Interfaces</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generics"><span class="toc-text">Generics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Enums-and-Annotations"><span class="toc-text">Enums and Annotations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambdas-and-Streams"><span class="toc-text">Lambdas and Streams</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Methods"><span class="toc-text">Methods</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#General-Programming"><span class="toc-text">General Programming</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exceptions"><span class="toc-text">Exceptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Concurrency"><span class="toc-text">Concurrency</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Serialization"><span class="toc-text">Serialization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
+</div>
+
+        <h1 id="记录一些Java编码条款，方便查看"><a href="#记录一些Java编码条款，方便查看" class="headerlink" title="记录一些Java编码条款，方便查看"></a>记录一些Java编码条款，方便查看</h1><h2 id="Effective-Java（3rd-Edition）中的编码条款"><a href="#Effective-Java（3rd-Edition）中的编码条款" class="headerlink" title="Effective Java（3rd Edition）中的编码条款"></a>Effective Java（3rd Edition）中的编码条款</h2><h3 id="Create-and-Destroying-Objects"><a href="#Create-and-Destroying-Objects" class="headerlink" title="Create and Destroying Objects"></a>Create and Destroying Objects</h3><p><a href="">Item1: Consider static factory methods instead of constructors</a><br><a href="">Item2: Consider a builder when faced with many constructors</a><br><a href="">Item3: Enforce the singleton property with a private constructor or an enum type</a><br><a href="">Item4: Enforce noninstantiability with a private constructor</a><br><a href="">Item5: Prefer dependency injection to hardwiring resources</a><br><a href="">Item6: Avoid creating unnecessary objects</a><br><a href="">Item7: Eliminate absolete object references</a><br><a href="">Item8: Avoid finalizers and cleaners</a><br><a href="">Item9: Prefer try-with-resources to try-finally</a></p>
+<h3 id="Mothods-Common-to-All-Objects"><a href="#Mothods-Common-to-All-Objects" class="headerlink" title="Mothods Common to All Objects"></a>Mothods Common to All Objects</h3><p><a href="">Item10: Obey the general construct when overriding equals</a><br><a href="">Item11: Always override hashCode when you override equals</a><br><a href="">Item12: Always override toString</a><br><a href="">Item13: Override clone judiciously</a><br><a href="">Item14: Consider implementing Comparable</a></p>
+<h3 id="Classes-and-Interfaces"><a href="#Classes-and-Interfaces" class="headerlink" title="Classes and Interfaces"></a>Classes and Interfaces</h3><p><a href="">Item15: Minimize the accessibility of classes and members</a><br><a href="">Item16: In public classes, use accessor methods, not public fields</a><br><a href="">Item17: Minimize mutability</a><br><a href="">Item18: Favor composition over inheritance</a><br><a href="">Item19: Design and document for inheritance or else prohibit it</a><br><a href="">Item20: Prefer interfaces to abstract classes</a><br><a href="">Item21: Design interfaces for posterity</a><br><a href="">Item22: Use interfaces only to define types</a><br><a href="">Item23: Prefer class hierarchies to tagged classes</a><br><a href="">Item24: Favor static member classes over nonstatic</a><br><a href="">Item25: Limit source fields to a single top-level class</a></p>
+<h3 id="Generics"><a href="#Generics" class="headerlink" title="Generics"></a>Generics</h3><p><a href="">Item26: Don’t use raw types</a><br><a href="">Item27: Eliminate unchecked warnings</a><br><a href="">Item28: Prefer lists to arrays</a><br><a href="">Item29: Favor generic types</a><br><a href="">Item30: Favor generic methods</a><br><a href="">Item31: Use bounded wildcards to increase API flexibility</a><br><a href="">Item32: Combine generics and varargs judiciously</a><br><a href="">Item33: Consider typesafe heterogeneous containers</a></p>
+<h3 id="Enums-and-Annotations"><a href="#Enums-and-Annotations" class="headerlink" title="Enums and Annotations"></a>Enums and Annotations</h3><p><a href="">Item34: Use enums instead of int constants</a><br><a href="">Item35: Use instance fields instead of ordinals</a><br><a href="">Item36: Use EnumSet instead of bit fields</a><br><a href="">Item37: Use EnumMap instead of ordinal indexing</a><br><a href="">Item38: Emulate extensible enums with interfaces</a><br><a href="">Item39: Prefer annotations to naming patterns</a><br><a href="">Item40: Consistently use the Override annotation</a><br><a href="">Item41: Use marker interfaces to define types</a></p>
+<h3 id="Lambdas-and-Streams"><a href="#Lambdas-and-Streams" class="headerlink" title="Lambdas and Streams"></a>Lambdas and Streams</h3><p><a href="">Item42: Prefer lambdas to anonymous classes</a><br><a href="">Item43: Prefer method reference to lambdas</a><br><a href="">Item44: Favor the use of standard functional interfaces</a><br><a href="">Item45: Use streams judiciously</a><br><a href="">Item46: Prefer side-effect-free functions in streams</a><br><a href="">Item47: Prefer Collections to Stream as a return type</a><br><a href="">Item48: Use caution when making streams parallel</a></p>
+<h3 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h3><p><a href="">Item49: Check parameters for validity</a><br><a href="">Item50: Make defensive copies when needed</a><br><a href="">Item51: Design method signatures carefully</a><br><a href="">Item52: Use overloading judiciously</a><br><a href="">Item53: Use varargs</a><br><a href="">Item54: Return empty collections or arrays, not nulls</a><br><a href="">Item55: Return optionals judiciously</a><br><a href="">Item56: Write doc comments for all exposed API elements</a></p>
+<h3 id="General-Programming"><a href="#General-Programming" class="headerlink" title="General Programming"></a>General Programming</h3><p><a href="">Item57: Minimize the scope of local variables</a><br><a href="">Item58: Prefer for-each loops to traditional for loops</a><br><a href="">Item59: Know and use the libraries</a><br><a href="">Item60: Avoid float and double if exact answers are required</a><br><a href="">Item61: Prefer primitive types to boxed primitives</a><br><a href="">Item62: Avoid strings where other types are more appropriate</a><br><a href="">Item63: Beware the performance of string concatenation</a><br><a href="">Item64: Refer to objects by their interfaces</a><br><a href="">Item65: Prefer interfaces to reflection</a><br><a href="">Item66: Use native methods judiciously</a><br><a href="">Item67: Optimize judiciously</a><br><a href="">Item68: Adhere to generally accepted naming conventions</a></p>
+<h3 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h3><p><a href="">Item69: Use exceptions only for exceptional conditions</a><br><a href="">Item70: Use checked exceptions for recoverable conditions and runtime exceptions for programming errors</a><br><a href="">Item71: Avoid unnecessary use of checked exceptions</a><br><a href="">Item72: Favor the use of standard exceptions</a><br><a href="">Item73: Throw exceptions appropriate to the abstraction</a><br><a href="">Item74: Document all exceptions thrown by each method</a><br><a href="">Item75: Include failure-capture information in detail messages</a><br><a href="">Item76: Strive for failure atomicity</a><br><a href="">Item77: Don’t ignore exceptions</a></p>
+<h3 id="Concurrency"><a href="#Concurrency" class="headerlink" title="Concurrency"></a>Concurrency</h3><p><a href="">Item78: Synchronize access to shared mutable data</a><br><a href="">Item79: Avoid excessive synchronization</a><br><a href="">Item80: Prefer executors, tasks, and streams to threads</a><br><a href="">Item81: Prefer concurrency utilities to wait and notify</a><br><a href="">Item82: Document thread safety</a><br><a href="">Item83: Use lazy initialization judiciously</a><br><a href="">Item84: Don’t depend on the thread scheduler</a></p>
+<h3 id="Serialization"><a href="#Serialization" class="headerlink" title="Serialization"></a>Serialization</h3><p><a href="">Item85: Prefer alternatives to Java serialization</a><br><a href="">Item86: Implement Serializable with great caution</a><br><a href="">Item87: Consider using a custom serialized form</a><br><a href="">Item88: Write readObject methods defensively</a><br><a href="">Item89: For instance control, prefer enum types to readResolve</a><br><a href="">Item90: Consider serialization proxies instead of serialized instances</a></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><pre><code>Effective Java, Third Edition
+</code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/13/effective-java-notes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-java-settings" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -481,213 +681,6 @@ Java语言程序设计（进阶篇 原书第10版）
 
 
   
-    <article id="post-SQL" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/07/SQL/">SQL使用</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/07/SQL/" class="archive-article-date">
-  	<time datetime="2017-12-07T13:43:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows下MySQL配置"><span class="toc-text">Windows下MySQL配置</span></a></li></ol>
-</div>
-
-        <h2 id="Windows下MySQL配置"><a href="#Windows下MySQL配置" class="headerlink" title="Windows下MySQL配置"></a>Windows下MySQL配置</h2><p><a href="http://blog.csdn.net/wengengeng/article/details/52013650" target="_blank" rel="external">MySQL配置</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">sql</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/sql//" class="article-tag-list-link color4">sql</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/07/SQL/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-One-stage-Detection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/One-stage-Detection/">One Stage Object Detection</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/01/One-stage-Detection/" class="archive-article-date">
-  	<time datetime="2017-11-30T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SSD"><span class="toc-text">SSD</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#论文链接"><span class="toc-text">论文链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析blog链接"><span class="toc-text">分析blog链接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#YOLO"><span class="toc-text">YOLO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#论文链接-1"><span class="toc-text">论文链接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLO-1"><span class="toc-text">YOLO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLO9000"><span class="toc-text">YOLO9000</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Better"><span class="toc-text">Better</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传统YOLO缺陷"><span class="toc-text">传统YOLO缺陷</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#YOLOv2相对YOLO的改进"><span class="toc-text">YOLOv2相对YOLO的改进</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#High-Resolution-Classifier"><span class="toc-text">High Resolution Classifier</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Convolutional-With-Anchor-Boxes"><span class="toc-text">Convolutional With Anchor Boxes</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#和YOLO相比的性能"><span class="toc-text">和YOLO相比的性能</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Dimension-Clusters"><span class="toc-text">Dimension Clusters</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Direct-Location-Prediction"><span class="toc-text">Direct Location Prediction</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Fine-Grained-Features"><span class="toc-text">Fine-Grained Features</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Multi-Scale-Training"><span class="toc-text">Multi-Scale Training</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Further-Experiments"><span class="toc-text">Further Experiments</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Faster"><span class="toc-text">Faster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stronger"><span class="toc-text">Stronger</span></a></li></ol></li></ol></li></ol>
-</div>
-
-        <h1 id="SSD"><a href="#SSD" class="headerlink" title="SSD"></a>SSD</h1><h2 id="论文链接"><a href="#论文链接" class="headerlink" title="论文链接"></a>论文链接</h2><p><a href="https://arxiv.org/pdf/1512.02325.pdf" target="_blank" rel="external">SSD: Single Shot MultiBox Detector</a></p>
-<h2 id="分析blog链接"><a href="#分析blog链接" class="headerlink" title="分析blog链接"></a>分析blog链接</h2><p><a href="http://blog.csdn.net/qq_14845119/article/details/53331581" target="_blank" rel="external"> SSD(Single Shot MultiBox Detector)不得不说的那些事</a></p>
-<h1 id="YOLO"><a href="#YOLO" class="headerlink" title="YOLO"></a>YOLO</h1><h2 id="论文链接-1"><a href="#论文链接-1" class="headerlink" title="论文链接"></a>论文链接</h2><p><a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8100173" target="_blank" rel="external">YOLO9000:Better, Faster, Stronger</a><br><a href="https://arxiv.org/pdf/1709.05943.pdf" target="_blank" rel="external">Fast YOLO: A Fast You Only Look Once System for Real-time Embedded Object Detection in Video</a><br><a href="https://pjreddie.com/media/files/papers/yolo.pdf" target="_blank" rel="external">You Only Look Once:Unified, Real-Time Object Detection</a></p>
-<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><h2 id="YOLO-1"><a href="#YOLO-1" class="headerlink" title="YOLO"></a>YOLO</h2><p><a href="https://zhuanlan.zhihu.com/p/25045711" target="_blank" rel="external">YOLO论文解读</a></p>
-<h2 id="YOLO9000"><a href="#YOLO9000" class="headerlink" title="YOLO9000"></a>YOLO9000</h2><p><a href="https://zhuanlan.zhihu.com/p/25052190" target="_blank" rel="external">YOLO9000论文解读</a></p>
-<h3 id="Better"><a href="#Better" class="headerlink" title="Better"></a>Better</h3><h4 id="传统YOLO缺陷"><a href="#传统YOLO缺陷" class="headerlink" title="传统YOLO缺陷"></a>传统YOLO缺陷</h4><pre><code>Significant number of localization errors compared to Fast-RCNN
-Low recall compared to region proposal-based mothods
-</code></pre><h4 id="YOLOv2相对YOLO的改进"><a href="#YOLOv2相对YOLO的改进" class="headerlink" title="YOLOv2相对YOLO的改进"></a>YOLOv2相对YOLO的改进</h4><h5 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h5><pre><code>adding  batch normalization on all of the convolutional layers in YOLO
-2% improvement in mAP
-then we can remove dropout without overfitting
-</code></pre><h5 id="High-Resolution-Classifier"><a href="#High-Resolution-Classifier" class="headerlink" title="High Resolution Classifier"></a>High Resolution Classifier</h5><pre><code>increase of almost 4% mAP
-</code></pre><h5 id="Convolutional-With-Anchor-Boxes"><a href="#Convolutional-With-Anchor-Boxes" class="headerlink" title="Convolutional With Anchor Boxes"></a>Convolutional With Anchor Boxes</h5><pre><code>remove fully connected layers from YOLO and use anchor boxes to predict bounding boxes.
-eliminate one pooling layer to make the output of the network&apos;s convolutional layers higher resolution.
-shrink the network to operate on 416x416 input images instead of 448x448。这样使得输出的feature map大小为13x13,代替原来的14x14使得中心只有一个。
-</code></pre><h6 id="和YOLO相比的性能"><a href="#和YOLO相比的性能" class="headerlink" title="和YOLO相比的性能"></a>和YOLO相比的性能</h6><pre><code>mAP: 69.5-&gt;69.2
-recall: 81%-&gt;88%
-</code></pre><h5 id="Dimension-Clusters"><a href="#Dimension-Clusters" class="headerlink" title="Dimension Clusters"></a>Dimension Clusters</h5><pre><code>使用k-means自动挑选box的尺寸代替原来YOLO方案的手动挑选尺寸。
-</code></pre><h5 id="Direct-Location-Prediction"><a href="#Direct-Location-Prediction" class="headerlink" title="Direct Location Prediction"></a>Direct Location Prediction</h5><pre><code>YOLO使用anchor boxes的过程中会遇到模型不稳定的问题。通过改变预测box位置的方法改进。
- Using dimension clusters along with directly predicting the bounding box center location improves YOLO by almost 5% over the version with anchor boxes.
-</code></pre><h5 id="Fine-Grained-Features"><a href="#Fine-Grained-Features" class="headerlink" title="Fine-Grained Features"></a>Fine-Grained Features</h5><pre><code>This gives a modest 1% performance increase.
-</code></pre><h5 id="Multi-Scale-Training"><a href="#Multi-Scale-Training" class="headerlink" title="Multi-Scale Training"></a>Multi-Scale Training</h5><pre><code>由于模型只有卷积层和池化层，我们可以随意调整大小。 Every 10 batches our network randomly chooses new image dimensions。
-</code></pre><h5 id="Further-Experiments"><a href="#Further-Experiments" class="headerlink" title="Further Experiments"></a>Further Experiments</h5><p><img src="compare.png" alt="The path from YOLO to YOLOv2"></p>
-<h3 id="Faster"><a href="#Faster" class="headerlink" title="Faster"></a>Faster</h3><h3 id="Stronger"><a href="#Stronger" class="headerlink" title="Stronger"></a>Stronger</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/cv//" class="article-tag-list-link color3">cv</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/01/One-stage-Detection/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -806,19 +799,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
              
               <li class="article-tag-list-item">
