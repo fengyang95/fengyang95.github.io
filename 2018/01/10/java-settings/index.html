@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
   <title>java-settings | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="配置Java项目时的一些方法maven指定JDK版本在pom.xml中如下配置 123456789101112    &amp;lt;build&amp;gt;    &amp;lt;plugins&amp;gt;        &amp;lt;plugin&amp;gt;            &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;            &amp;lt;arti">
+  <meta name="description" content="配置Java项目时的一些方法maven指定JDK版本在pom.xml中如下配置123456789101112    &amp;lt;build&amp;gt;    &amp;lt;plugins&amp;gt;        &amp;lt;plugin&amp;gt;            &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;            &amp;lt;artif">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java-settings">
 <meta property="og:url" content="https://wwdguu.github.io/2018/01/10/java-settings/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="配置Java项目时的一些方法maven指定JDK版本在pom.xml中如下配置 123456789101112    &amp;lt;build&amp;gt;    &amp;lt;plugins&amp;gt;        &amp;lt;plugin&amp;gt;            &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;            &amp;lt;arti">
+<meta property="og:description" content="配置Java项目时的一些方法maven指定JDK版本在pom.xml中如下配置123456789101112    &amp;lt;build&amp;gt;    &amp;lt;plugins&amp;gt;        &amp;lt;plugin&amp;gt;            &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;            &amp;lt;artif">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-10T03:43:43.930Z">
+<meta property="og:updated_time" content="2018-01-14T14:42:59.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java-settings">
-<meta name="twitter:description" content="配置Java项目时的一些方法maven指定JDK版本在pom.xml中如下配置 123456789101112    &amp;lt;build&amp;gt;    &amp;lt;plugins&amp;gt;        &amp;lt;plugin&amp;gt;            &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;            &amp;lt;arti">
+<meta name="twitter:description" content="配置Java项目时的一些方法maven指定JDK版本在pom.xml中如下配置123456789101112    &amp;lt;build&amp;gt;    &amp;lt;plugins&amp;gt;        &amp;lt;plugin&amp;gt;            &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;            &amp;lt;artif">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -180,8 +180,8 @@
   <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#配置Java项目时的一些方法"><span class="toc-text">配置Java项目时的一些方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#maven指定JDK版本"><span class="toc-text">maven指定JDK版本</span></a></li></ol></li></ol>
 </div>
 
-        <h1 id="配置Java项目时的一些方法"><a href="#配置Java项目时的一些方法" class="headerlink" title="配置Java项目时的一些方法"></a>配置Java项目时的一些方法</h1><h2 id="maven指定JDK版本"><a href="#maven指定JDK版本" class="headerlink" title="maven指定JDK版本"></a>maven指定JDK版本</h2><pre><code>在pom.xml中如下配置
-</code></pre><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></div></pre></td></tr></table></figure>
+        <h1 id="配置Java项目时的一些方法"><a href="#配置Java项目时的一些方法" class="headerlink" title="配置Java项目时的一些方法"></a>配置Java项目时的一些方法</h1><h2 id="maven指定JDK版本"><a href="#maven指定JDK版本" class="headerlink" title="maven指定JDK版本"></a>maven指定JDK版本</h2><p>在pom.xml中如下配置<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></div></pre></td></tr></table></figure></p>
+
       
 
       
@@ -432,11 +432,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -445,6 +445,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">sql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -457,10 +461,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
