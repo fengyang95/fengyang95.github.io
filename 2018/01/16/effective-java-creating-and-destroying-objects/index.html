@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
   <title>Effective Java-- Creating and Destroying Objects | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="CV  python  C++  Java  Machine Learning">
+  <meta name="description" content="Effective Java Items about Creating and Destroying ObjectsEffective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。 Item1: Consider static factory methods instead of">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Effective Java-- Creating and Destroying Objects">
 <meta property="og:url" content="https://wwdguu.github.io/2018/01/16/effective-java-creating-and-destroying-objects/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="CV  python  C++  Java  Machine Learning">
+<meta property="og:description" content="Effective Java Items about Creating and Destroying ObjectsEffective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。 Item1: Consider static factory methods instead of">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-16T11:25:38.584Z">
+<meta property="og:updated_time" content="2018-01-16T15:46:34.504Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Effective Java-- Creating and Destroying Objects">
-<meta name="twitter:description" content="CV  python  C++  Java  Machine Learning">
+<meta name="twitter:description" content="Effective Java Items about Creating and Destroying ObjectsEffective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。 Item1: Consider static factory methods instead of">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -177,10 +177,12 @@
       
         
 <div id="toc">
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Creating-and-Destroying-Objects"><span class="toc-text">Effective Java Items about Creating and Destroying Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item1-Consider-static-factory-methods-instead-of-constructors"><span class="toc-text">Item1: Consider static factory methods instead of constructors</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item2-Consider-a-builder-when-faced-with-many-constructor-parameters"><span class="toc-text">Item2: Consider a builder when faced with many constructor parameters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item3-Enforce-the-singleton-property-with-a-private-constructor-or-an-enum"><span class="toc-text">Item3: Enforce the singleton property with a private constructor or an enum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item4-Enforce-noninstantiability-with-a-private-constructor"><span class="toc-text">Item4: Enforce noninstantiability with a private constructor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item5-Prefer-dependency-injection-to-hardwiring-resources"><span class="toc-text">Item5: Prefer dependency injection to hardwiring resources</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item6-Avoid-creating-unnecessary-objects"><span class="toc-text">Item6: Avoid creating unnecessary objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item7-Eliminate-obsolete-object-references"><span class="toc-text">Item7: Eliminate obsolete object references</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item8-Avoid-finalizers-and-cleaners"><span class="toc-text">Item8: Avoid finalizers and cleaners</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item9-Prefer-try-with-resources-to-try-finally"><span class="toc-text">Item9: Prefer try-with-resources to try-finally</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a>
 </div>
 
-        
+        <h2 id="Effective-Java-Items-about-Creating-and-Destroying-Objects"><a href="#Effective-Java-Items-about-Creating-and-Destroying-Objects" class="headerlink" title="Effective Java Items about Creating and Destroying Objects"></a>Effective Java Items about Creating and Destroying Objects</h2><p>Effective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。</p>
+<h3 id="Item1-Consider-static-factory-methods-instead-of-constructors"><a href="#Item1-Consider-static-factory-methods-instead-of-constructors" class="headerlink" title="Item1: Consider static factory methods instead of constructors"></a>Item1: Consider static factory methods instead of constructors</h3><p>静态工厂方法相比构造器方法的几大优势如下：<br>1、静态工厂方法有名称，使得产生的客户端代码更容易阅读。<br>2、使用工厂方法不必在每次调用它们的时候都创建一个新对象。<br>3、静态工厂方法可以返回原返回类型的任何子类型的对象。这使得在选择返回的对象的类时有了更大的灵活性。<br>4、创建参数化类型实例的时候，静态工厂方法使得代码更加简洁。<br>然而静态工厂方法也有以下缺点需要注意：<br>1、类如果不含有public或者protected的构造器，其就不能被子类化。<br>2、静态工厂方法相对其他的静态方法实际上并没有任何区别。这使得对于提供了静态工厂方法而不是构造器的类来说，要想查明如何实例化一个类比较困难。<br>关于静态工厂方法可参考：<br><a href="https://yq.aliyun.com/articles/11335" target="_blank" rel="external">Java 设计模式—-工厂模式</a></p>
+<h3 id="Item2-Consider-a-builder-when-faced-with-many-constructor-parameters"><a href="#Item2-Consider-a-builder-when-faced-with-many-constructor-parameters" class="headerlink" title="Item2: Consider a builder when faced with many constructor parameters"></a>Item2: Consider a builder when faced with many constructor parameters</h3><h3 id="Item3-Enforce-the-singleton-property-with-a-private-constructor-or-an-enum"><a href="#Item3-Enforce-the-singleton-property-with-a-private-constructor-or-an-enum" class="headerlink" title="Item3: Enforce the singleton property with a private constructor or an enum"></a>Item3: Enforce the singleton property with a private constructor or an enum</h3><h3 id="Item4-Enforce-noninstantiability-with-a-private-constructor"><a href="#Item4-Enforce-noninstantiability-with-a-private-constructor" class="headerlink" title="Item4: Enforce noninstantiability with a private constructor"></a>Item4: Enforce noninstantiability with a private constructor</h3><h3 id="Item5-Prefer-dependency-injection-to-hardwiring-resources"><a href="#Item5-Prefer-dependency-injection-to-hardwiring-resources" class="headerlink" title="Item5: Prefer dependency injection to hardwiring resources"></a>Item5: Prefer dependency injection to hardwiring resources</h3><h3 id="Item6-Avoid-creating-unnecessary-objects"><a href="#Item6-Avoid-creating-unnecessary-objects" class="headerlink" title="Item6: Avoid creating unnecessary objects"></a>Item6: Avoid creating unnecessary objects</h3><h3 id="Item7-Eliminate-obsolete-object-references"><a href="#Item7-Eliminate-obsolete-object-references" class="headerlink" title="Item7: Eliminate obsolete object references"></a>Item7: Eliminate obsolete object references</h3><h3 id="Item8-Avoid-finalizers-and-cleaners"><a href="#Item8-Avoid-finalizers-and-cleaners" class="headerlink" title="Item8: Avoid finalizers and cleaners"></a>Item8: Avoid finalizers and cleaners</h3><h3 id="Item9-Prefer-try-with-resources-to-try-finally"><a href="#Item9-Prefer-try-with-resources-to-try-finally" class="headerlink" title="Item9: Prefer try-with-resources to try-finally"></a>Item9: Prefer try-with-resources to try-finally</h3><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1>
       
 
       
@@ -274,9 +276,18 @@
   
 <nav id="article-nav">
   
+    <a href="/2018/01/16/design-pattern-links/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          一些讲解设计模式的链接
+        
+      </div>
+    </a>
   
-    <a href="/2018/01/14/design-pattern-links/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">一些讲解设计模式的链接</div>
+  
+    <a href="/2018/01/13/effective-java-lambdas-and-streams/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Effective Java-- Lambdas and Streams</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -439,10 +450,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">cuda</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link Java</a>
               </li>
              
               <li class="article-tag-list-item">
