@@ -6,19 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
-  <title>Fengyang</title>
+  <title>Effective Java-- Creating and Destroying Objects | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="CV  python  C++  Java  Machine Learning">
-<meta name="keywords" content="CV  python  C++  Java  Machine Learning">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Fengyang">
-<meta property="og:url" content="https://wwdguu.github.io/page/6/index.html">
+  <meta name="description" content="Effective Java Items about Creating and Destroying ObjectsEffective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。 Item1: Consider static factory methods instead of">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Effective Java-- Creating and Destroying Objects">
+<meta property="og:url" content="https://wwdguu.github.io/2018/01/17/effective-java-creating-and-destroying-objects/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="CV  python  C++  Java  Machine Learning">
+<meta property="og:description" content="Effective Java Items about Creating and Destroying ObjectsEffective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。 Item1: Consider static factory methods instead of">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-01-17T12:53:14.213Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Fengyang">
-<meta name="twitter:description" content="CV  python  C++  Java  Machine Learning">
+<meta name="twitter:title" content="Effective Java-- Creating and Destroying Objects">
+<meta name="twitter:description" content="Effective Java Items about Creating and Destroying ObjectsEffective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。 Item1: Consider static factory methods instead of">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -154,22 +155,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-Fluent-Python-Chapter01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-effective-java-creating-and-destroying-objects" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/20/Fluent-Python-Chapter01/">Fluent Python Chapter 1 Python 数据模型</a>
+    <h1 class="article-title" itemprop="name">
+      Effective Java-- Creating and Destroying Objects
     </h1>
   
 
         
-        <a href="/2017/09/20/Fluent-Python-Chapter01/" class="archive-article-date">
-  	<time datetime="2017-09-20T08:34:12.590Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-20</time>
+        <a href="/2018/01/17/effective-java-creating-and-destroying-objects/" class="archive-article-date">
+  	<time datetime="2018-01-17T11:17:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
 </a>
         
       </header>
@@ -178,11 +177,20 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#getitem-and-len"><span class="toc-text">__getitem__  and __len__</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#example"><span class="toc-text">example</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Creating-and-Destroying-Objects"><span class="toc-text">Effective Java Items about Creating and Destroying Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item1-Consider-static-factory-methods-instead-of-constructors"><span class="toc-text">Item1: Consider static factory methods instead of constructors</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item2-Consider-a-builder-when-faced-with-many-constructor-parameters"><span class="toc-text">Item2: Consider a builder when faced with many constructor parameters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item3-Enforce-the-singleton-property-with-a-private-constructor-or-an-enum"><span class="toc-text">Item3: Enforce the singleton property with a private constructor or an enum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item4-Enforce-noninstantiability-with-a-private-constructor"><span class="toc-text">Item4: Enforce noninstantiability with a private constructor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item5-Prefer-dependency-injection-to-hardwiring-resources"><span class="toc-text">Item5: Prefer dependency injection to hardwiring resources</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item6-Avoid-creating-unnecessary-objects"><span class="toc-text">Item6: Avoid creating unnecessary objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item7-Eliminate-obsolete-object-references"><span class="toc-text">Item7: Eliminate obsolete object references</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item8-Avoid-finalizers-and-cleaners"><span class="toc-text">Item8: Avoid finalizers and cleaners</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item9-Prefer-try-with-resources-to-try-finally"><span class="toc-text">Item9: Prefer try-with-resources to try-finally</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a>
 </div>
 
-        <p>数据模型其实是对 Python 框架的描述，它规范了这门语言自身构建模块的接口，这些模块包括但不限于序列、迭代器、函数、类和上下文管理器。</p>
-<h2 id="getitem-and-len"><a href="#getitem-and-len" class="headerlink" title="__getitem__  and __len__"></a>__getitem__  and __len__</h2><h3 id="example"><a href="#example" class="headerlink" title="example"></a>example</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> collecitons</div><div class="line"></div><div class="line">Card=collections.namedtuple(<span class="string">'Card'</span>,[<span class="string">'rank'</span>,<span class="string">'suit'</span>])</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">FrenchDeck</span>:</span></div><div class="line">    ranks=[str(n) <span class="keyword">for</span> n <span class="keyword">in</span> range(<span class="number">2</span>,<span class="number">11</span>) + list(<span class="string">'JQKA'</span>)]</div><div class="line">    suits=<span class="string">'spades diamonds clubs hearts'</span>.split()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self._cards=[Card(rank,suit) <span class="keyword">for</span> suit <span class="keyword">in</span> self.suits</div><div class="line">                                    <span class="keyword">for</span> ranks <span class="keyword">in</span> self.ranks]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> len(self._cards)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self,position)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._cards[position]</div></pre></td></tr></table></figure>
+        <h2 id="Effective-Java-Items-about-Creating-and-Destroying-Objects"><a href="#Effective-Java-Items-about-Creating-and-Destroying-Objects" class="headerlink" title="Effective Java Items about Creating and Destroying Objects"></a>Effective Java Items about Creating and Destroying Objects</h2><p>Effective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。</p>
+<h3 id="Item1-Consider-static-factory-methods-instead-of-constructors"><a href="#Item1-Consider-static-factory-methods-instead-of-constructors" class="headerlink" title="Item1: Consider static factory methods instead of constructors"></a>Item1: Consider static factory methods instead of constructors</h3><p>静态工厂方法相比构造器方法的几大优势如下：<br>1、静态工厂方法有名称，使得产生的客户端代码更容易阅读。<br>2、使用工厂方法不必在每次调用它们的时候都创建一个新对象。<br>3、静态工厂方法可以返回原返回类型的任何子类型的对象。这使得在选择返回的对象的类时有了更大的灵活性。<br>4、创建参数化类型实例的时候，静态工厂方法使得代码更加简洁。<br>然而静态工厂方法也有以下缺点需要注意：<br>1、类如果不含有public或者protected的构造器，其就不能被子类化。<br>2、静态工厂方法相对其他的静态方法实际上并没有任何区别。这使得对于提供了静态工厂方法而不是构造器的类来说，要想查明如何实例化一个类比较困难。<br>关于静态工厂方法可参考：<br><a href="https://yq.aliyun.com/articles/11335" target="_blank" rel="external">Java 设计模式—-工厂模式</a></p>
+<h3 id="Item2-Consider-a-builder-when-faced-with-many-constructor-parameters"><a href="#Item2-Consider-a-builder-when-faced-with-many-constructor-parameters" class="headerlink" title="Item2: Consider a builder when faced with many constructor parameters"></a>Item2: Consider a builder when faced with many constructor parameters</h3><p>如果类的构造器或者静态工厂中具有多个参数，设计这种类时，Builder模式就是种不错的选择，特别是当大多数参数都是可以选择的时候。与使用传统的重叠构造器模式相比，使用Builder模式的客户端代码将更易于阅读和编写，构建器也更加安全。<br>关于Builder模式可参考：<br><a href="https://yq.aliyun.com/articles/11334" target="_blank" rel="external">Java设计模式（二）—-建造者模式</a><br><a href="https://howtodoinjava.com/design-patterns/creational/builder-pattern-in-java/" target="_blank" rel="external">Builder Pattern in Java</a><br><a href="http://wwdguu.github.io/2018/01/16/effective-java-creating-and-destroying-objects/">effective java creating and destroying objects</a></p>
+<h3 id="Item3-Enforce-the-singleton-property-with-a-private-constructor-or-an-enum"><a href="#Item3-Enforce-the-singleton-property-with-a-private-constructor-or-an-enum" class="headerlink" title="Item3: Enforce the singleton property with a private constructor or an enum"></a>Item3: Enforce the singleton property with a private constructor or an enum</h3><p>可以利用私有属性或者枚举类型来强化单例属性。其中单元素的枚举类型已经成为实现单例模式的最佳方法，需要注意的是，当单例类必须继承自一个非枚举类型时，不能使用这种方法。<br>有关单例模式可参考：<br><a href="https://yq.aliyun.com/articles/11333" target="_blank" rel="external">Java设计模式(一)—-单例模式</a><br><a href="https://www.journaldev.com/1377/java-singleton-design-pattern-best-practices-examples" target="_blank" rel="external">Java Singleton Pattern</a></p>
+<h3 id="Item4-Enforce-noninstantiability-with-a-private-constructor"><a href="#Item4-Enforce-noninstantiability-with-a-private-constructor" class="headerlink" title="Item4: Enforce noninstantiability with a private constructor"></a>Item4: Enforce noninstantiability with a private constructor</h3><p>对于一些只包含静态方法和静态域的类，我们不希望其被实例化，可以通过私有构造方法使得其不能被实例化。当然这种方法也有一定副作用，其使得一个类不能被子类化。因为子类需要调用超类的构造函数，而超类的构造函数却是私有的，并不能被子类调用。</p>
+<h3 id="Item5-Prefer-dependency-injection-to-hardwiring-resources"><a href="#Item5-Prefer-dependency-injection-to-hardwiring-resources" class="headerlink" title="Item5: Prefer dependency injection to hardwiring resources"></a>Item5: Prefer dependency injection to hardwiring resources</h3><p>不要使用单例或静态的实用类来实现一个类，该类依赖于一个或多个底层资源，这些资源的行为会影响类的行为，并且不让类直接创建这些资源。相反，将资源或工厂传递给构造方法(或静态工厂或builder模式)。这种称为依赖注入的实践将极大地增强类的灵活性、可重用性和可测试性。</p>
+<h3 id="Item6-Avoid-creating-unnecessary-objects"><a href="#Item6-Avoid-creating-unnecessary-objects" class="headerlink" title="Item6: Avoid creating unnecessary objects"></a>Item6: Avoid creating unnecessary objects</h3><p>可以通过以下一些方法来避免创建不必要的对象：<br>1、重用不可变对象而不是每次需要的时候创建一个相同功能的新对象。<br>2、对于同时提供了静态工厂方法和构造器的不可变类，通常可以使用静态工厂方法而不是构造器并以此来避免创建不必要的对象。<br>3、也可以重用那些已知不会被修改的可变对象。<br>4、优先使用基本类型而不是装箱基本类型，要当心无意识的自动装箱。<br>5、避免创建不必要的对象并不是意味着“创建对象的代价很昂贵，而我们要尽可能避免创建对象”。事实上，针对小对象的创建和回收是非常廉价的。有时候，可以通过创建附加的对象从而使得程序更清晰简洁。</p>
+<h3 id="Item7-Eliminate-obsolete-object-references"><a href="#Item7-Eliminate-obsolete-object-references" class="headerlink" title="Item7: Eliminate obsolete object references"></a>Item7: Eliminate obsolete object references</h3><p>过期引用指的是永远也不会再被解除的引用。在Java这类支持垃圾回收的语言中，如果一个对象引用被无意识地保留起来了，那么垃圾回收机制不仅不会处理这个对象，而且连被这个对象所引用的其它对象也不会被处理。这样即便只有少量的几个对象引用被无意识保留下来，也会有许多对象被排除在垃圾回收机制之外，对性能造成潜在的重大影响。那如何解决这类问题？只需要在知道对象引用过期时，及时清空引用。只要是自己管理内存，就应该时时警惕内存泄漏问题。<br>内存泄漏的常见来源有：无意识的对象保持；缓存；监听器和其他回调。</p>
+<h3 id="Item8-Avoid-finalizers-and-cleaners"><a href="#Item8-Avoid-finalizers-and-cleaners" class="headerlink" title="Item8: Avoid finalizers and cleaners"></a>Item8: Avoid finalizers and cleaners</h3><p>终结方法是不可预测的，常常是危险而且不必要的。Java9已经弃用了终结方法，但是许多Java库中还用着这种方法。Java9中用Cleaners代替了终结方法。Cleaners比终结方法稍安全，但是仍然不可预测，慢和不必要。<br>Finalizers和cleaners的缺点之一是它们不能保证被及时执行。注重时间的任务不应该由终结方法和清理方法来完成。不但不能保证终结方法和清理方法能够及时执行，甚至其能不能执行也不会有保证。所以，永远不能依赖终结方法和清理方法来更新持久状态。<br>使用终结方法和清理方法会有严重的性能损失。显式的终结方法通常与try-finally 结构结合起来使用，以确保及时终止。重要的准则是：除非是作为安全网，或者是为了终止非关键的本地资源，否则请不要使用终结方法和清理方法。</p>
+<h3 id="Item9-Prefer-try-with-resources-to-try-finally"><a href="#Item9-Prefer-try-with-resources-to-try-finally" class="headerlink" title="Item9: Prefer try-with-resources to try-finally"></a>Item9: Prefer try-with-resources to try-finally</h3><p>操作一些必须被关闭的资源时，最好使用try-with-resources块而不是try-finally代码块，这样代码更短更清晰，而且生成的异常更有用。try-with-resources块使得正确编写操作必须关闭的资源的代码更加容易。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p> Effective Java, Third Edition -Bloch-2017<br> <a href="http://www.cnblogs.com/IcanFixIt/tag/Effective%20Java%20Third%20Edition/" target="_blank" rel="external">林本托的博客</a></p>
 
       
 
@@ -196,7 +204,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
@@ -208,7 +216,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Fluent-python//" class="article-tag-list-link color4">Fluent-python</a>
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
@@ -216,16 +224,75 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/20/Fluent-Python-Chapter01/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2018/01/17/effective-java-creating-and-destroying-objects/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/01/17/useful-links/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Useful Links</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -245,16 +312,34 @@
 
 
 
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
-    </nav>
   
+
+  
+
+  
+    <section id="comments">
+      <div id="disqus_thread"></div>
+        <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'wwdguu'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </section>
+  
+
+  
+
+
+
 
 
           </div>
@@ -277,8 +362,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
