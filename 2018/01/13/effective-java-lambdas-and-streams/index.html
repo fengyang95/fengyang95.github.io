@@ -16,13 +16,13 @@
 <meta property="og:site_name" content="Fengyang">
 <meta property="og:description" content="Lambdas in JavaIntroduceLambada Expressionslambda表达式的固定格式如下： parameter -&amp;gt; expression body一个lambda表达式有如下特点：可不声明参数类型，编译器会自动推导；单个参数无需加括号，多个参数必须加括号；单条语句无需加花括号；return关键词可省略。参考：Lambda Expressions Method">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://wwdguu.github.io/2018/01/13/effective-java-lambdas-and-streams/method_ref_type.jpg">
-<meta property="og:image" content="https://wwdguu.github.io/2018/01/13/effective-java-lambdas-and-streams/interface_type.jpg">
-<meta property="og:updated_time" content="2018-01-16T11:37:20.948Z">
+<meta property="og:image" content="https://wwdguu.github.io/2018/01/13/effective-java-lambdas-and-streams/method_ref_type.JPG">
+<meta property="og:image" content="https://wwdguu.github.io/2018/01/13/effective-java-lambdas-and-streams/interface_type.JPG">
+<meta property="og:updated_time" content="2018-01-18T12:15:08.420Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Effective Java-- Lambdas and Streams">
 <meta name="twitter:description" content="Lambdas in JavaIntroduceLambada Expressionslambda表达式的固定格式如下： parameter -&amp;gt; expression body一个lambda表达式有如下特点：可不声明参数类型，编译器会自动推导；单个参数无需加括号，多个参数必须加括号；单条语句无需加花括号；return关键词可省略。参考：Lambda Expressions Method">
-<meta name="twitter:image" content="https://wwdguu.github.io/2018/01/13/effective-java-lambdas-and-streams/method_ref_type.jpg">
+<meta name="twitter:image" content="https://wwdguu.github.io/2018/01/13/effective-java-lambdas-and-streams/method_ref_type.JPG">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -184,7 +184,7 @@
 </div>
 
         <h1 id="Lambdas-in-Java"><a href="#Lambdas-in-Java" class="headerlink" title="Lambdas in Java"></a>Lambdas in Java</h1><h2 id="Introduce"><a href="#Introduce" class="headerlink" title="Introduce"></a>Introduce</h2><h3 id="Lambada-Expressions"><a href="#Lambada-Expressions" class="headerlink" title="Lambada Expressions"></a>Lambada Expressions</h3><p>lambda表达式的固定格式如下： parameter -&gt; expression body<br>一个lambda表达式有如下特点：可不声明参数类型，编译器会自动推导；单个参数无需加括号，多个参数必须加括号；单条语句无需加花括号；return关键词可省略。<br>参考：<br><a href="https://www.tutorialspoint.com/java8/java8_lambda_expressions.htm" target="_blank" rel="external">Lambda Expressions</a></p>
-<h3 id="Method-References"><a href="#Method-References" class="headerlink" title="Method References"></a>Method References</h3><p>方法引用有助于按照名称指向方法。其使用“::”符号描述方法引用。方法引用可以用来指出以下类型的方法：静态方法;实例方法；使用new运算符的构造器方法。<br>大多数引用的是静态方法，但是也有一些其它情况，主要有以下几种类型的方法引用：<br><img src="method_ref_type.jpg" alt=""></p>
+<h3 id="Method-References"><a href="#Method-References" class="headerlink" title="Method References"></a>Method References</h3><p>方法引用有助于按照名称指向方法。其使用“::”符号描述方法引用。方法引用可以用来指出以下类型的方法：静态方法;实例方法；使用new运算符的构造器方法。<br>大多数引用的是静态方法，但是也有一些其它情况，主要有以下几种类型的方法引用：<br><img src="method_ref_type.JPG" alt=""></p>
 <p>参考：<br><a href="https://www.tutorialspoint.com/java8/java8_method_references.htm" target="_blank" rel="external">Method References</a></p>
 <h3 id="Functional-Interfaces"><a href="#Functional-Interfaces" class="headerlink" title="Functional Interfaces"></a>Functional Interfaces</h3><p>functional interfaces有着一个特定的功能展示的作用。例如：使用单个方法 compareTo 的 Comparable接口来用于比较。<br>参考：<br><a href="https://www.tutorialspoint.com/java8/java8_functional_interfaces.htm" target="_blank" rel="external">Function Interfaces</a></p>
 <h2 id="Effective-Java-Items-about-Lambdas"><a href="#Effective-Java-Items-about-Lambdas" class="headerlink" title="Effective Java Items about Lambdas"></a>Effective Java Items about Lambdas</h2><h3 id="Item42-Prefer-lambdas-to-anonymous-classes"><a href="#Item42-Prefer-lambdas-to-anonymous-classes" class="headerlink" title="Item42: Prefer lambdas to anonymous classes"></a>Item42: Prefer lambdas to anonymous classes</h3><pre><code>在支持lambda之前，Java中一般用匿名函数来实现函数对象这样的功能。比如：
@@ -193,7 +193,7 @@
 </code></pre><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">words.sort((s1,s2)-&gt;Integer.compare(s1.length(),s2.length()));</div></pre></td></tr></table></figure>
 <p>使用lambda表达式时，一般会省略参数的类型，因为编译器会进行自动推导类型。当编译器不能推导出类型时，需要我们显式指定。一个重要的原则就是：为了让lambda表达式更简洁，尽量省略参数类型。有时需要对返回值进行类型转换或者对整个lambda表达式进行类型转换，但是这比较少见。<br>和方法及类不同，lambda缺少名称和文档，如果一个运算不是很容易理解或者行数太多，那么就不要使用lambda表达式。<br>总而言之，目前而言，lambda表达式是表示小型函数对象的最佳方法。除非必须要创建非函数接口的类型实例，否则不要使用匿名类。</p>
 <h3 id="Item43-Prefer-method-references-to-lambdas"><a href="#Item43-Prefer-method-references-to-lambdas" class="headerlink" title="Item43: Prefer method references to lambdas"></a>Item43: Prefer method references to lambdas</h3><p>lambda表达式相较于匿名类的主要优势就是其更简洁。然而Java提供了一种比lambda表达式更为简洁的生成函数对象的方法：方法引用(method references)。使用方法引用通常会生成更短更清晰的代码。但是也有例外的情况，使用的时候可以根据具体情况选择使用lambda还是方法引用。<br>一般而言，方法引用提供了一种比lambda表达式更为简洁的方法。总的使用原则就是：方法引用更为简洁时就使用它，否则使用lambda。</p>
-<h3 id="Item44-Favor-the-use-of-standard-functional-interfaces"><a href="#Item44-Favor-the-use-of-standard-functional-interfaces" class="headerlink" title="Item44: Favor the use of standard functional interfaces"></a>Item44: Favor the use of standard functional interfaces</h3><p>Java有了lambda之后，我们在设计API的时候就有必要随时考虑lambda。既能接受functional interface类型作为输入也要能将其作为输出。通常情况下，最好使用java.util.function.Function中的标准接口，但是极少数情况下可能还是需要我们自己设计functional interfaces。<br>主要有如下一些使用原则：<br>1、优先使用标准functional interface<br>2、java.util.function中有43种接口类型，比较常用的有以下6种：<br><img src="interface_type.jpg" alt=""></p>
+<h3 id="Item44-Favor-the-use-of-standard-functional-interfaces"><a href="#Item44-Favor-the-use-of-standard-functional-interfaces" class="headerlink" title="Item44: Favor the use of standard functional interfaces"></a>Item44: Favor the use of standard functional interfaces</h3><p>Java有了lambda之后，我们在设计API的时候就有必要随时考虑lambda。既能接受functional interface类型作为输入也要能将其作为输出。通常情况下，最好使用java.util.function.Function中的标准接口，但是极少数情况下可能还是需要我们自己设计functional interfaces。<br>主要有如下一些使用原则：<br>1、优先使用标准functional interface<br>2、java.util.function中有43种接口类型，比较常用的有以下6种：<br><img src="interface_type.JPG" alt=""></p>
 <p>3、多数标准functional interfaces只提供了对于基本类型的支持。不要试图用包装的基本类型来替代基本类型的functional interfaces。<br>4、使用 @FunctionalInterface注解来定义函数接口。</p>
 <h1 id="Streams-in-Java"><a href="#Streams-in-Java" class="headerlink" title="Streams in Java"></a>Streams in Java</h1><h2 id="Introduce-1"><a href="#Introduce-1" class="headerlink" title="Introduce"></a>Introduce</h2><h3 id="Streams"><a href="#Streams" class="headerlink" title="Streams"></a>Streams</h3><p>streams表示来自源的一系列对象，其支持聚合操作，有以下特征：<br>1、元素序列：stream以顺序的方式提供一组特定类型的元素。其按需获取或者计算元素。其从不存储元素。<br>2、源：其将Collection, Array或者IO资源作为输入。<br>3、聚合操作：其支持聚合操作，如filter, map, limit, reduce, find, match等。<br>4、流水线：大多数stream操作本身返回stream，以使得其操作可以流水线话。collect()方法是在流水线操作结束时通常存在的终端操作，用于标记流的结束。<br>5、自动迭代：stream通过所提供的源元素在内部执行迭代，与需要显式迭代的集合相反。</p>
 <h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>可以用stream()或者parallelStream()方法生成Stream。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">"abc"</span>, <span class="string">""</span>, <span class="string">"bc"</span>, <span class="string">"efg"</span>, <span class="string">"abcd"</span>,<span class="string">""</span>, <span class="string">"jkl"</span>);</div><div class="line">List&lt;String&gt; filtered = strings.stream().filter(string -&gt; !string.isEmpty()).collect(Collectors.toList());</div></pre></td></tr></table></figure></p>
@@ -456,11 +456,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
