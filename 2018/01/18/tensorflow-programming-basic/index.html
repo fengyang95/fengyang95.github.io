@@ -16,13 +16,13 @@
 <meta property="og:site_name" content="Fengyang">
 <meta property="og:description" content="Tensorflow基本操作12345import tensorflow as tfa = tf.add(3,5)sess = tf.Session()print(sess.run(a))sess.close() 或者这样写更好：1234import tensorflow as tfa = tf.add(3,5)with tf.Session() as sess:    print(sess.ru">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://wwdguu.github.io/2018/01/18/tensorflow-programming-basic/img/operations.jpg">
-<meta property="og:image" content="https://wwdguu.github.io/2018/01/18/tensorflow-programming-basic/img/data_types.jpg">
-<meta property="og:updated_time" content="2018-01-18T11:54:29.869Z">
+<meta property="og:image" content="https://wwdguu.github.io/img/operations.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/img/data_types.jpg">
+<meta property="og:updated_time" content="2018-01-18T11:56:29.450Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tensorflow Programming--Basic">
 <meta name="twitter:description" content="Tensorflow基本操作12345import tensorflow as tfa = tf.add(3,5)sess = tf.Session()print(sess.run(a))sess.close() 或者这样写更好：1234import tensorflow as tfa = tf.add(3,5)with tf.Session() as sess:    print(sess.ru">
-<meta name="twitter:image" content="https://wwdguu.github.io/2018/01/18/tensorflow-programming-basic/img/operations.jpg">
+<meta name="twitter:image" content="https://wwdguu.github.io/img/operations.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -201,8 +201,8 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">a = tf.constant(<span class="number">2</span>, name=<span class="string">'a'</span>)</div><div class="line">b = tf.constant(<span class="number">3</span>, name=<span class="string">'b'</span>)</div><div class="line">x = tf.add(a, b, name=<span class="string">'add'</span>)</div><div class="line">writer = tf.summary.FileWriter(<span class="string">'./graphs'</span>,sess.graph)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(x))</div></pre></td></tr></table></figure>
 <p>总之，Tensorboard是一个十分强大的工具，特别是对于分析复杂的网络结构以及观察网络训练过程特别有用。</p>
 <h2 id="常用API"><a href="#常用API" class="headerlink" title="常用API"></a>常用API</h2><p>1、tf.constant(value, dtype=None, shape=None, name=’Const’,verify_shape=False)<br>2、tf.zeros(shape, dtype=tf.float32, name=None)<br>3、tf.zeros_like(input_tensor, dtype=None, name=None, optimize=True)<br>4、tf.ones(shape, dtype=tf.float32, name=None)<br>5、tf.ones_like(input_tensor, dtype=None, name=None, optimize=True)<br>6、tf.fill(dims, value, name=None)<br>7、tf.linspace(start, stop, num, name=None)<br>8、tf.range(start, limit=None, delta=1, dtype=None, name=’range’)<br>9、tf.random_normal(shape, mean=0.0, stddev=1.0, dtype=tf.float32, seed=None, name=None)<br>10、tf.truncated_normal(shape, mean=0.0, stddev=1.0, dtype=tf.float32, seed=None,name=None)<br>10、tf.random_uniform(shape, minval=0, maxval=None, dtype=tf.float32, seed=None,name=None)<br>11、tf.random_shuffle(value, seed=None, name=None)<br>12、tf.random_crop(value, size, seed=None, name=None)<br>13、tf.multinomial(logits, num_samples, seed=None, name=None)<br>14、tf.random_gamma(shape, alpha, beta=None, dtype=tf.float32, seed=None, name=None)<br>15、tf.set_random_seed(seed)</p>
-<h2 id="运算操作"><a href="#运算操作" class="headerlink" title="运算操作"></a>运算操作</h2><p><img src="img/operations.jpg" alt=""></p>
-<h2 id="Tensorflow数据类型"><a href="#Tensorflow数据类型" class="headerlink" title="Tensorflow数据类型"></a>Tensorflow数据类型</h2><p>Tensorflow需要python的原生数据类型，如int，float， string等。<br><img src="img/data_types.jpg" alt=""></p>
+<h2 id="运算操作"><a href="#运算操作" class="headerlink" title="运算操作"></a>运算操作</h2><p><img src="/img/operations.jpg" alt=""></p>
+<h2 id="Tensorflow数据类型"><a href="#Tensorflow数据类型" class="headerlink" title="Tensorflow数据类型"></a>Tensorflow数据类型</h2><p>Tensorflow需要python的原生数据类型，如int，float， string等。<br><img src="/img/data_types.jpg" alt=""></p>
 <h3 id="Tensorflow和Numpy中的数据类型比较"><a href="#Tensorflow和Numpy中的数据类型比较" class="headerlink" title="Tensorflow和Numpy中的数据类型比较"></a>Tensorflow和Numpy中的数据类型比较</h3><p>1、tf.int3 == np.int32 #true<br>2、可将numpy数据类型传递给Tensorflow的操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.ones([<span class="number">2</span>,<span class="number">2</span>],np.float32) <span class="comment"># =&gt;[[1.0,1.0],[1.0,1.0]]</span></div></pre></td></tr></table></figure></p>
 <p>3、对于语句 tf.Session.run(fetches), 如果 fetch是一个Tensor数据，那么输出将会是一个numpy数组。</p>
 <h4 id="使用原则"><a href="#使用原则" class="headerlink" title="使用原则"></a>使用原则</h4><p>1、不要使用Python原生类型作为张量，因为TensorFlow必须推断Python<br>类型。<br>2、使用numpy类型时需要小心，以后numpy和tensorflow可能不兼容。</p>
