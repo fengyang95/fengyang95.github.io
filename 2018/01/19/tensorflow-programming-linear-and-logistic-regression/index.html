@@ -6,20 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
-  <title>Effective Java-- Creating and Destroying Objects | Fengyang</title>
+  <title>Linear and Logistic Regression in Tensorflow Notes | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Effective Java Items about Creating and Destroying ObjectsEffective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。 Item1: Consider static factory methods instead of">
-<meta name="keywords" content="Java">
+  <meta name="description" content="线性回归和逻辑回归之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。 线性回归代码notes_03 如何判断一个模型是正确的？使用相关系数R的平方R-squared 在测试集上运行用虚拟数据测试模型部分代码分析12optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).m">
+<meta name="keywords" content="tensorflow">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Effective Java-- Creating and Destroying Objects">
-<meta property="og:url" content="https://wwdguu.github.io/2018/01/17/effective-java-creating-and-destroying-objects/index.html">
+<meta property="og:title" content="Linear and Logistic Regression in Tensorflow Notes">
+<meta property="og:url" content="https://wwdguu.github.io/2018/01/19/tensorflow-programming-linear-and-logistic-regression/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="Effective Java Items about Creating and Destroying ObjectsEffective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。 Item1: Consider static factory methods instead of">
+<meta property="og:description" content="线性回归和逻辑回归之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。 线性回归代码notes_03 如何判断一个模型是正确的？使用相关系数R的平方R-squared 在测试集上运行用虚拟数据测试模型部分代码分析12optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).m">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-17T12:53:14.213Z">
+<meta property="og:image" content="https://wwdguu.github.io/2018/01/19/tensorflow-programming-linear-and-logistic-regression/graph.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2018/01/19/tensorflow-programming-linear-and-logistic-regression/optimizer.jpg">
+<meta property="og:updated_time" content="2018-01-19T11:04:06.491Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Effective Java-- Creating and Destroying Objects">
-<meta name="twitter:description" content="Effective Java Items about Creating and Destroying ObjectsEffective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。 Item1: Consider static factory methods instead of">
+<meta name="twitter:title" content="Linear and Logistic Regression in Tensorflow Notes">
+<meta name="twitter:description" content="线性回归和逻辑回归之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。 线性回归代码notes_03 如何判断一个模型是正确的？使用相关系数R的平方R-squared 在测试集上运行用虚拟数据测试模型部分代码分析12optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).m">
+<meta name="twitter:image" content="https://wwdguu.github.io/2018/01/19/tensorflow-programming-linear-and-logistic-regression/graph.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -155,20 +158,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-effective-java-creating-and-destroying-objects" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-tensorflow-programming-linear-and-logistic-regression" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Effective Java-- Creating and Destroying Objects
+      Linear and Logistic Regression in Tensorflow Notes
     </h1>
   
 
         
-        <a href="/2018/01/17/effective-java-creating-and-destroying-objects/" class="archive-article-date">
-  	<time datetime="2018-01-17T11:17:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
+        <a href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/" class="archive-article-date">
+  	<time datetime="2018-01-18T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-19</time>
 </a>
         
       </header>
@@ -177,20 +180,23 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Creating-and-Destroying-Objects"><span class="toc-text">Effective Java Items about Creating and Destroying Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item1-Consider-static-factory-methods-instead-of-constructors"><span class="toc-text">Item1: Consider static factory methods instead of constructors</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item2-Consider-a-builder-when-faced-with-many-constructor-parameters"><span class="toc-text">Item2: Consider a builder when faced with many constructor parameters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item3-Enforce-the-singleton-property-with-a-private-constructor-or-an-enum"><span class="toc-text">Item3: Enforce the singleton property with a private constructor or an enum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item4-Enforce-noninstantiability-with-a-private-constructor"><span class="toc-text">Item4: Enforce noninstantiability with a private constructor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item5-Prefer-dependency-injection-to-hardwiring-resources"><span class="toc-text">Item5: Prefer dependency injection to hardwiring resources</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item6-Avoid-creating-unnecessary-objects"><span class="toc-text">Item6: Avoid creating unnecessary objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item7-Eliminate-obsolete-object-references"><span class="toc-text">Item7: Eliminate obsolete object references</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item8-Avoid-finalizers-and-cleaners"><span class="toc-text">Item8: Avoid finalizers and cleaners</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item9-Prefer-try-with-resources-to-try-finally"><span class="toc-text">Item9: Prefer try-with-resources to try-finally</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#线性回归和逻辑回归"><span class="toc-text">线性回归和逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线性回归"><span class="toc-text">线性回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何判断一个模型是正确的？"><span class="toc-text">如何判断一个模型是正确的？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用相关系数R的平方"><span class="toc-text">使用相关系数R的平方</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在测试集上运行"><span class="toc-text">在测试集上运行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用虚拟数据测试模型"><span class="toc-text">用虚拟数据测试模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部分代码分析"><span class="toc-text">部分代码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化"><span class="toc-text">优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#更多关于梯度计算"><span class="toc-text">更多关于梯度计算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优化器种类"><span class="toc-text">优化器种类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#各种优化器的比较"><span class="toc-text">各种优化器的比较</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑回归"><span class="toc-text">逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理解one-hot-encodiing"><span class="toc-text">理解one-hot encodiing</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
 </div>
 
-        <h2 id="Effective-Java-Items-about-Creating-and-Destroying-Objects"><a href="#Effective-Java-Items-about-Creating-and-Destroying-Objects" class="headerlink" title="Effective Java Items about Creating and Destroying Objects"></a>Effective Java Items about Creating and Destroying Objects</h2><p>Effective Java 书籍的这一章节主要讲了一些关于何时及如何创建对象，何时及如何避免创建对象，如何确保对象能够适时地被销毁及如何管理对象销毁之前必须进行的各种清理动作的建议。</p>
-<h3 id="Item1-Consider-static-factory-methods-instead-of-constructors"><a href="#Item1-Consider-static-factory-methods-instead-of-constructors" class="headerlink" title="Item1: Consider static factory methods instead of constructors"></a>Item1: Consider static factory methods instead of constructors</h3><p>静态工厂方法相比构造器方法的几大优势如下：<br>1、静态工厂方法有名称，使得产生的客户端代码更容易阅读。<br>2、使用工厂方法不必在每次调用它们的时候都创建一个新对象。<br>3、静态工厂方法可以返回原返回类型的任何子类型的对象。这使得在选择返回的对象的类时有了更大的灵活性。<br>4、创建参数化类型实例的时候，静态工厂方法使得代码更加简洁。<br>然而静态工厂方法也有以下缺点需要注意：<br>1、类如果不含有public或者protected的构造器，其就不能被子类化。<br>2、静态工厂方法相对其他的静态方法实际上并没有任何区别。这使得对于提供了静态工厂方法而不是构造器的类来说，要想查明如何实例化一个类比较困难。<br>关于静态工厂方法可参考：<br><a href="https://yq.aliyun.com/articles/11335" target="_blank" rel="external">Java 设计模式—-工厂模式</a></p>
-<h3 id="Item2-Consider-a-builder-when-faced-with-many-constructor-parameters"><a href="#Item2-Consider-a-builder-when-faced-with-many-constructor-parameters" class="headerlink" title="Item2: Consider a builder when faced with many constructor parameters"></a>Item2: Consider a builder when faced with many constructor parameters</h3><p>如果类的构造器或者静态工厂中具有多个参数，设计这种类时，Builder模式就是种不错的选择，特别是当大多数参数都是可以选择的时候。与使用传统的重叠构造器模式相比，使用Builder模式的客户端代码将更易于阅读和编写，构建器也更加安全。<br>关于Builder模式可参考：<br><a href="https://yq.aliyun.com/articles/11334" target="_blank" rel="external">Java设计模式（二）—-建造者模式</a><br><a href="https://howtodoinjava.com/design-patterns/creational/builder-pattern-in-java/" target="_blank" rel="external">Builder Pattern in Java</a><br><a href="http://wwdguu.github.io/2018/01/16/effective-java-creating-and-destroying-objects/">effective java creating and destroying objects</a></p>
-<h3 id="Item3-Enforce-the-singleton-property-with-a-private-constructor-or-an-enum"><a href="#Item3-Enforce-the-singleton-property-with-a-private-constructor-or-an-enum" class="headerlink" title="Item3: Enforce the singleton property with a private constructor or an enum"></a>Item3: Enforce the singleton property with a private constructor or an enum</h3><p>可以利用私有属性或者枚举类型来强化单例属性。其中单元素的枚举类型已经成为实现单例模式的最佳方法，需要注意的是，当单例类必须继承自一个非枚举类型时，不能使用这种方法。<br>有关单例模式可参考：<br><a href="https://yq.aliyun.com/articles/11333" target="_blank" rel="external">Java设计模式(一)—-单例模式</a><br><a href="https://www.journaldev.com/1377/java-singleton-design-pattern-best-practices-examples" target="_blank" rel="external">Java Singleton Pattern</a></p>
-<h3 id="Item4-Enforce-noninstantiability-with-a-private-constructor"><a href="#Item4-Enforce-noninstantiability-with-a-private-constructor" class="headerlink" title="Item4: Enforce noninstantiability with a private constructor"></a>Item4: Enforce noninstantiability with a private constructor</h3><p>对于一些只包含静态方法和静态域的类，我们不希望其被实例化，可以通过私有构造方法使得其不能被实例化。当然这种方法也有一定副作用，其使得一个类不能被子类化。因为子类需要调用超类的构造函数，而超类的构造函数却是私有的，并不能被子类调用。</p>
-<h3 id="Item5-Prefer-dependency-injection-to-hardwiring-resources"><a href="#Item5-Prefer-dependency-injection-to-hardwiring-resources" class="headerlink" title="Item5: Prefer dependency injection to hardwiring resources"></a>Item5: Prefer dependency injection to hardwiring resources</h3><p>不要使用单例或静态的实用类来实现一个类，该类依赖于一个或多个底层资源，这些资源的行为会影响类的行为，并且不让类直接创建这些资源。相反，将资源或工厂传递给构造方法(或静态工厂或builder模式)。这种称为依赖注入的实践将极大地增强类的灵活性、可重用性和可测试性。</p>
-<h3 id="Item6-Avoid-creating-unnecessary-objects"><a href="#Item6-Avoid-creating-unnecessary-objects" class="headerlink" title="Item6: Avoid creating unnecessary objects"></a>Item6: Avoid creating unnecessary objects</h3><p>可以通过以下一些方法来避免创建不必要的对象：<br>1、重用不可变对象而不是每次需要的时候创建一个相同功能的新对象。<br>2、对于同时提供了静态工厂方法和构造器的不可变类，通常可以使用静态工厂方法而不是构造器并以此来避免创建不必要的对象。<br>3、也可以重用那些已知不会被修改的可变对象。<br>4、优先使用基本类型而不是装箱基本类型，要当心无意识的自动装箱。<br>5、避免创建不必要的对象并不是意味着“创建对象的代价很昂贵，而我们要尽可能避免创建对象”。事实上，针对小对象的创建和回收是非常廉价的。有时候，可以通过创建附加的对象从而使得程序更清晰简洁。</p>
-<h3 id="Item7-Eliminate-obsolete-object-references"><a href="#Item7-Eliminate-obsolete-object-references" class="headerlink" title="Item7: Eliminate obsolete object references"></a>Item7: Eliminate obsolete object references</h3><p>过期引用指的是永远也不会再被解除的引用。在Java这类支持垃圾回收的语言中，如果一个对象引用被无意识地保留起来了，那么垃圾回收机制不仅不会处理这个对象，而且连被这个对象所引用的其它对象也不会被处理。这样即便只有少量的几个对象引用被无意识保留下来，也会有许多对象被排除在垃圾回收机制之外，对性能造成潜在的重大影响。那如何解决这类问题？只需要在知道对象引用过期时，及时清空引用。只要是自己管理内存，就应该时时警惕内存泄漏问题。<br>内存泄漏的常见来源有：无意识的对象保持；缓存；监听器和其他回调。</p>
-<h3 id="Item8-Avoid-finalizers-and-cleaners"><a href="#Item8-Avoid-finalizers-and-cleaners" class="headerlink" title="Item8: Avoid finalizers and cleaners"></a>Item8: Avoid finalizers and cleaners</h3><p>终结方法是不可预测的，常常是危险而且不必要的。Java9已经弃用了终结方法，但是许多Java库中还用着这种方法。Java9中用Cleaners代替了终结方法。Cleaners比终结方法稍安全，但是仍然不可预测，慢和不必要。<br>Finalizers和cleaners的缺点之一是它们不能保证被及时执行。注重时间的任务不应该由终结方法和清理方法来完成。不但不能保证终结方法和清理方法能够及时执行，甚至其能不能执行也不会有保证。所以，永远不能依赖终结方法和清理方法来更新持久状态。<br>使用终结方法和清理方法会有严重的性能损失。显式的终结方法通常与try-finally 结构结合起来使用，以确保及时终止。重要的准则是：除非是作为安全网，或者是为了终止非关键的本地资源，否则请不要使用终结方法和清理方法。</p>
-<h3 id="Item9-Prefer-try-with-resources-to-try-finally"><a href="#Item9-Prefer-try-with-resources-to-try-finally" class="headerlink" title="Item9: Prefer try-with-resources to try-finally"></a>Item9: Prefer try-with-resources to try-finally</h3><p>操作一些必须被关闭的资源时，最好使用try-with-resources块而不是try-finally代码块，这样代码更短更清晰，而且生成的异常更有用。try-with-resources块使得正确编写操作必须关闭的资源的代码更加容易。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p> Effective Java, Third Edition -Bloch-2017<br> <a href="http://www.cnblogs.com/IcanFixIt/tag/Effective%20Java%20Third%20Edition/" target="_blank" rel="external">林本托的博客</a></p>
+        <h1 id="线性回归和逻辑回归"><a href="#线性回归和逻辑回归" class="headerlink" title="线性回归和逻辑回归"></a>线性回归和逻辑回归</h1><p>之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。</p>
+<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a></p>
+<h3 id="如何判断一个模型是正确的？"><a href="#如何判断一个模型是正确的？" class="headerlink" title="如何判断一个模型是正确的？"></a>如何判断一个模型是正确的？</h3><h4 id="使用相关系数R的平方"><a href="#使用相关系数R的平方" class="headerlink" title="使用相关系数R的平方"></a>使用相关系数R的平方</h4><p><a href="http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit" target="_blank" rel="external">R-squared</a></p>
+<h4 id="在测试集上运行"><a href="#在测试集上运行" class="headerlink" title="在测试集上运行"></a>在测试集上运行</h4><h4 id="用虚拟数据测试模型"><a href="#用虚拟数据测试模型" class="headerlink" title="用虚拟数据测试模型"></a>用虚拟数据测试模型</h4><h3 id="部分代码分析"><a href="#部分代码分析" class="headerlink" title="部分代码分析"></a>部分代码分析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.GradientDescentOptimizer(learning_rate=<span class="number">0.01</span>).minimize(loss)</div><div class="line">sess.run(optimizer, feed_dict=&#123;X: x, Y: y&#125;)</div></pre></td></tr></table></figure>
+<p>有两个疑问？<br>1、为什么train_op在tf.Session.run()的提取列表中？<br>2、Tensorflow怎么知道要更新哪些变量？<br>实际上，我们可以将任何Tensorflow的操作作为tf.Session.run()的提取变量。Tensorflow会执行计算图中这些操作所依赖的部分。在以上例子中，train_op的目的是使loss最小，而loss依赖于w和b的值。<br><img src="graph.jpg" alt=""><br>从图中可以看出，节点GrandientDescentOptimizer依赖于节点weights，bias和gradients。</p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>GradientDescentOptimizer意味着我们的更新策略是梯度下降。Tensorflow已经为我们做了自动微分，然后更新w和b的值使得loss最小。默认情况下，optimizer训练目标函数所依赖的变量中的所有可训练变量，如果这里面有一些你不想训练的变量，可以将在定义参数时其参数trainable设置为False。一个具体的例子是变量global_step，这个变量是用来记录你运行模型多少次数的变量，其不应该为可训练的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">global_step = tf.Variable(<span class="number">0</span>,trainable=<span class="keyword">False</span>, dtype=tf.int32)</div><div class="line">learning_rate = <span class="number">0.01</span> * <span class="number">0.99</span> ** tf.cast(global_step, tf.float32)</div><div class="line">increment_step = global_step.assign_add(<span class="number">1</span>)</div><div class="line">optimizer = tf.GradientDescentOptimizer(learning_rate) <span class="comment"># learning rate 可以是一个tensor</span></div></pre></td></tr></table></figure></p>
+<p>tf.Variable的完整定义是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tf.Variable(initial_value=<span class="keyword">None</span>, trainable=<span class="keyword">True</span>, collections=<span class="keyword">None</span>,</div><div class="line">    validate_shape=<span class="keyword">True</span>, caching_device=<span class="keyword">None</span>, name=<span class="keyword">None</span>, variable_def=<span class="keyword">None</span>,</div><div class="line">    dtype=<span class="keyword">None</span>, expected_shape=<span class="keyword">None</span>, import_scope=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>我们甚至可以让optimizer计算特定变量的梯度，也可以修改由optimizer计算出的梯度。<br>如下所示是一些例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">optimizer = GradientDescentOptimizer(learning_rate=<span class="number">0.1</span>)</div><div class="line"><span class="comment"># 计算一系列变量的梯度</span></div><div class="line">grads_and_vars = opt.compute_gradients(loss, &lt;list of variables&gt;)</div><div class="line"><span class="comment"># grads_and_vars 是由元组(gradient, valriable)</span></div><div class="line"><span class="comment">#组成的列表。可以对其中的gradient项做一些操作。</span></div><div class="line">substracted_grads_and_vars = [(gv[<span class="number">0</span>] - <span class="number">1.0</span>, gv[<span class="number">1</span>]) <span class="keyword">for</span> gv <span class="keyword">in</span> grads_and_vars]</div><div class="line"><span class="comment"># 让optimizer应用减过1的梯度。</span></div><div class="line">optimizer.apply_gradients(subtracted_grads_and_vars)</div></pre></td></tr></table></figure></p>
+<h4 id="更多关于梯度计算"><a href="#更多关于梯度计算" class="headerlink" title="更多关于梯度计算"></a>更多关于梯度计算</h4><p>优化器类会自动计算graph的梯度，但创建新的优化器或专家用户可以调用下面的低级函数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.gradients(ys, xs, grad_ys=<span class="keyword">None</span>, name=<span class="string">'gradients'</span>, colocate_gradients_with_ops=<span class="keyword">False</span>, gate_gradients=<span class="keyword">False</span>, aggregation_method=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>当只训练一个模型的一个部分时，这种方法很有用。例如我们可以使用tf.gradient()计算中间层loss的梯度G，然后我们使用优化器来最小化中间层输出M和M + G之间的差异，<br>只更新网络的下半部分。</p>
+<h4 id="优化器种类"><a href="#优化器种类" class="headerlink" title="优化器种类"></a>优化器种类</h4><p><img src="optimizer.jpg" alt=""></p>
+<h5 id="各种优化器的比较"><a href="#各种优化器的比较" class="headerlink" title="各种优化器的比较"></a>各种优化器的比较</h5><p>cs231n的笔记中有介绍。也可参考：<br><a href="http://sebastianruder.com/optimizing-gradient-descent/" target="_blank" rel="external">Optimizing Gradient Descent</a></p>
+<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><p>用逻辑回归解决MNIST字符识别的一个例子</p>
+<h3 id="理解one-hot-encodiing"><a href="#理解one-hot-encodiing" class="headerlink" title="理解one-hot encodiing"></a>理解one-hot encodiing</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_03.pdf" target="_blank" rel="external">slides_03</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a><br><a href="https://zhuanlan.zhihu.com/p/28924642" target="_blank" rel="external">cs20si: tensorflow for research 学习笔记3</a><br><a href="notes_03.pdf">notes_03s</a></p>
 
       
 
@@ -204,7 +210,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -216,7 +222,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -271,7 +277,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2018/01/17/effective-java-creating-and-destroying-objects/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2018/01/19/tensorflow-programming-linear-and-logistic-regression/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -285,18 +291,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/01/18/design-pattern-links/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          一些讲解设计模式的链接
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/01/17/useful-links/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Useful Links</div>
+    <a href="/2018/01/18/2017-summary/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">My 2017</div>
       <i class="icon-circle-right"></i>
     </a>
   
