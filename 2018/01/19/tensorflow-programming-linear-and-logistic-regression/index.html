@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
   <title>Linear and Logistic Regression in Tensorflow Notes | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="线性回归和逻辑回归之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。 线性回归代码notes_03 如何判断一个模型是正确的？使用相关系数R的平方R-squared 在测试集上运行用虚拟数据测试模型部分代码分析12optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).m">
+  <meta name="description" content="线性回归和逻辑回归之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。 线性回归代码notes_03 如何判断一个模型是正确的？使用相关系数R的平方R-squared 在测试集上运行用虚拟数据测试模型部分代码分析12optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).">
 <meta name="keywords" content="tensorflow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linear and Logistic Regression in Tensorflow Notes">
 <meta property="og:url" content="https://wwdguu.github.io/2018/01/19/tensorflow-programming-linear-and-logistic-regression/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="线性回归和逻辑回归之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。 线性回归代码notes_03 如何判断一个模型是正确的？使用相关系数R的平方R-squared 在测试集上运行用虚拟数据测试模型部分代码分析12optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).m">
+<meta property="og:description" content="线性回归和逻辑回归之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。 线性回归代码notes_03 如何判断一个模型是正确的？使用相关系数R的平方R-squared 在测试集上运行用虚拟数据测试模型部分代码分析12optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wwdguu.github.io/2018/01/19/tensorflow-programming-linear-and-logistic-regression/graph.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2018/01/19/tensorflow-programming-linear-and-logistic-regression/optimizer.jpg">
-<meta property="og:updated_time" content="2018-01-19T11:07:44.037Z">
+<meta property="og:updated_time" content="2018-01-19T11:14:01.968Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linear and Logistic Regression in Tensorflow Notes">
-<meta name="twitter:description" content="线性回归和逻辑回归之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。 线性回归代码notes_03 如何判断一个模型是正确的？使用相关系数R的平方R-squared 在测试集上运行用虚拟数据测试模型部分代码分析12optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).m">
+<meta name="twitter:description" content="线性回归和逻辑回归之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。 线性回归代码notes_03 如何判断一个模型是正确的？使用相关系数R的平方R-squared 在测试集上运行用虚拟数据测试模型部分代码分析12optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).">
 <meta name="twitter:image" content="https://wwdguu.github.io/2018/01/19/tensorflow-programming-linear-and-logistic-regression/graph.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
@@ -183,7 +183,8 @@
   <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#线性回归和逻辑回归"><span class="toc-text">线性回归和逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线性回归"><span class="toc-text">线性回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何判断一个模型是正确的？"><span class="toc-text">如何判断一个模型是正确的？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用相关系数R的平方"><span class="toc-text">使用相关系数R的平方</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在测试集上运行"><span class="toc-text">在测试集上运行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用虚拟数据测试模型"><span class="toc-text">用虚拟数据测试模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部分代码分析"><span class="toc-text">部分代码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化"><span class="toc-text">优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#更多关于梯度计算"><span class="toc-text">更多关于梯度计算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优化器种类"><span class="toc-text">优化器种类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#各种优化器的比较"><span class="toc-text">各种优化器的比较</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑回归"><span class="toc-text">逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理解one-hot-encodiing"><span class="toc-text">理解one-hot encodiing</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
 </div>
 
-        <h1 id="线性回归和逻辑回归"><a href="#线性回归和逻辑回归" class="headerlink" title="线性回归和逻辑回归"></a>线性回归和逻辑回归</h1><p>之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。</p>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=474117771&auto=1&height=66"></iframe></p>
+<h1 id="线性回归和逻辑回归"><a href="#线性回归和逻辑回归" class="headerlink" title="线性回归和逻辑回归"></a>线性回归和逻辑回归</h1><p>之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。</p>
 <h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a></p>
 <h3 id="如何判断一个模型是正确的？"><a href="#如何判断一个模型是正确的？" class="headerlink" title="如何判断一个模型是正确的？"></a>如何判断一个模型是正确的？</h3><h4 id="使用相关系数R的平方"><a href="#使用相关系数R的平方" class="headerlink" title="使用相关系数R的平方"></a>使用相关系数R的平方</h4><p><a href="http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit" target="_blank" rel="external">R-squared</a></p>
 <h4 id="在测试集上运行"><a href="#在测试集上运行" class="headerlink" title="在测试集上运行"></a>在测试集上运行</h4><h4 id="用虚拟数据测试模型"><a href="#用虚拟数据测试模型" class="headerlink" title="用虚拟数据测试模型"></a>用虚拟数据测试模型</h4><h3 id="部分代码分析"><a href="#部分代码分析" class="headerlink" title="部分代码分析"></a>部分代码分析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.GradientDescentOptimizer(learning_rate=<span class="number">0.01</span>).minimize(loss)</div><div class="line">sess.run(optimizer, feed_dict=&#123;X: x, Y: y&#125;)</div></pre></td></tr></table></figure>
