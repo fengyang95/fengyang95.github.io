@@ -156,6 +156,153 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-cs179notes-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/23/cs179notes-1/">cs179notes_1</a>
+    </h1>
+  
+
+        
+        <a href="/2017/11/23/cs179notes-1/" class="archive-article-date">
+  	<time datetime="2017-11-23T14:32:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#useful-links"><span class="toc-text">useful links</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lecture1"><span class="toc-text">lecture1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU-Central-Processing-Unit"><span class="toc-text">CPU(Central Processing Unit)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GPU-Graphics-Processing-Unit"><span class="toc-text">GPU(Graphics Processing Unit)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要用GPU-GPU的优势"><span class="toc-text">为什么要用GPU?(GPU的优势)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#GPU与CPU在上下文切换上的差异"><span class="toc-text">GPU与CPU在上下文切换上的差异</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在GPU上可以这样实现"><span class="toc-text">在GPU上可以这样实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GPU的计算步骤"><span class="toc-text">GPU的计算步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#编程举例"><span class="toc-text">编程举例</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#内核代码"><span class="toc-text">内核代码</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CPU上调用内核的代码"><span class="toc-text">CPU上调用内核的代码</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GPU的历史"><span class="toc-text">GPU的历史</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lecture2-More-Basics"><span class="toc-text">lecture2 More Basics</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线程组织形式-Thread-Organization"><span class="toc-text">线程组织形式(Thread Organization)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键词"><span class="toc-text">关键词</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GPU内部构造"><span class="toc-text">GPU内部构造</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lecture3"><span class="toc-text">lecture3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#并行问题"><span class="toc-text">并行问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非并行问题"><span class="toc-text">非并行问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lecture4-GPU-Memory-Systems"><span class="toc-text">lecture4 GPU Memory Systems</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#NVIDIA-Architecture-Names"><span class="toc-text">NVIDIA Architecture Names</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#延迟和吞吐量-Latency-and-Throughput"><span class="toc-text">延迟和吞吐量(Latency and Throughput)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#计算和IO吞吐量-Compute-and-IO-Throughput"><span class="toc-text">计算和IO吞吐量(Compute and IO Throughput)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存-Cache"><span class="toc-text">缓存(Cache)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GPU内存"><span class="toc-text">GPU内存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Registers"><span class="toc-text">Registers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Local-Memory"><span class="toc-text">Local Memory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Global-Memory"><span class="toc-text">Global Memory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shared-Memory"><span class="toc-text">Shared Memory</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#静态方式"><span class="toc-text">静态方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#动态方式"><span class="toc-text">动态方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#案例分析"><span class="toc-text">案例分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#计算强度-Computational-Intensity"><span class="toc-text">计算强度(Computational Intensity)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#内核中的常见模式"><span class="toc-text">内核中的常见模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bank-Conflicts"><span class="toc-text">Bank Conflicts</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Register-spilling"><span class="toc-text">Register spilling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#L1-Cache"><span class="toc-text">L1 Cache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#L2-Cache"><span class="toc-text">L2 Cache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Constant-Memory"><span class="toc-text">Constant Memory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Texture-Memory"><span class="toc-text">Texture Memory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Read-Only-Cache-CC-3-5"><span class="toc-text">Read-Only Cache(CC 3.5)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lecture5-GPU-Compute-Programming"><span class="toc-text">lecture5 GPU Compute Programming</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Warp调度"><span class="toc-text">Warp调度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GK110-Kepler-numbers"><span class="toc-text">GK110(Kepler) numbers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#占用率"><span class="toc-text">占用率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步"><span class="toc-text">同步</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lecture6-同步、共享内存、矩阵转置"><span class="toc-text">lecture6 同步、共享内存、矩阵转置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步-1"><span class="toc-text">同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#需要同步的例子"><span class="toc-text">需要同步的例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#syncthreads"><span class="toc-text">__syncthreads()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原子指令：动机"><span class="toc-text">原子指令：动机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用建议"><span class="toc-text">使用建议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#warp-synchronous-programming"><span class="toc-text">warp-synchronous programming</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Warp-shuffle"><span class="toc-text">Warp shuffle</span></a></li></ol></li></ol></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=439915614&auto=1&height=66"></iframe></p>
+<h1 id="useful-links"><a href="#useful-links" class="headerlink" title="useful links"></a>useful links</h1><p><a href="http://courses.cms.caltech.edu/cs179/" target="_blank" rel="external">cs179</a><br><a href="http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html" target="_blank" rel="external">cuda c programming guide</a></p>
+<h1 id="lecture1"><a href="#lecture1" class="headerlink" title="lecture1"></a>lecture1</h1><h2 id="CPU-Central-Processing-Unit"><a href="#CPU-Central-Processing-Unit" class="headerlink" title="CPU(Central Processing Unit)"></a>CPU(Central Processing Unit)</h2><p>传统上，应用程序使用CPU作为主服务器计算，它有如下特点：<br>•通用功能<br>•建立技术<br>•通常配备8个或更少的强大的核心<br>•对于并发进程是最佳的，但不是大规模的并行计算</p>
+<h2 id="GPU-Graphics-Processing-Unit"><a href="#GPU-Graphics-Processing-Unit" class="headerlink" title="GPU(Graphics Processing Unit)"></a>GPU(Graphics Processing Unit)</h2><p>为并行化问题设计的相对较新的技术。<br>•最初专为图形创建<br>•成为更有能力的一般计算</p>
+<h3 id="为什么要用GPU-GPU的优势"><a href="#为什么要用GPU-GPU的优势" class="headerlink" title="为什么要用GPU?(GPU的优势)"></a>为什么要用GPU?(GPU的优势)</h3><p>举例，对于两个数组相加的操作。在CPU上这样实现：</p>
+<p>串行实现<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">float</span> *C=<span class="built_in">malloc</span>(N*<span class="keyword">sizeof</span>(<span class="keyword">float</span>));</div><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;++i)&#123;</div><div class="line">    C[i]=A[i]+B[i];</div><div class="line">&#125;</div><div class="line"><span class="keyword">return</span> C;</div></pre></td></tr></table></figure></p>
+<p>更好一点可以使用并行实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">(allocate memory for C)</div><div class="line">Create # of threads equal to number of cores on processor</div><div class="line">(around 2, 4, perhaps 8)</div><div class="line">(Indicate portions of A, B, C to each thread...)</div><div class="line">...</div><div class="line">In each thread,</div><div class="line">For (i from beginning region of thread)</div><div class="line">C[i] &lt;- A[i] + B[i]</div><div class="line">//lots of waiting involved for memory reads, writes, ...</div><div class="line">Wait for threads to synchronize...</div><div class="line">This is slightly faster – 2-8x (slightly more with other tricks)</div></pre></td></tr></table></figure>
+<p>但是这带来一些问题：能用多少个线程？如何扩展程序性能？实际上，在CPU上允许的最大线程数量比较少。</p>
+<h4 id="GPU与CPU在上下文切换上的差异"><a href="#GPU与CPU在上下文切换上的差异" class="headerlink" title="GPU与CPU在上下文切换上的差异"></a>GPU与CPU在上下文切换上的差异</h4><p>CPU与GPU架构的一个主要区别就是CPU与GPU映射寄存器的方式。CPU通过使用寄存器重命名和栈来执行多线程。为了运行一个新任务，CPU需要进行上下文切换，当前所有寄存器的状态保存到栈上，然后从栈中恢复当前需要执行的新线程上次的执行状态。而这些操作通常要花费上百个CPU时钟周期，所以如果在CPU中开启过多的线程，时间几乎都将花在上下文切换过程中寄存器内容的换进换出上。<br>然而，GPU却恰恰相反，GPU利用多线程隐藏了内存获取与指令执行带来的延迟，因此，在GPU上开启过少的线程反而会因为等待内存事务而使得GPU处于闲置状态。另外，GPU也不实用寄存器重命名的机制，而是致力于为每一个线程都分配真实的寄存器，因此，当需要上下文切换时，所需要的操作就是将指向当前寄存器组的选择器(或者指针)更新，以指向下一个执行的线程束的寄存器组，因此几乎就是零开销。</p>
+<h4 id="在GPU上可以这样实现"><a href="#在GPU上可以这样实现" class="headerlink" title="在GPU上可以这样实现"></a>在GPU上可以这样实现</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">(allocate memory <span class="keyword">for</span> A, B, C on GPU)</div><div class="line">Create the “kernel” – <span class="function">each thread will perform <span class="title">one</span> <span class="params">(<span class="keyword">or</span> a few)</span></span></div><div class="line"><span class="function">additions</span></div><div class="line">Specify the following kernel operation:</div><div class="line">For all i‘s (indices) assigned to <span class="keyword">this</span> thread:</div><div class="line">C[i] &lt;- A[i] + B[i]</div><div class="line">Start ~<span class="number">20000</span> (!) threads</div><div class="line">Wait <span class="keyword">for</span> threads to synchronize...</div></pre></td></tr></table></figure>
+<p>GPU的优势在于：强调并行性意味着我们有很多核心。这允许我们同时运行多个线程而没有上下文切换。</p>
+<h4 id="GPU的计算步骤"><a href="#GPU的计算步骤" class="headerlink" title="GPU的计算步骤"></a>GPU的计算步骤</h4><p>• Setup inputs on the host (CPU-accessible memory)<br>• Allocate memory for outputs on the host<br>• Allocate memory for inputs on the GPU<br>• Allocate memory for outputs on the GPU<br>• Copy inputs from host to GPU<br>• Start GPU kernel<br>• Copy output from GPU to host</p>
+<p>值得注意的是：数据的复制过程可以是异步的。</p>
+<h4 id="编程举例"><a href="#编程举例" class="headerlink" title="编程举例"></a>编程举例</h4><h5 id="内核代码"><a href="#内核代码" class="headerlink" title="内核代码"></a>内核代码</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">__<span class="function">global__ <span class="keyword">void</span> <span class="title">cudaAddVectorsKernel</span><span class="params">(<span class="keyword">float</span>* a,<span class="keyword">float</span>* b,<span class="keyword">float</span>* c)</span></span>&#123;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> index=blockIdx.x*blockDim.x+threadIdx.x;</div><div class="line">    c[index]=a[index]+b[index];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="CPU上调用内核的代码"><a href="#CPU上调用内核的代码" class="headerlink" title="CPU上调用内核的代码"></a>CPU上调用内核的代码</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">cudaAddVectors</span><span class="params">(<span class="keyword">const</span> <span class="keyword">float</span>* a,<span class="keyword">const</span> <span class="keyword">float</span>* b,<span class="keyword">float</span>* c,size)</span></span>&#123;</div><div class="line">    <span class="keyword">float</span>* dev_a;</div><div class="line">    <span class="keyword">float</span>* dev_b;</div><div class="line">    <span class="keyword">float</span>* dev_c;</div><div class="line"></div><div class="line">    cudaMalloc((<span class="keyword">void</span>**) &amp;dev_a,size*<span class="keyword">sizeof</span>(<span class="keyword">float</span>));</div><div class="line">    cudaMemcpy(dev_a,a,size*<span class="keyword">sizeof</span>(<span class="keyword">float</span>),cudaMemcpyHostToDevice);</div><div class="line"></div><div class="line">    cudaMalloc((<span class="keyword">void</span>**) &amp;dev_b,size*<span class="keyword">sizeof</span>(<span class="keyword">float</span>));</div><div class="line">    cudaMemcpy(dev_b,b,size*<span class="keyword">sizeof</span>(<span class="keyword">float</span>),cudaMemcpyHostToDevice);</div><div class="line"></div><div class="line">    cudaMalloc((<span class="keyword">void</span>**) &amp;dev_c,size*<span class="keyword">sizeof</span>(<span class="keyword">float</span>));</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> threadsPerBlock=<span class="number">512</span>;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> blocks=<span class="built_in">ceil</span>(size/<span class="keyword">float</span>(threadsPerBlock));</div><div class="line">    cudaAddVectorsKernel&lt;&lt;&lt;blocks,threadsPerBlock&gt;&gt;&gt;(dev_a,dev_b,dev_c);</div><div class="line"></div><div class="line">    cudaMemcpy(c,dev_c,size*<span class="keyword">sizeof</span>(<span class="keyword">float</span>),cudaMemcpyDeviceToHost);</div><div class="line"></div><div class="line">    cudaFree(dev_a);</div><div class="line">    cudaFree(dev_b);</div><div class="line">    cudaFree(dev_c);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="GPU的历史"><a href="#GPU的历史" class="headerlink" title="GPU的历史"></a>GPU的历史</h4><h1 id="lecture2-More-Basics"><a href="#lecture2-More-Basics" class="headerlink" title="lecture2 More Basics"></a>lecture2 More Basics</h1><h2 id="线程组织形式-Thread-Organization"><a href="#线程组织形式-Thread-Organization" class="headerlink" title="线程组织形式(Thread Organization)"></a>线程组织形式(Thread Organization)</h2><h3 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h3><p>线程(Thread)<br>块(Block)<br>网格(Grid)<br>流形多处理器(Streaming Multiprocessor)<br>Warp<br>Warp Divergence</p>
+<h3 id="GPU内部构造"><a href="#GPU内部构造" class="headerlink" title="GPU内部构造"></a>GPU内部构造</h3><p>把Device Memory(也叫Global Memory)当做GPU里的RAM。它比实际的RAM快速，而且还可以更快。<br>GPU有着许多SMs,其中每一个SM有多个处理器，但是只有一个指令单元(instruction unit)。SM中的一个处理器组在一定时间内必须运行完全相同的指令。<br>当内核被调用时，一个任务被分为多个线程，每个线程控制整个任务的某个部分。这些线程被分成一个个网格块(a Grid of Blocks)。Grids和Blocks都有三个维度。然而我们经常使用一个维度的Grids和Blocks。</p>
+<p>每个block的最大线程数量是512或者1024，具体取决于机器型号。每个Grid的Block数目通常是65525个。当超过了这些限制之后会使得GPU出现问题。</p>
+<p>每个block和一个SM对应。在SM内部，block被分成线程的Warps。每个Warp包含32个线程，这里面的每个线程在同一时刻必须执行完全相同的指令(因为这里只有一个指令单元)。一个SM中的Warps是并行的。如果想要在一个Warp中的线程运行不同的指令，这两个任务将会按照顺序执行，这种现象叫做Warp Divergence。</p>
+<h1 id="lecture3"><a href="#lecture3" class="headerlink" title="lecture3"></a>lecture3</h1><h2 id="并行问题"><a href="#并行问题" class="headerlink" title="并行问题"></a>并行问题</h2><h2 id="非并行问题"><a href="#非并行问题" class="headerlink" title="非并行问题"></a>非并行问题</h2><p>并不是所有的问题都是并行问题。GPU用来计算并行问题，对于非并行问题，直接用CPU计算。</p>
+<h1 id="lecture4-GPU-Memory-Systems"><a href="#lecture4-GPU-Memory-Systems" class="headerlink" title="lecture4 GPU Memory Systems"></a>lecture4 GPU Memory Systems</h1><h2 id="NVIDIA-Architecture-Names"><a href="#NVIDIA-Architecture-Names" class="headerlink" title="NVIDIA Architecture Names"></a>NVIDIA Architecture Names</h2><p><a href="https://developer.nvidia.com/cuda-gpus" target="_blank" rel="external">cuda-gpus</a></p>
+<h2 id="延迟和吞吐量-Latency-and-Throughput"><a href="#延迟和吞吐量-Latency-and-Throughput" class="headerlink" title="延迟和吞吐量(Latency and Throughput)"></a>延迟和吞吐量(Latency and Throughput)</h2><p>延迟是由硬件的物理速度造成的延迟。<br>CPU有着低延迟低吞吐量。CPU clock 3GHz,main memory latency:~100ns,arithmetic instruction latency:~1+ns</p>
+<p>GPU有着高延迟和高吞吐量。GPU clock 1GHz,main memory latency:~300+ns,arithmetic instruction latency:~10+ns。这些参数针对 Kepler GPUs(例如GTX 700)。对于 Fermi,吞吐量大概是其两倍。</p>
+<h2 id="计算和IO吞吐量-Compute-and-IO-Throughput"><a href="#计算和IO吞吐量-Compute-and-IO-Throughput" class="headerlink" title="计算和IO吞吐量(Compute and IO Throughput)"></a>计算和IO吞吐量(Compute and IO Throughput)</h2><p>IO往往是吞吐量的性能瓶颈，所以需要好的IO策略。如果象牙超过900GFLOPS,则需要执行多个FLOP共享内存负载。</p>
+<h2 id="缓存-Cache"><a href="#缓存-Cache" class="headerlink" title="缓存(Cache)"></a>缓存(Cache)</h2><p>缓存是位于更大的内存池和处理器之间的一块内存,它通常在硬件级别实现，具有比它更大的内存池更快的访问速度。当请求内存时，请求的内存附近的额外内存被读入一个缓存，读取的数量是缓存和内存池特定的。始终缓存在一起的内存区域称为缓存行，这使未来访问可能在缓存中找到。这种访问被称为缓存命中并允许更快的访问，如果在在缓存中找不到访问，则称为缓存未命中（显然没有性能增益）。</p>
+<h2 id="GPU内存"><a href="#GPU内存" class="headerlink" title="GPU内存"></a>GPU内存</h2><h3 id="Registers"><a href="#Registers" class="headerlink" title="Registers"></a>Registers</h3><p>寄存器是处理器直接使用的一块内存。我们希望尽可能使用最快的内存，寄存器的速度大概是共享内存的10倍。每个SM中有着数以万计的寄存器。通常每个线程最多可以有32或者64个32位的寄存器。在内核中声明的大多数堆栈变量都存储在寄存器中。存储在堆栈中的静态索引数组有时被放入寄存器中。</p>
+<h3 id="Local-Memory"><a href="#Local-Memory" class="headerlink" title="Local Memory"></a>Local Memory</h3><p>本地内存是堆栈中不能被寄存器容纳的所有内容。本地内存的范围只是线程，本地内存存储在全局内存中，比寄存器慢得多。</p>
+<h3 id="Global-Memory"><a href="#Global-Memory" class="headerlink" title="Global Memory"></a>Global Memory</h3><p>Global Memory是独立于GPU内核的硬件(包含SM，高速缓存，等)。GPU上绝大部分内存都是全局内存，如果数据不适合全局内存，则将以块处理它使得它适合全局内存。GPU有着0.5-24GB的全局内存，现在的设备大多在2GB左右。全局内存的延时在Kepler上大约300ns,在Fermi上大约600ns。<br>全局内存的IO是GPU上的IO中最慢的(当然对主机内存的通信IO更慢)。由于这个原因，我们希望能够尽可能少访问全局内存。与GPU硬件搭配得很好的访问模式被称为合并内存访问。合并内存访问能够最大限度减少读入的缓存行数量。GPU高速缓存线是128字节并对齐。内存合并在现实中其实复杂得多。</p>
+<h3 id="Shared-Memory"><a href="#Shared-Memory" class="headerlink" title="Shared Memory"></a>Shared Memory</h3><p>共享内存是SM中非常快的内存。和L1级缓存的硬件相同，大概5ns的延迟。最大容量为48KB，是用户可配置的。共享内存的范围是block。<br>共享内存的分配可以通过静态和动态两种方式进行。</p>
+<h4 id="静态方式"><a href="#静态方式" class="headerlink" title="静态方式"></a>静态方式</h4><p><strong>shared</strong>  float data[1024];<br>在内核中定义，在主机代码中不用做任何处理。</p>
+<h4 id="动态方式"><a href="#动态方式" class="headerlink" title="动态方式"></a>动态方式</h4><p>Host:<br>kernel&lt;&lt;<grid_dim,block_dim,numbytesshmem>&gt;&gt;(args);<br>Device:<br>extern <strong>shared</strong> float s[];<br>定义多个动态大小的变量可以参考<br><a href="https://devblogs.nvidia.com/parallelforall/using-shared-memory-cuda-cc/" target="_blank" rel="external">using shared memory cuda cc</a></grid_dim,block_dim,numbytesshmem></p>
+<h4 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h4><p>任务：计算字节频率计数<br>输入：长度为n的字节数组<br>输出：存储每个数字出现次数的长度为256的数组</p>
+<p>简单方法：在全局内存建立输出，n个全局存储空间。<br>聪明方法：在共享内存中构建输出，并复制到全局内存中，最终需要256个全局存储空间。</p>
+<h4 id="计算强度-Computational-Intensity"><a href="#计算强度-Computational-Intensity" class="headerlink" title="计算强度(Computational Intensity)"></a>计算强度(Computational Intensity)</h4><p>计算强度是必须在单个数据点（FLOPs / IO）上完成的操作数的一种表示。通常和复杂度的大O表示方法一致。<br>如果计算强度大于1，那么相同的数据不止用来计算一次。实践中我们需要尽可能多的共享负载和尽可能少的全局负载。</p>
+<h4 id="内核中的常见模式"><a href="#内核中的常见模式" class="headerlink" title="内核中的常见模式"></a>内核中的常见模式</h4><p>1、将数据从全局内存拷贝到共享内存<br>2、__syncthreads()<br>3、运行计算，并递增地将运行结果存储在共享内存中，如果必要还需进行线程同步。<br>4、将输出从共享内存拷贝到全局内存。</p>
+<h4 id="Bank-Conflicts"><a href="#Bank-Conflicts" class="headerlink" title="Bank Conflicts"></a>Bank Conflicts</h4><p>共享内存被设置为32个bank,如果将共享内存划分为4个字节长的元素，则元素i的位置将在第i%32个bank。当同一个Warp中的两个线程访问同一个bank中的不同元素时将发生bank conflicts。这种冲突将导致串行存储器访问而不是并行访问。在GPU编程中串行任何内容都对性能不利。</p>
+<h3 id="Register-spilling"><a href="#Register-spilling" class="headerlink" title="Register spilling"></a>Register spilling</h3><p>It costs:<br>1 extra load<br>1 extra store<br>2 extra pairs of consecutive dependent instructions</p>
+<p>## </p>
+<h3 id="L1-Cache"><a href="#L1-Cache" class="headerlink" title="L1 Cache"></a>L1 Cache</h3><p>Fermi-caches local&amp; global memory<br>Kepler,Maxwell -only caches local momory<br>same hardware as shared momory<br>configurale size(16,32,48KB)<br>each SM has its own L1 cache</p>
+<h3 id="L2-Cache"><a href="#L2-Cache" class="headerlink" title="L2 Cache"></a>L2 Cache</h3><p>caches all global and local memory accesses<br>about 1MB in size<br>shared by all SMs</p>
+<h3 id="Constant-Memory"><a href="#Constant-Memory" class="headerlink" title="Constant Memory"></a>Constant Memory</h3><p>常量内存是具有特殊缓存的全局内存，用于不能编译成程序的常量，运行内核之前必须从主机设置常量，用户为64KB，编译器为64KB,内核参数通过常量内存传递。<br>用法：<br>在全局范围内(内核之外，程序的顶层)：<br><strong>constant</strong> in foo[1024];<br>主机代码：<br>cudaMemcpyToSymbol(foo,h_src,sizeof(int)*1024);</p>
+<h3 id="Texture-Memory"><a href="#Texture-Memory" class="headerlink" title="Texture Memory"></a>Texture Memory</h3><p>对于通用计算来说，复杂而且只有很小的用处<br>有用的特点：<br>●通过“CUDA阵列”进行缓存的二维或三维数据位置,进入特殊的纹理缓存。<br>●在1D，2D或3D阵列上进行快速插补<br>●将整数转换为“单位”浮点数<br>用例：<br>(1)通过纹理缓存和CUDA数组读取输入数据来利用空间缓存,这是最常见的用例。<br>(2)通过纹理缓存和CUDA数组读取输入数据来利用。<br>(3)利用数字纹理功能。<br>(4)与OpenGL和一般计算机图形学的交互。</p>
+<h3 id="Read-Only-Cache-CC-3-5"><a href="#Read-Only-Cache-CC-3-5" class="headerlink" title="Read-Only Cache(CC 3.5)"></a>Read-Only Cache(CC 3.5)</h3><p>许多CUDA程序不使用纹理，但是我们应该利用纹理缓存硬件。CC&gt;=3.5 使得使用纹理缓存更加容易。许多const限制变量将自动通过纹理缓存加载(也称为只读缓存)。也可以使用__ldg内部函数强制加载缓存。其和常量内存不同，因为不需要静态索引。</p>
+<h1 id="lecture5-GPU-Compute-Programming"><a href="#lecture5-GPU-Compute-Programming" class="headerlink" title="lecture5 GPU Compute Programming"></a>lecture5 GPU Compute Programming</h1><h2 id="Warp调度"><a href="#Warp调度" class="headerlink" title="Warp调度"></a>Warp调度</h2><p>warp调度程序找到一个准备好执行下一个指令和可执行的warp核心，然后开始执行<br>GK110：每个SM中有4个调度程序，2个调度程序每个时钟最多4次启动指令，并在每个经纱中启动最多2条指令。</p>
+<h2 id="GK110-Kepler-numbers"><a href="#GK110-Kepler-numbers" class="headerlink" title="GK110(Kepler) numbers"></a>GK110(Kepler) numbers</h2><p>max threads/SM=2048(64warps)<br>max threads/block=1024(32warps)<br>32bit registers /SM=64KB<br>max shared memory /SM=48KB<br>值得注意的是：在一个SM上同时运行的块的数量取决于该资源的需求块。</p>
+<h2 id="占用率"><a href="#占用率" class="headerlink" title="占用率"></a>占用率</h2><p>occupancy=warps per SM / max warps per SM<br>max warps /SM depends only on GPU<br>warps /SM depends on warps /block, registers/block, shared momory/block。</p>
+<h2 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h2><p>在CPU上，可以使用锁，信号量，条件变量等来解决同步问题。在GPU上，这些解决方案引入了太多的内存和处理开销。其实我们有更简单的解决方案更适合并行程序。我们使用__syncthreads()函数来同步块内的线程◦但是只能在块级别运行，因为SMs是彼此分开的，所以做不到比这更好。类似于C/C++中的barrier()函数。</p>
+<h1 id="lecture6-同步、共享内存、矩阵转置"><a href="#lecture6-同步、共享内存、矩阵转置" class="headerlink" title="lecture6 同步、共享内存、矩阵转置"></a>lecture6 同步、共享内存、矩阵转置</h1><h2 id="同步-1"><a href="#同步-1" class="headerlink" title="同步"></a>同步</h2><p>并行的理想状态：线程之间无资源共享，无通讯。许多只需要一点点共享资源的算法仍然能够通过大规模的并行计算来实现。</p>
+<h3 id="需要同步的例子"><a href="#需要同步的例子" class="headerlink" title="需要同步的例子"></a>需要同步的例子</h3><p>1、并行BFS<br>2、计算列表之和<br>3、向GPU的共享内存载入数据</p>
+<h3 id="syncthreads"><a href="#syncthreads" class="headerlink" title="__syncthreads()"></a>__syncthreads()</h3><p>作用是同步一个block中的所有线程。值得注意的是：共享内存是在每个block之内共享。Every block that is launched will have to allocate shared memory for its own itself on its resident SM。__synchthreads()方法对于内核共享内存很有用。</p>
+<h3 id="原子指令：动机"><a href="#原子指令：动机" class="headerlink" title="原子指令：动机"></a>原子指令：动机</h3><p>一个原子指令作为一个基本单元，不能被打断。序列化访问。<br>CUDA上的原子指令：<br>atomic{Add, Sub, Exch, Min, Max, Inc, Dec, CAS, And, Or, Xor}<br>Syntax: atomicAdd(float* address, float val)<br>在全局内存和共享内存都起作用。</p>
+<h3 id="使用建议"><a href="#使用建议" class="headerlink" title="使用建议"></a>使用建议</h3><p>做更多的便宜操作和做更少的复杂操作。<br>举例：计算列表的和。<br>Naive方法：每个线程以原子方式递增每个数字到全局内存中的累加器。<br>更聪明的方法是：<br>.每个线程在寄存器中计算自己那部分的和。<br>.利用warp shuffle来计算跨越warp的和。<br>.每个warp以原子方式递增和到全局内存中的累加器。<br>.将原子操作的数量减少32倍。(32为每个warp的线程数)。</p>
+<h3 id="warp-synchronous-programming"><a href="#warp-synchronous-programming" class="headerlink" title="warp-synchronous programming"></a>warp-synchronous programming</h3><p>怎样能够使得warp中的各个线程同步呢？实际上，warp中的各个线程已经是同步的。这样可以减少__syncthreads()方法的调用次数。</p>
+<h3 id="Warp-shuffle"><a href="#Warp-shuffle" class="headerlink" title="Warp shuffle"></a>Warp shuffle</h3><p>从warp中的另一个线程读取寄存器的值。<br>int __shfl(int val,int srcLane, int width=warpSize)<br>对于计算整个warp的和极其有用。First avalible on Kepler(no Fermi, only CC&gt;=3.0)</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">cuda</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/cuda//" class="article-tag-list-link color5">cuda</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/11/23/cs179notes-1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-motion-detection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -508,109 +655,9 @@
 
 
   
-    <article id="post-cnn-architecture" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/09/cnn-architecture/">常用卷积神经网络结构</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/09/cnn-architecture/" class="archive-article-date">
-  	<time datetime="2017-10-09T05:52:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#AlexNet"><span class="toc-text">AlexNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VGGNet"><span class="toc-text">VGGNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GoogleNet"><span class="toc-text">GoogleNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ResNet"><span class="toc-text">ResNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码实现"><span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
-</div>
-
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=423104954&auto=1&height=66"></iframe><br>主要介绍几种当前常见的卷积网络结构。包括AlexNet,VGGNet,GoogleNet,ResNet等。</p>
-<h1 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h1><p>AlexNet结构获得了2012年ILSVRC的冠军。其主要结构如下,这是cs231n的课件做的一个总结：<br><img src="alex_net.jpg" alt=""></p>
-<h1 id="VGGNet"><a href="#VGGNet" class="headerlink" title="VGGNet"></a>VGGNet</h1><p>VGGNet是2014年ILSVRC的分类第二名，和AlexNet相比的改进是滤波器的尺寸更小，只用3x3的滤波器；还有就是更深的网络结果。具体如下；<br><img src="vgg_net.jpg" alt=""></p>
-<p>用3x3的滤波器的原因：3个3x3的卷积层的组合的effective of field和一个7x7的卷积层是一致的。并且还有以下两个优点：1、网络更深，引入更多非线性；<br>2、引入更少的参数，对于每层C个通道的结构，3层3x3的参数个数为 3<em>3</em>3<em>C</em>C=27<em>C</em>C,而1个7x7的参数为7<em>7</em>C<em>C=49</em>C*C。<br>下面是对参数的一个分析,可见占用内存最多的层是在前面的卷积层，而拥有参数最多的层在最后的全连接层：<br><img src="vgg16_parameters.jpg" alt=""></p>
-<h1 id="GoogleNet"><a href="#GoogleNet" class="headerlink" title="GoogleNet"></a>GoogleNet</h1><p>GoogleNet结构获得2014年ILSVRC的分类第一名。它具有更深的网络结构，达到22层，但是采用了更高效的计算。<br><img src="google_net.jpg" alt=""><br>它的最大的一个亮点是采用Inception module的结构。<br><img src="naive_inception_module.jpg" alt=""><br>从前一层开始并行计算4种不同类型和参数的网络层，在depth上叠加得到输出。但是这带来一个比较大的问题就是计算量太大，因为卷积层和池化层都会保留depth,所以每个并行的层都会带来整个输出的depth的增加。这个问题的一个解决方法就是使用更小深度的1x1的卷积层来减少深度。<br><img src="naive_inception_computation.jpg" alt=""><br><img src="1x1_conv.jpg" alt=""><br>最后得到的优化的Inception module结构如下：<br><img src="inception_dimension_reduction.jpg" alt=""><br>于是整个GoogleNet就以多个Inception小模块为基础搭建而成。GoogleNet还有另外一个亮点是摒弃了计算量巨大的FC层。<br><img src="full_googlenet.jpg" alt=""></p>
-<h1 id="ResNet"><a href="#ResNet" class="headerlink" title="ResNet"></a>ResNet</h1><p>ResNet结构获得了2015年ILSVRC的第一名。它的最大亮点就是采用了残差学习的新思想。它将输入的结果加到通过普通网络层的输出上形成新的输出。这样使得训练很深的网络结构变得有效。<br><img src="resnet.jpg" alt=""><br>这个方法解决了之前的一个很大的问题，事实上，在这之前，如果我们将网络层数增加到特别深的情况下，其性能是会变差的，但是并不是由过拟合造成的，而是因为太深的网络结构难以优化。<br>而这个残差网络就能很好解决难以优化的问题。<br><img src="compare.jpg" alt=""><br>这样一来整个网络结构就如下所示：<br><img src="full_resnet.jpg" alt=""><br>对于比较深的网络，还应采用类似GoogleNet的1x1的”bottleneck” layer来提高网络的计算效率。<br><img src="resnet_bottlelayer.jpg" alt=""></p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>主要是基于tensorflow的一些实现。<br><a href="https://github.com/tensorflow/models" target="_blank" rel="external">tensorflow models</a></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture9.pdf" target="_blank" rel="external">cs231n spring2017 lecture9 slides</a><br><a href="http://deeplearning.csail.mit.edu/cvpr2017_tutorial_kaiminghe.pdf" target="_blank" rel="external">cvpr2017_tutorial_kaiminghe</a><br><a href="http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks" target="_blank" rel="external">AlexNet</a><br><a href="http://arxiv.org/abs/1409.4842" target="_blank" rel="external">GoogleNet</a><br><a href="http://www.robots.ox.ac.uk/~vgg/research/very_deep/" target="_blank" rel="external">VGGNet</a><br><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="external">ResNet</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/09/cnn-architecture/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
     </nav>
   
 
