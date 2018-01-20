@@ -533,7 +533,7 @@
   <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#AlexNet"><span class="toc-text">AlexNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VGGNet"><span class="toc-text">VGGNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GoogleNet"><span class="toc-text">GoogleNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ResNet"><span class="toc-text">ResNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码实现"><span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
-        <p>主要介绍几种当前常见的卷积网络结构。包括AlexNet,VGGNet,GoogleNet,ResNet等。</p>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=423104954&auto=1&height=66"></iframe><br>主要介绍几种当前常见的卷积网络结构。包括AlexNet,VGGNet,GoogleNet,ResNet等。</p>
 <h1 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h1><p>AlexNet结构获得了2012年ILSVRC的冠军。其主要结构如下,这是cs231n的课件做的一个总结：<br><img src="alex_net.jpg" alt=""></p>
 <h1 id="VGGNet"><a href="#VGGNet" class="headerlink" title="VGGNet"></a>VGGNet</h1><p>VGGNet是2014年ILSVRC的分类第二名，和AlexNet相比的改进是滤波器的尺寸更小，只用3x3的滤波器；还有就是更深的网络结果。具体如下；<br><img src="vgg_net.jpg" alt=""></p>
 <p>用3x3的滤波器的原因：3个3x3的卷积层的组合的effective of field和一个7x7的卷积层是一致的。并且还有以下两个优点：1、网络更深，引入更多非线性；<br>2、引入更少的参数，对于每层C个通道的结构，3层3x3的参数个数为 3<em>3</em>3<em>C</em>C=27<em>C</em>C,而1个7x7的参数为7<em>7</em>C<em>C=49</em>C*C。<br>下面是对参数的一个分析,可见占用内存最多的层是在前面的卷积层，而拥有参数最多的层在最后的全连接层：<br><img src="vgg16_parameters.jpg" alt=""></p>
@@ -722,6 +722,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
@@ -743,10 +747,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
             
             <div class="clearfix"></div>
