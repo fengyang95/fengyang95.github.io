@@ -157,6 +157,105 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-thinking-in-java-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/22/thinking-in-java-notes/">Thinking in Java Notes -- Basic</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/22/thinking-in-java-notes/" class="archive-article-date">
+  	<time datetime="2018-01-22T12:48:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第1章-对象导论"><span class="toc-text">第1章 对象导论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第2章-一切都是对象"><span class="toc-text">第2章 一切都是对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第3章-操作符"><span class="toc-text">第3章 操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第4章-控制执行流程"><span class="toc-text">第4章 控制执行流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第5章-初始化与清理"><span class="toc-text">第5章 初始化与清理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第6章-访问权限控制"><span class="toc-text">第6章 访问权限控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第7章-复用类"><span class="toc-text">第7章 复用类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第8章-多态"><span class="toc-text">第8章 多态</span></a></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=521415702&auto=1&height=66"></iframe></p>
+<h2 id="第1章-对象导论"><a href="#第1章-对象导论" class="headerlink" title="第1章 对象导论"></a>第1章 对象导论</h2><h2 id="第2章-一切都是对象"><a href="#第2章-一切都是对象" class="headerlink" title="第2章 一切都是对象"></a>第2章 一切都是对象</h2><p>1、理解static关键词。当声明一个事物是static时，就意味着这个域或方法不会与包含它的那个类的任何对象实例关联在一起。</p>
+<h2 id="第3章-操作符"><a href="#第3章-操作符" class="headerlink" title="第3章 操作符"></a>第3章 操作符</h2><p>1、注意 == 操作符和equals()方法的区别。<br>2、移位操作符&lt;&lt;和&gt;&gt;，对于&lt;&lt;左移操作符，低位补0即可，对于&gt;&gt;右移操作符，采用“符号扩展”，符号为正，在高位插入0，符号为负则在高位插入1。Java中增加了一种有别于其它语言的“无符号”右移操作符&gt;&gt;&gt;，无论正负都在高位插入0。</p>
+<h2 id="第4章-控制执行流程"><a href="#第4章-控制执行流程" class="headerlink" title="第4章 控制执行流程"></a>第4章 控制执行流程</h2><h2 id="第5章-初始化与清理"><a href="#第5章-初始化与清理" class="headerlink" title="第5章 初始化与清理"></a>第5章 初始化与清理</h2><p>1、只能根据参数列表区分重载方法，而不能根据返回值的类型区分重载方法。<br>2、JVM垃圾回收机制。需要之后深入理解。<br>3、成员初始化。Java尽力保证，所有变量在使用前都能得到恰当的初始化。对于方法的局部变量，Java以编译时错误的形式来贯彻这种保证。如果类的数据成员是基本类型，那么可以不用初始化，其保证会有一个默认的初始值。在类里定义一个对象引用时，如果不将其初始化，此引用就会获得一个特殊值null。注意初始化时出现的“向前引用”的错误。<br>4、初始化顺序：类的内部，变量定义的先后顺序决定了初始化的顺序。<br>5、静态数据的初始化：无论创建多少个对象，静态数据都只占用一份存储区域。static关键字不能应用于局部变量，因此它只能作用于域。初始化的顺序是先静态对象（如果它们还没有因为前面的对象创建过程而被初始化），而后是“非静态对象”。<br>6、对象的创建过程大概如下：<br>假设有个名为Dog的类。<br>a、即便没有显式地使用static关键字，构造器实际上也是静态方法，因此，当首次创建类型为Dog的对象时(构造器可以看做static方法)，或者Dog类的静态方法/静态域首次被访问时，Java解释器必须查找类路径，以定位Dog.class文件。<br>b、然后载入Dog.class，有关静态初始化的所有动作都会执行。因此，静态初始化只在Class对象首次加载的时候进行一次。<br>c、当用new Dog() 创建对象的时候，首先将在堆上为Dog对象分配足够的存储空间。<br>d、这块存储空间会被清零，这就自动地将Dog对象中的所有基本类型数据都设置成了默认值，而引用则被设置成了null。<br>e、执行所有出现于字段定义处的初始化动作。<br>f、执行构造器。</p>
+<h2 id="第6章-访问权限控制"><a href="#第6章-访问权限控制" class="headerlink" title="第6章 访问权限控制"></a>第6章 访问权限控制</h2><p>1、关键字<br>   private<br>   protected：继承访问权限。<br>   public：接口访问权限。<br>   默认访问权限：包访问权限。</p>
+<h2 id="第7章-复用类"><a href="#第7章-复用类" class="headerlink" title="第7章 复用类"></a>第7章 复用类</h2><p>1、可以通过组合语法，继承语法，代理，结合使用组合和继承等方法实现类的复用。<br>2、@Override 的使用，当想要覆写某个方法时，可以选择添加这个注解，在不小心重载并非覆写了该方法时，编译器会生成错误信息。<br>3、在组合和继承之间做合适选择。一般来说，is-a关系用继承表达，has-a关系用组合表达。究竟改用组合还是用继承，一个比较清晰的判断方法就是看是否需要从新类向基类进行向上转型，如果必须向上转型，那么继承是必要的；如果不需要，则应该慎重考虑是否需要继承。<br>4、final关键字：包括final参数，final方法， final类的意义。</p>
+<h2 id="第8章-多态"><a href="#第8章-多态" class="headerlink" title="第8章 多态"></a>第8章 多态</h2><p>1、面向对象的语言的特征：数据抽象，继承和多态。<br>2、前期绑定和后期绑定：Java中除了static方法和final方法(private方法属于final方法)之外，其他所有的方法都是后期绑定。实际上将方法声明为final的一个重要原因之一是防止他人覆盖该方法，另一个更为重要的原因则是有效关闭动态绑定。<br>3、缺陷：试图覆盖私有方法。实际上试图在继承类中覆盖基类的私有方法是不对的，如果使用了@Override注解，那么编译会报错，而如果没有使用该注解，那么实际上我们试图要覆盖的那个方法是全新的方法，甚至因为private的权限，这也不是重载。事实上只有非private方法才能被覆盖。<br>4、复杂对象调用构造器按照下面的顺序：a、在其他任何事物发生之前，将分配给对象的存储空间初始化成二进制的零；b、调用基类构造器；c、按声明顺序调用成员的初始化方法；d、调用导出类构造器的主体。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/22/thinking-in-java-notes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-paper-and-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -223,6 +322,103 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/01/21/paper-and-notes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-effective-java-methods-common-to-all-objects" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/21/effective-java-methods-common-to-all-objects/">Effective Java -- Methods Common to All Objects</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/21/effective-java-methods-common-to-all-objects/" class="archive-article-date">
+  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Methods-Common-to-All-Objects"><span class="toc-text">Effective Java Items about Methods Common to All Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-10-Obey-the-general-contract-when-overriding-equals"><span class="toc-text">Item 10: Obey the general contract when overriding equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-11-Always-override-hashCode-when-you-override-equals"><span class="toc-text">Item 11: Always override hashCode when you override equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-12-Always-override-toString"><span class="toc-text">Item 12: Always override toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-13-Override-clone-judiciously"><span class="toc-text">Item 13: Override clone judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-14-Consider-implementing-Comparable"><span class="toc-text">Item 14: Consider implementing Comparable</span></a></li></ol></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=483671599&auto=1&height=66"></iframe></p>
+<h2 id="Effective-Java-Items-about-Methods-Common-to-All-Objects"><a href="#Effective-Java-Items-about-Methods-Common-to-All-Objects" class="headerlink" title="Effective Java Items about Methods Common to All Objects"></a>Effective Java Items about Methods Common to All Objects</h2><p>设计Object类的目的是为了扩展，它所有的非final方法(equals, hashCode, toString, clone, finalize)都有着明确的通用约定，它们都被设计成要被覆盖的。任何一个类在覆盖这些方法时都要遵守一些通用规定。</p>
+<h3 id="Item-10-Obey-the-general-contract-when-overriding-equals"><a href="#Item-10-Obey-the-general-contract-when-overriding-equals" class="headerlink" title="Item 10: Obey the general contract when overriding equals"></a>Item 10: Obey the general contract when overriding equals</h3><p>equals方法实现了等价关系，主要要满足以下条件：自反性，对称性，传递性，一致性，非空性。为了高效编写符合要求的equals方法，书中总结了以下方法：<br>1、使用==操作符检查参数是否是这个对象的引用。<br>2、使用instanceof操作符检查“参数是否为正确的类型”。<br>3、把参数转换成正确的类型。<br>4、对于该类中的每个“关键”域,检查参数中的域是否与该对象中对应的域相匹配。<br>5、编写好equals方法之后，再仔细检查是否满足之前的几个条件。<br>6、覆盖equals时要同时覆盖hashCode<br>7、不要企图让equals方法过于智能。<br>8、不要将equals声明中的Object对象替换为其他的类型。</p>
+<h3 id="Item-11-Always-override-hashCode-when-you-override-equals"><a href="#Item-11-Always-override-hashCode-when-you-override-equals" class="headerlink" title="Item 11: Always override hashCode when you override equals"></a>Item 11: Always override hashCode when you override equals</h3><p>每个覆盖了equals方法的类中，也必须同时覆盖hashCode方法。</p>
+<h3 id="Item-12-Always-override-toString"><a href="#Item-12-Always-override-toString" class="headerlink" title="Item 12: Always override toString"></a>Item 12: Always override toString</h3><p>遵守toString的约定并不像遵守equals和hashCode的约定那么重要，但是提供好的toString实现可以使得类使用起来更为舒适。</p>
+<h3 id="Item-13-Override-clone-judiciously"><a href="#Item-13-Override-clone-judiciously" class="headerlink" title="Item 13: Override clone judiciously"></a>Item 13: Override clone judiciously</h3><h3 id="Item-14-Consider-implementing-Comparable"><a href="#Item-14-Consider-implementing-Comparable" class="headerlink" title="Item 14: Consider implementing Comparable"></a>Item 14: Consider implementing Comparable</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/21/effective-java-methods-common-to-all-objects/">展开全文 >></a>
         </p>
       
 
@@ -374,103 +570,6 @@
 
 
   
-    <article id="post-effective-java-methods-common-to-all-objects" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/21/effective-java-methods-common-to-all-objects/">Effective Java -- Methods Common to All Objects</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/21/effective-java-methods-common-to-all-objects/" class="archive-article-date">
-  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Methods-Common-to-All-Objects"><span class="toc-text">Effective Java Items about Methods Common to All Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-10-Obey-the-general-contract-when-overriding-equals"><span class="toc-text">Item 10: Obey the general contract when overriding equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-11-Always-override-hashCode-when-you-override-equals"><span class="toc-text">Item 11: Always override hashCode when you override equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-12-Always-override-toString"><span class="toc-text">Item 12: Always override toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-13-Override-clone-judiciously"><span class="toc-text">Item 13: Override clone judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-14-Consider-implementing-Comparable"><span class="toc-text">Item 14: Consider implementing Comparable</span></a></li></ol></li></ol>
-</div>
-
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=483671599&auto=1&height=66"></iframe></p>
-<h2 id="Effective-Java-Items-about-Methods-Common-to-All-Objects"><a href="#Effective-Java-Items-about-Methods-Common-to-All-Objects" class="headerlink" title="Effective Java Items about Methods Common to All Objects"></a>Effective Java Items about Methods Common to All Objects</h2><p>设计Object类的目的是为了扩展，它所有的非final方法(equals, hashCode, toString, clone, finalize)都有着明确的通用约定，它们都被设计成要被覆盖的。任何一个类在覆盖这些方法时都要遵守一些通用规定。</p>
-<h3 id="Item-10-Obey-the-general-contract-when-overriding-equals"><a href="#Item-10-Obey-the-general-contract-when-overriding-equals" class="headerlink" title="Item 10: Obey the general contract when overriding equals"></a>Item 10: Obey the general contract when overriding equals</h3><p>equals方法实现了等价关系，主要要满足以下条件：自反性，对称性，传递性，一致性，非空性。为了高效编写符合要求的equals方法，书中总结了以下方法：<br>1、使用==操作符检查参数是否是这个对象的引用。<br>2、使用instanceof操作符检查“参数是否为正确的类型”。<br>3、把参数转换成正确的类型。<br>4、对于该类中的每个“关键”域,检查参数中的域是否与该对象中对应的域相匹配。<br>5、编写好equals方法之后，再仔细检查是否满足之前的几个条件。<br>6、覆盖equals时要同时覆盖hashCode<br>7、不要企图让equals方法过于智能。<br>8、不要将equals声明中的Object对象替换为其他的类型。</p>
-<h3 id="Item-11-Always-override-hashCode-when-you-override-equals"><a href="#Item-11-Always-override-hashCode-when-you-override-equals" class="headerlink" title="Item 11: Always override hashCode when you override equals"></a>Item 11: Always override hashCode when you override equals</h3><p>每个覆盖了equals方法的类中，也必须同时覆盖hashCode方法。</p>
-<h3 id="Item-12-Always-override-toString"><a href="#Item-12-Always-override-toString" class="headerlink" title="Item 12: Always override toString"></a>Item 12: Always override toString</h3><p>遵守toString的约定并不像遵守equals和hashCode的约定那么重要，但是提供好的toString实现可以使得类使用起来更为舒适。</p>
-<h3 id="Item-13-Override-clone-judiciously"><a href="#Item-13-Override-clone-judiciously" class="headerlink" title="Item 13: Override clone judiciously"></a>Item 13: Override clone judiciously</h3><h3 id="Item-14-Consider-implementing-Comparable"><a href="#Item-14-Consider-implementing-Comparable" class="headerlink" title="Item 14: Consider implementing Comparable"></a>Item 14: Consider implementing Comparable</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/21/effective-java-methods-common-to-all-objects/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
     <article id="post-tensorflow-programming-structure-your-tf-model" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -546,113 +645,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/01/20/tensorflow-programming-structure-your-tf-model/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-tensorflow-programming-linear-and-logistic-regression" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/">Linear and Logistic Regression in Tensorflow Notes</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/" class="archive-article-date">
-  	<time datetime="2018-01-18T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#线性回归和逻辑回归"><span class="toc-text">线性回归和逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线性回归"><span class="toc-text">线性回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何判断一个模型是正确的？"><span class="toc-text">如何判断一个模型是正确的？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用相关系数R的平方"><span class="toc-text">使用相关系数R的平方</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在测试集上运行"><span class="toc-text">在测试集上运行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用虚拟数据测试模型"><span class="toc-text">用虚拟数据测试模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部分代码分析"><span class="toc-text">部分代码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化"><span class="toc-text">优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#更多关于梯度计算"><span class="toc-text">更多关于梯度计算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优化器种类"><span class="toc-text">优化器种类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#各种优化器的比较"><span class="toc-text">各种优化器的比较</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑回归"><span class="toc-text">逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理解one-hot-encodiing"><span class="toc-text">理解one-hot encodiing</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
-</div>
-
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=474117771&auto=1&height=66"></iframe></p>
-<h1 id="线性回归和逻辑回归"><a href="#线性回归和逻辑回归" class="headerlink" title="线性回归和逻辑回归"></a>线性回归和逻辑回归</h1><p>之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。</p>
-<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a></p>
-<h3 id="如何判断一个模型是正确的？"><a href="#如何判断一个模型是正确的？" class="headerlink" title="如何判断一个模型是正确的？"></a>如何判断一个模型是正确的？</h3><h4 id="使用相关系数R的平方"><a href="#使用相关系数R的平方" class="headerlink" title="使用相关系数R的平方"></a>使用相关系数R的平方</h4><p><a href="http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit" target="_blank" rel="external">R-squared</a></p>
-<h4 id="在测试集上运行"><a href="#在测试集上运行" class="headerlink" title="在测试集上运行"></a>在测试集上运行</h4><h4 id="用虚拟数据测试模型"><a href="#用虚拟数据测试模型" class="headerlink" title="用虚拟数据测试模型"></a>用虚拟数据测试模型</h4><h3 id="部分代码分析"><a href="#部分代码分析" class="headerlink" title="部分代码分析"></a>部分代码分析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.GradientDescentOptimizer(learning_rate=<span class="number">0.01</span>).minimize(loss)</div><div class="line">sess.run(optimizer, feed_dict=&#123;X: x, Y: y&#125;)</div></pre></td></tr></table></figure>
-<p>有两个疑问？<br>1、为什么train_op在tf.Session.run()的提取列表中？<br>2、Tensorflow怎么知道要更新哪些变量？<br>实际上，我们可以将任何Tensorflow的操作作为tf.Session.run()的提取变量。Tensorflow会执行计算图中这些操作所依赖的部分。在以上例子中，train_op的目的是使loss最小，而loss依赖于w和b的值。<br><img src="graph.jpg" alt=""><br>从图中可以看出，节点GrandientDescentOptimizer依赖于节点weights，bias和gradients。</p>
-<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>GradientDescentOptimizer意味着我们的更新策略是梯度下降。Tensorflow已经为我们做了自动微分，然后更新w和b的值使得loss最小。默认情况下，optimizer训练目标函数所依赖的变量中的所有可训练变量，如果这里面有一些你不想训练的变量，可以将在定义参数时其参数trainable设置为False。一个具体的例子是变量global_step，这个变量是用来记录你运行模型多少次数的变量，其不应该为可训练的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">global_step = tf.Variable(<span class="number">0</span>,trainable=<span class="keyword">False</span>, dtype=tf.int32)</div><div class="line">learning_rate = <span class="number">0.01</span> * <span class="number">0.99</span> ** tf.cast(global_step, tf.float32)</div><div class="line">increment_step = global_step.assign_add(<span class="number">1</span>)</div><div class="line">optimizer = tf.GradientDescentOptimizer(learning_rate) <span class="comment"># learning rate 可以是一个tensor</span></div></pre></td></tr></table></figure></p>
-<p>tf.Variable的完整定义是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tf.Variable(initial_value=<span class="keyword">None</span>, trainable=<span class="keyword">True</span>, collections=<span class="keyword">None</span>,</div><div class="line">    validate_shape=<span class="keyword">True</span>, caching_device=<span class="keyword">None</span>, name=<span class="keyword">None</span>, variable_def=<span class="keyword">None</span>,</div><div class="line">    dtype=<span class="keyword">None</span>, expected_shape=<span class="keyword">None</span>, import_scope=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
-<p>我们甚至可以让optimizer计算特定变量的梯度，也可以修改由optimizer计算出的梯度。<br>如下所示是一些例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">optimizer = GradientDescentOptimizer(learning_rate=<span class="number">0.1</span>)</div><div class="line"><span class="comment"># 计算一系列变量的梯度</span></div><div class="line">grads_and_vars = opt.compute_gradients(loss, &lt;list of variables&gt;)</div><div class="line"><span class="comment"># grads_and_vars 是由元组(gradient, valriable)</span></div><div class="line"><span class="comment">#组成的列表。可以对其中的gradient项做一些操作。</span></div><div class="line">substracted_grads_and_vars = [(gv[<span class="number">0</span>] - <span class="number">1.0</span>, gv[<span class="number">1</span>]) <span class="keyword">for</span> gv <span class="keyword">in</span> grads_and_vars]</div><div class="line"><span class="comment"># 让optimizer应用减过1的梯度。</span></div><div class="line">optimizer.apply_gradients(subtracted_grads_and_vars)</div></pre></td></tr></table></figure></p>
-<h4 id="更多关于梯度计算"><a href="#更多关于梯度计算" class="headerlink" title="更多关于梯度计算"></a>更多关于梯度计算</h4><p>优化器类会自动计算graph的梯度，但创建新的优化器或专家用户可以调用下面的低级函数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.gradients(ys, xs, grad_ys=<span class="keyword">None</span>, name=<span class="string">'gradients'</span>, colocate_gradients_with_ops=<span class="keyword">False</span>, gate_gradients=<span class="keyword">False</span>, aggregation_method=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
-<p>当只训练一个模型的一个部分时，这种方法很有用。例如我们可以使用tf.gradient()计算中间层loss的梯度G，然后我们使用优化器来最小化中间层输出M和M + G之间的差异，<br>只更新网络的下半部分。</p>
-<h4 id="优化器种类"><a href="#优化器种类" class="headerlink" title="优化器种类"></a>优化器种类</h4><p><img src="optimizer.jpg" alt=""></p>
-<h5 id="各种优化器的比较"><a href="#各种优化器的比较" class="headerlink" title="各种优化器的比较"></a>各种优化器的比较</h5><p>cs231n的笔记中有介绍。也可参考：<br><a href="http://sebastianruder.com/optimizing-gradient-descent/" target="_blank" rel="external">Optimizing Gradient Descent</a></p>
-<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><p>用逻辑回归解决MNIST字符识别的一个例子</p>
-<h3 id="理解one-hot-encodiing"><a href="#理解one-hot-encodiing" class="headerlink" title="理解one-hot encodiing"></a>理解one-hot encodiing</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_03.pdf" target="_blank" rel="external">slides_03</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a><br><a href="https://zhuanlan.zhihu.com/p/28924642" target="_blank" rel="external">cs20si: tensorflow for research 学习笔记3</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/">展开全文 >></a>
         </p>
       
 
@@ -787,15 +779,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -803,11 +791,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">

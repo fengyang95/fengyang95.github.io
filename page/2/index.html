@@ -157,6 +157,113 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-tensorflow-programming-linear-and-logistic-regression" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/">Linear and Logistic Regression in Tensorflow Notes</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/" class="archive-article-date">
+  	<time datetime="2018-01-18T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#线性回归和逻辑回归"><span class="toc-text">线性回归和逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线性回归"><span class="toc-text">线性回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何判断一个模型是正确的？"><span class="toc-text">如何判断一个模型是正确的？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用相关系数R的平方"><span class="toc-text">使用相关系数R的平方</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在测试集上运行"><span class="toc-text">在测试集上运行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用虚拟数据测试模型"><span class="toc-text">用虚拟数据测试模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部分代码分析"><span class="toc-text">部分代码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化"><span class="toc-text">优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#更多关于梯度计算"><span class="toc-text">更多关于梯度计算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优化器种类"><span class="toc-text">优化器种类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#各种优化器的比较"><span class="toc-text">各种优化器的比较</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑回归"><span class="toc-text">逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理解one-hot-encodiing"><span class="toc-text">理解one-hot encodiing</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=474117771&auto=1&height=66"></iframe></p>
+<h1 id="线性回归和逻辑回归"><a href="#线性回归和逻辑回归" class="headerlink" title="线性回归和逻辑回归"></a>线性回归和逻辑回归</h1><p>之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。</p>
+<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a></p>
+<h3 id="如何判断一个模型是正确的？"><a href="#如何判断一个模型是正确的？" class="headerlink" title="如何判断一个模型是正确的？"></a>如何判断一个模型是正确的？</h3><h4 id="使用相关系数R的平方"><a href="#使用相关系数R的平方" class="headerlink" title="使用相关系数R的平方"></a>使用相关系数R的平方</h4><p><a href="http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit" target="_blank" rel="external">R-squared</a></p>
+<h4 id="在测试集上运行"><a href="#在测试集上运行" class="headerlink" title="在测试集上运行"></a>在测试集上运行</h4><h4 id="用虚拟数据测试模型"><a href="#用虚拟数据测试模型" class="headerlink" title="用虚拟数据测试模型"></a>用虚拟数据测试模型</h4><h3 id="部分代码分析"><a href="#部分代码分析" class="headerlink" title="部分代码分析"></a>部分代码分析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.GradientDescentOptimizer(learning_rate=<span class="number">0.01</span>).minimize(loss)</div><div class="line">sess.run(optimizer, feed_dict=&#123;X: x, Y: y&#125;)</div></pre></td></tr></table></figure>
+<p>有两个疑问？<br>1、为什么train_op在tf.Session.run()的提取列表中？<br>2、Tensorflow怎么知道要更新哪些变量？<br>实际上，我们可以将任何Tensorflow的操作作为tf.Session.run()的提取变量。Tensorflow会执行计算图中这些操作所依赖的部分。在以上例子中，train_op的目的是使loss最小，而loss依赖于w和b的值。<br><img src="graph.jpg" alt=""><br>从图中可以看出，节点GrandientDescentOptimizer依赖于节点weights，bias和gradients。</p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>GradientDescentOptimizer意味着我们的更新策略是梯度下降。Tensorflow已经为我们做了自动微分，然后更新w和b的值使得loss最小。默认情况下，optimizer训练目标函数所依赖的变量中的所有可训练变量，如果这里面有一些你不想训练的变量，可以将在定义参数时其参数trainable设置为False。一个具体的例子是变量global_step，这个变量是用来记录你运行模型多少次数的变量，其不应该为可训练的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">global_step = tf.Variable(<span class="number">0</span>,trainable=<span class="keyword">False</span>, dtype=tf.int32)</div><div class="line">learning_rate = <span class="number">0.01</span> * <span class="number">0.99</span> ** tf.cast(global_step, tf.float32)</div><div class="line">increment_step = global_step.assign_add(<span class="number">1</span>)</div><div class="line">optimizer = tf.GradientDescentOptimizer(learning_rate) <span class="comment"># learning rate 可以是一个tensor</span></div></pre></td></tr></table></figure></p>
+<p>tf.Variable的完整定义是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tf.Variable(initial_value=<span class="keyword">None</span>, trainable=<span class="keyword">True</span>, collections=<span class="keyword">None</span>,</div><div class="line">    validate_shape=<span class="keyword">True</span>, caching_device=<span class="keyword">None</span>, name=<span class="keyword">None</span>, variable_def=<span class="keyword">None</span>,</div><div class="line">    dtype=<span class="keyword">None</span>, expected_shape=<span class="keyword">None</span>, import_scope=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>我们甚至可以让optimizer计算特定变量的梯度，也可以修改由optimizer计算出的梯度。<br>如下所示是一些例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">optimizer = GradientDescentOptimizer(learning_rate=<span class="number">0.1</span>)</div><div class="line"><span class="comment"># 计算一系列变量的梯度</span></div><div class="line">grads_and_vars = opt.compute_gradients(loss, &lt;list of variables&gt;)</div><div class="line"><span class="comment"># grads_and_vars 是由元组(gradient, valriable)</span></div><div class="line"><span class="comment">#组成的列表。可以对其中的gradient项做一些操作。</span></div><div class="line">substracted_grads_and_vars = [(gv[<span class="number">0</span>] - <span class="number">1.0</span>, gv[<span class="number">1</span>]) <span class="keyword">for</span> gv <span class="keyword">in</span> grads_and_vars]</div><div class="line"><span class="comment"># 让optimizer应用减过1的梯度。</span></div><div class="line">optimizer.apply_gradients(subtracted_grads_and_vars)</div></pre></td></tr></table></figure></p>
+<h4 id="更多关于梯度计算"><a href="#更多关于梯度计算" class="headerlink" title="更多关于梯度计算"></a>更多关于梯度计算</h4><p>优化器类会自动计算graph的梯度，但创建新的优化器或专家用户可以调用下面的低级函数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.gradients(ys, xs, grad_ys=<span class="keyword">None</span>, name=<span class="string">'gradients'</span>, colocate_gradients_with_ops=<span class="keyword">False</span>, gate_gradients=<span class="keyword">False</span>, aggregation_method=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>当只训练一个模型的一个部分时，这种方法很有用。例如我们可以使用tf.gradient()计算中间层loss的梯度G，然后我们使用优化器来最小化中间层输出M和M + G之间的差异，<br>只更新网络的下半部分。</p>
+<h4 id="优化器种类"><a href="#优化器种类" class="headerlink" title="优化器种类"></a>优化器种类</h4><p><img src="optimizer.jpg" alt=""></p>
+<h5 id="各种优化器的比较"><a href="#各种优化器的比较" class="headerlink" title="各种优化器的比较"></a>各种优化器的比较</h5><p>cs231n的笔记中有介绍。也可参考：<br><a href="http://sebastianruder.com/optimizing-gradient-descent/" target="_blank" rel="external">Optimizing Gradient Descent</a></p>
+<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><p>用逻辑回归解决MNIST字符识别的一个例子</p>
+<h3 id="理解one-hot-encodiing"><a href="#理解one-hot-encodiing" class="headerlink" title="理解one-hot encodiing"></a>理解one-hot encodiing</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_03.pdf" target="_blank" rel="external">slides_03</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a><br><a href="https://zhuanlan.zhihu.com/p/28924642" target="_blank" rel="external">cs20si: tensorflow for research 学习笔记3</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-2017-summary" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -604,105 +711,6 @@
 
 
   
-    <article id="post-useful-links" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/17/useful-links/">Useful Links</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/17/useful-links/" class="archive-article-date">
-  	<time datetime="2018-01-16T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#综合"><span class="toc-text">综合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Programming-Language"><span class="toc-text">Programming Language</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#C"><span class="toc-text">C++</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python"><span class="toc-text">python</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java"><span class="toc-text">Java</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL"><span class="toc-text">SQL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Machine-Learning"><span class="toc-text">Machine Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Deep-Learning"><span class="toc-text">Deep Learning</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Computer-Vision"><span class="toc-text">Computer Vision</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenCV"><span class="toc-text">OpenCV</span></a></li></ol></li></ol>
-</div>
-
-        <h2 id="综合"><a href="#综合" class="headerlink" title="综合"></a>综合</h2><p><a href="https://stackoverflow.com/" target="_blank" rel="external">Stackoverflow</a><br><a href="http://blog.csdn.net/golden1314521/article/details/45500843" target="_blank" rel="external">VirtualBox安装增强功能包实现资源共享</a><br><a href="https://mirrors.tuna.tsinghua.edu.cn/" target="_blank" rel="external">清华大学开源软件镜像站</a></p>
-<h2 id="Programming-Language"><a href="#Programming-Language" class="headerlink" title="Programming Language"></a>Programming Language</h2><h3 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h3><p><a href="http://en.cppreference.com/w/" target="_blank" rel="external">cppreference</a></p>
-<h3 id="python"><a href="#python" class="headerlink" title="python"></a>python</h3><p><a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy" target="_blank" rel="external">Python Extension Packages for Windows</a></p>
-<h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><p><a href="https://docs.oracle.com/javase/8/docs/api/" target="_blank" rel="external">JavaSE API</a></p>
-<h3 id="SQL"><a href="#SQL" class="headerlink" title="SQL"></a>SQL</h3><p><a href="http://blog.csdn.net/wengengeng/article/details/52013650" target="_blank" rel="external">windows安装mysql-5.7压缩版详细教程</a></p>
-<h2 id="Machine-Learning"><a href="#Machine-Learning" class="headerlink" title="Machine Learning"></a>Machine Learning</h2><h3 id="Deep-Learning"><a href="#Deep-Learning" class="headerlink" title="Deep Learning"></a>Deep Learning</h3><p><a href="http://cs231n.stanford.edu/syllabus.html" target="_blank" rel="external">cs231n spring2017</a><br><a href="https://www.tensorflow.org/" target="_blank" rel="external">tensorflow</a><br><a href="https://github.com/kjw0612/awesome-deep-vision" target="_blank" rel="external">Awesome Deep Vision</a><br><a href="https://github.com/tensorflow/models" target="_blank" rel="external">tensorflow model</a></p>
-<h2 id="Computer-Vision"><a href="#Computer-Vision" class="headerlink" title="Computer Vision"></a>Computer Vision</h2><h3 id="OpenCV"><a href="#OpenCV" class="headerlink" title="OpenCV"></a>OpenCV</h3><p><a href="http://blog.csdn.net/youngpan1101/article/details/58027049" target="_blank" rel="external">Ubuntu 14.04 安装 OpenCV-3.2.0</a><br><a href="http://blog.csdn.net/column/details/photoshop-algorithm.html" target="_blank" rel="external">Photoshop图像处理算法</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">link</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/link//" class="article-tag-list-link color5">link</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/17/useful-links/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -805,15 +813,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -821,11 +825,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
