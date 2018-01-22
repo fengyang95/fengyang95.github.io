@@ -157,20 +157,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-software-installation" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-tensorflow-programming-structure-your-tf-model" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/18/software-installation/">常用软件安装及配置</a>
+      <a class="article-title" href="/2018/01/20/tensorflow-programming-structure-your-tf-model/">Structure Your Tensorflow Model Notes</a>
     </h1>
   
 
         
-        <a href="/2017/10/18/software-installation/" class="archive-article-date">
-  	<time datetime="2017-10-18T08:02:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-18</time>
+        <a href="/2018/01/20/tensorflow-programming-structure-your-tf-model/" class="archive-article-date">
+  	<time datetime="2018-01-20T07:03:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-20</time>
 </a>
         
       </header>
@@ -179,81 +179,24 @@
       
         
 <div id="toc">
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何结构化Tensorflow模型"><span class="toc-text">如何结构化Tensorflow模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#tensorflow中模型的结构"><span class="toc-text">tensorflow中模型的结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步，构建计算图"><span class="toc-text">第一步，构建计算图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步，计算"><span class="toc-text">第二步，计算</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Word2Vec-skip-gram-model实例"><span class="toc-text">Word2Vec, skip-gram model实例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步，构建计算图-1"><span class="toc-text">第一步，构建计算图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步，执行-计算"><span class="toc-text">第二步，执行 计算</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Name-Scope"><span class="toc-text">Name Scope</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要学习梯度？"><span class="toc-text">为什么要学习梯度？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
-        <p>1、cmder安装及配置<br><a href="http://xiaogliu.github.io/2017/04/07/install-and-configure-cmder/" target="_blank" rel="external">cmder安装及配置教程</a><br>2、Virtual Box安装<br><a href="http://blog.csdn.net/u012732259/article/details/70172704" target="_blank" rel="external">virtual box 安装教程</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/18/software-installation/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-RNN" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/18/RNN/">RNN</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/18/RNN/" class="archive-article-date">
-  	<time datetime="2017-10-18T02:46:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#主要介绍一些关于RNN的知识"><span class="toc-text">主要介绍一些关于RNN的知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一些教程链接"><span class="toc-text">一些教程链接</span></a></li></ol></li></ol>
-</div>
-
-        <h1 id="主要介绍一些关于RNN的知识"><a href="#主要介绍一些关于RNN的知识" class="headerlink" title="主要介绍一些关于RNN的知识"></a>主要介绍一些关于RNN的知识</h1><h2 id="一些教程链接"><a href="#一些教程链接" class="headerlink" title="一些教程链接"></a>一些教程链接</h2><p><a href="https://zybuluo.com/hanbingtao/note/541458" target="_blank" rel="external">零基础入门深度学习-循环神经网络</a></p>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=500293527&auto=1&height=66"></iframe><br>之前已经介绍了使用tensorflow构建线性回归以及用逻辑回归来进行MNIST手写字母识别,这些都属于比较简单的网络结构。当我们需要构建更为复杂的结构时，就需要好好计划编码结构，不然代码混乱不说而且难于调试。这里主要介绍如何高效结构化模型，以word2vec作为例子说明。<br>关于word2vec的理论知识可以参考cs224n的课件。主要介绍利用tensorflow搭建skip-gram模型。原理可参考：<br><a href="http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/" target="_blank" rel="external">Word2Vec Tutorial–The Skip-Gram Model</a></p>
+<h2 id="如何结构化Tensorflow模型"><a href="#如何结构化Tensorflow模型" class="headerlink" title="如何结构化Tensorflow模型"></a>如何结构化Tensorflow模型</h2><h3 id="tensorflow中模型的结构"><a href="#tensorflow中模型的结构" class="headerlink" title="tensorflow中模型的结构"></a>tensorflow中模型的结构</h3><h4 id="第一步，构建计算图"><a href="#第一步，构建计算图" class="headerlink" title="第一步，构建计算图"></a>第一步，构建计算图</h4><p>1、为输入和输出定义placeholders<br>2、定义权重weights<br>3、定义inference model<br>4、定义损失函数<br>5、定义优化器</p>
+<h4 id="第二步，计算"><a href="#第二步，计算" class="headerlink" title="第二步，计算"></a>第二步，计算</h4><p>1、初次初始化所有模型变量<br>2、输入训练数据，可能还会涉及随机化数据样本的顺序。<br>3、对训练数据执行推理模型，从而计算每个训练输入以当前模型参数的输出结果。<br>4、计算损失<br>5、调整模型参数使得模型的损失最大或者最小。<br><img src="compute.jpg" alt=""></p>
+<h3 id="Word2Vec-skip-gram-model实例"><a href="#Word2Vec-skip-gram-model实例" class="headerlink" title="Word2Vec, skip-gram model实例"></a>Word2Vec, skip-gram model实例</h3><h4 id="第一步，构建计算图-1"><a href="#第一步，构建计算图-1" class="headerlink" title="第一步，构建计算图"></a>第一步，构建计算图</h4><p>1、为输入和输出定义placeholders<br>输入是中心词，输出是目标(上下文)词，我们直接输入这些词的索引而不是one-hot向量，例如：如果中心词是单词表中的第1001个单词，我们输入数字1001。每个样本输入都是一个标量，所以我们以形状[BATCH_SIZE]的占位符定义批量大小为BATCH_SIZE的输入。同样，输出也是用同样的方法定义。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">center_words = tf.placeholder(tf.int32, shape=[BATCH_SIZE])</div><div class="line">target_words = tf.placeholder(tf.int32, shape=[BATCH_SIZE])</div></pre></td></tr></table></figure></p>
+<p>2、定义权重weights<br>每行对应一个词的表示向量。如果用一个词表示一个大小为EMBED_SIZE的向量，那么嵌入矩阵的形状为[VOCAB_SIZE,EMBED_SIZE]。我们将嵌入矩阵初始化为随机分布的值。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">embed_matrix = tf.Variable(tf.random_uniform([VOCAB_SIZE,EMBED_SIZE],<span class="number">-1.0</span>,<span class="number">1.0</span>))</div></pre></td></tr></table></figure></p>
+<p>3、定义推理模型<br>我们的目标是得到词汇表中单词的向量表示，embed_matrix的维度是[VOCAB_SIZE x EMBED_SIZE]，embedding矩阵的每一行和该索引出的单词的矢量表示相对应。为了得到批次中所有中心词的表示，我们得到所有相应行的切片嵌入矩阵。Tensorflow为我们提供了一个简单的API：tf.nn.embedding_lookup()。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.nn.embedding_lookup(parmas, ids, partition_strategy=<span class="string">'mod'</span>, name=<span class="keyword">None</span>, validate_indices=<span class="keyword">True</span>, max_norm=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>于是为了得到输入中心词的嵌入矩阵表示，我们这样操作:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">embed = tf.nn.embedding_lookup(embed_matrix, center_words)</div></pre></td></tr></table></figure></p>
+<p>4、定义损失函数<br>对于NCE损失，我们需要隐藏层的权重和偏置来计算。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">nce_weight = tf.Variable(tf.truncated_normal([VOCAB_SIZE, EMBED_SIZE],stddev=<span class="number">1.0</span>/EMBED_SIZE**<span class="number">0.5</span>))</div><div class="line">nce_bias = tf.Variable(tf.zeros([VOCAB_SIZE]))</div><div class="line">loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weight,</div><div class="line">                                     biases=nce_bias,</div><div class="line">                                     labels=target_words,</div><div class="line">                                     inputs=embed,</div><div class="line">                                     num_sampled=NUM_SAMPLED,</div><div class="line">                                     num_classes=VOCAB_SIZE))</div></pre></td></tr></table></figure></p>
+<p>5、定义优化器<br>我们使用梯度下降法。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.GradientDescentOptimizer(LEARNING_RATE).minimize(loss)</div></pre></td></tr></table></figure></p>
+<h4 id="第二步，执行-计算"><a href="#第二步，执行-计算" class="headerlink" title="第二步，执行 计算"></a>第二步，执行 计算</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variable_initializer())</div><div class="line">    average_loss = <span class="number">0.0</span></div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> range(NUM_TRAIN_STEPS):</div><div class="line">        batch = batch_gen.next()</div><div class="line">        loss_batch, _=sess.run([loss, optimizer],</div><div class="line">                                feed_dict=&#123;center_words: batch[<span class="number">0</span>], target_words: batch[<span class="number">1</span>]&#125;)</div><div class="line">        average_loss +=loss_batch</div><div class="line">        <span class="keyword">if</span> (index + <span class="number">1</span>) % <span class="number">200</span> == <span class="number">0</span>:</div><div class="line">            print(<span class="string">'Average loss at step &#123;&#125;: &#123;:5.1f&#125;'</span>.format(index+<span class="number">1</span>,</div><div class="line">                                                    average_loss/(index+<span class="number">1</span>)))</div></pre></td></tr></table></figure>
+<h3 id="Name-Scope"><a href="#Name-Scope" class="headerlink" title="Name Scope"></a>Name Scope</h3><p>给出张量的名称，在Tensorboard中查看<br><img src="tensorboard.jpg" alt=""><br>这看起来可读性并不强，节点到处都是。Tensorboard并不知道哪些节点之间关联性比较强并将它们组合在一起。当构建更为复杂的模型时，这看起来会更混乱。实际上我们可以同过name scope的方法指定节点之间的关联关系，这样有着相同name scope的节点会被放置在一起。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.name_scope(name_of_that_scope):</div><div class="line">    <span class="comment"># declare op_1</span></div><div class="line">    <span class="comment"># declare op_2</span></div></pre></td></tr></table></figure></p>
+<p>这样我们就可以将之前的代码再规范一下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'data'</span>):</div><div class="line">    center_words = tf.placeholder(tf.int32, shape=[BATCH_SIZE], name=<span class="string">'center_words'</span>)</div><div class="line">    target_words = tf.placeholder(tf.in32, shape=[BATCH_SIZE, <span class="number">1</span>], name=<span class="string">'target_words'</span>)</div><div class="line"><span class="keyword">with</span> tf.name_scope(embed):</div><div class="line">    embed_matrix = tf.Variable(tf.random_uniform([VOCAB_SIZE, EMBED_SIZE], <span class="number">-1.0</span>, <span class="number">1.0</span>), name=<span class="string">'embed_matrx'</span>)</div><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'loss'</span>):</div><div class="line">    embed = tf.nn.embedding_lookup(embed_matrix, center_words, name=<span class="string">'embed'</span>)</div><div class="line">    nce_weights = tf.Variable(tf.truncated_normal([VOCAB_SIZE, EMBED_SIZE],</div><div class="line">            stddev=<span class="number">1.0</span> / math.sqrt(EMBED_SIZE)), name=<span class="string">'nce_weights'</span>)</div><div class="line">    nce_bias = tf.Variable(tf.zeros([VOCAB_SIZE]), name=<span class="string">'nce_bias'</span>)</div><div class="line">    loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weights, biases=nce_bias, labels=target_words, inputs=embbed, num_sampled=NUM_SAMPLED, num_classes=VOCAB_SIZE), name=<span class="string">'loss'</span>)</div></pre></td></tr></table></figure></p>
+<p>这样Tensorboard中的图看起来更加直观了，鼠标点击相应的块会出现该块的具体内容。<br><img src="with_name_scope.JPG" alt=""><br>Tensorboard中有两种类型的边界，一种是实线一种是虚线，实线代表data flow边，而虚线代表控制依赖的边。<br>此外，为了让代码的复用性更强，我们可以将模型写成一个类，如下所示：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span>  <span class="title">SkipGramModel</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, params)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_create_placeholder</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">    <span class="title">def</span> <span class="title">_create_embedding</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">    <span class="title">def</span> <span class="title">_create_loss</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">    <span class="title">def</span> <span class="title">_create_optimizer</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div></pre></td></tr></table></figure></p>
+<h3 id="为什么要学习梯度？"><a href="#为什么要学习梯度？" class="headerlink" title="为什么要学习梯度？"></a>为什么要学习梯度？</h3><p>从以上例子可以看出 ，我们在构建模型的时候并没有计算梯度，而是Tensorflow自动帮我们求解的，那么我们为什么还要学习梯度呢？因为Tensorflow虽然帮我们计算了梯度，但是它并没有告诉我们函数是否会受到梯度爆炸或者消失的影响，所以我们仍然需要了解梯度下降的工作原理。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_04.pdf" target="_blank" rel="external">notes_04</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_04.pdf" target="_blank" rel="external">slides_04</a><br><a href="http://colah.github.io/posts/2014-10-Visualizing-MNIST/" target="_blank" rel="external">Visualizing MNIST</a></p>
 
       
 
@@ -267,7 +210,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -279,7 +222,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -288,305 +231,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/18/RNN/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-Object-Detection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/11/Object-Detection/">Object Detection with CNN</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/11/Object-Detection/" class="archive-article-date">
-  	<time datetime="2017-10-10T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  
-</div>
-
-        <p>主要介绍一些利用卷积神经网络的方法进行目标检测的方法。<br>网上有很多关于这些方法的详细介绍。以下是一些blog或者slide的链接。<br><a href="https://zhuanlan.zhihu.com/p/21412911" target="_blank" rel="external">基于深度学习的目标检测研究进展</a><br><a href="http://deeplearning.csail.mit.edu/instance_ross.pdf" target="_blank" rel="external">slide1</a><br><a href="http://blog.csdn.net/myarrow/article/details/51878004" target="_blank" rel="external">cs231n学习笔记-CNN-目标检测、定位、分割</a><br><a href="https://www.zhihu.com/question/57403701" target="_blank" rel="external">知乎 如何评价Mask-RCNN</a><br><a href="http://www.yuthon.com/2017/04/27/Notes-From-Faster-R-CNN-to-Mask-R-CNN/" target="_blank" rel="external">Notes: From Faster R-CNN to Mask R-CNN</a><br><a href="https://zhuanlan.zhihu.com/p/26655034" target="_blank" rel="external">CNN图像分割进化史：三年从R-CNN到Mask R-CNN</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/11/Object-Detection/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-cnn-architecture" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/09/cnn-architecture/">常用卷积神经网络结构</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/09/cnn-architecture/" class="archive-article-date">
-  	<time datetime="2017-10-09T05:52:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#AlexNet"><span class="toc-text">AlexNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VGGNet"><span class="toc-text">VGGNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GoogleNet"><span class="toc-text">GoogleNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ResNet"><span class="toc-text">ResNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码实现"><span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
-</div>
-
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=423104954&auto=1&height=66"></iframe><br>主要介绍几种当前常见的卷积网络结构。包括AlexNet,VGGNet,GoogleNet,ResNet等。</p>
-<h1 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h1><p>AlexNet结构获得了2012年ILSVRC的冠军。其主要结构如下,这是cs231n的课件做的一个总结：<br><img src="alex_net.jpg" alt=""></p>
-<h1 id="VGGNet"><a href="#VGGNet" class="headerlink" title="VGGNet"></a>VGGNet</h1><p>VGGNet是2014年ILSVRC的分类第二名，和AlexNet相比的改进是滤波器的尺寸更小，只用3x3的滤波器；还有就是更深的网络结果。具体如下；<br><img src="vgg_net.jpg" alt=""></p>
-<p>用3x3的滤波器的原因：3个3x3的卷积层的组合的effective of field和一个7x7的卷积层是一致的。并且还有以下两个优点：1、网络更深，引入更多非线性；<br>2、引入更少的参数，对于每层C个通道的结构，3层3x3的参数个数为 3<em>3</em>3<em>C</em>C=27<em>C</em>C,而1个7x7的参数为7<em>7</em>C<em>C=49</em>C*C。<br>下面是对参数的一个分析,可见占用内存最多的层是在前面的卷积层，而拥有参数最多的层在最后的全连接层：<br><img src="vgg16_parameters.jpg" alt=""></p>
-<h1 id="GoogleNet"><a href="#GoogleNet" class="headerlink" title="GoogleNet"></a>GoogleNet</h1><p>GoogleNet结构获得2014年ILSVRC的分类第一名。它具有更深的网络结构，达到22层，但是采用了更高效的计算。<br><img src="google_net.jpg" alt=""><br>它的最大的一个亮点是采用Inception module的结构。<br><img src="naive_inception_module.jpg" alt=""><br>从前一层开始并行计算4种不同类型和参数的网络层，在depth上叠加得到输出。但是这带来一个比较大的问题就是计算量太大，因为卷积层和池化层都会保留depth,所以每个并行的层都会带来整个输出的depth的增加。这个问题的一个解决方法就是使用更小深度的1x1的卷积层来减少深度。<br><img src="naive_inception_computation.jpg" alt=""><br><img src="1x1_conv.jpg" alt=""><br>最后得到的优化的Inception module结构如下：<br><img src="inception_dimension_reduction.jpg" alt=""><br>于是整个GoogleNet就以多个Inception小模块为基础搭建而成。GoogleNet还有另外一个亮点是摒弃了计算量巨大的FC层。<br><img src="full_googlenet.jpg" alt=""></p>
-<h1 id="ResNet"><a href="#ResNet" class="headerlink" title="ResNet"></a>ResNet</h1><p>ResNet结构获得了2015年ILSVRC的第一名。它的最大亮点就是采用了残差学习的新思想。它将输入的结果加到通过普通网络层的输出上形成新的输出。这样使得训练很深的网络结构变得有效。<br><img src="resnet.jpg" alt=""><br>这个方法解决了之前的一个很大的问题，事实上，在这之前，如果我们将网络层数增加到特别深的情况下，其性能是会变差的，但是并不是由过拟合造成的，而是因为太深的网络结构难以优化。<br>而这个残差网络就能很好解决难以优化的问题。<br><img src="compare.jpg" alt=""><br>这样一来整个网络结构就如下所示：<br><img src="full_resnet.jpg" alt=""><br>对于比较深的网络，还应采用类似GoogleNet的1x1的”bottleneck” layer来提高网络的计算效率。<br><img src="resnet_bottlelayer.jpg" alt=""></p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>主要是基于tensorflow的一些实现。<br><a href="https://github.com/tensorflow/models" target="_blank" rel="external">tensorflow models</a></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture9.pdf" target="_blank" rel="external">cs231n spring2017 lecture9 slides</a><br><a href="http://deeplearning.csail.mit.edu/cvpr2017_tutorial_kaiminghe.pdf" target="_blank" rel="external">cvpr2017_tutorial_kaiminghe</a><br><a href="http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks" target="_blank" rel="external">AlexNet</a><br><a href="http://arxiv.org/abs/1409.4842" target="_blank" rel="external">GoogleNet</a><br><a href="http://www.robots.ox.ac.uk/~vgg/research/very_deep/" target="_blank" rel="external">VGGNet</a><br><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="external">ResNet</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/09/cnn-architecture/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/08/python/">Python使用问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/08/python/" class="archive-article-date">
-  	<time datetime="2017-10-08T02:28:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><span class="toc-text">在linux下可以通过设置PYTHONPATH的方法指定python工程目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><span class="toc-text">UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><span class="toc-text">在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pycharm切换python版本"><span class="toc-text">pycharm切换python版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用cx-Freeze-打包python程序成exe文件"><span class="toc-text">使用cx_Freeze 打包python程序成exe文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#python3-中的一些编码问题一定要注意"><span class="toc-text">python3 中的一些编码问题一定要注意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#opencv读图片Premature-end-of-JPEG-file？"><span class="toc-text">opencv读图片Premature end of JPEG file？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pyconfig-h-can’t-find"><span class="toc-text">pyconfig.h can’t find</span></a></li></ol>
-</div>
-
-        <p>整理一些使用Python过程中遇到的问题和解决方法。</p>
-<h1 id="Python3"><a href="#Python3" class="headerlink" title="Python3"></a>Python3</h1><h2 id="cPickle"><a href="#cPickle" class="headerlink" title="cPickle"></a>cPickle</h2><p>python3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。</p>
-<h1 id="ubuntu下为python3-5安装pip3-5"><a href="#ubuntu下为python3-5安装pip3-5" class="headerlink" title="ubuntu下为python3.5安装pip3.5"></a>ubuntu下为python3.5安装pip3.5</h1><p>1、下载setuptools,easy_install安装包<br>    wget <a href="https://bootstrap.pypa.io/ez_setup.py" target="_blank" rel="external">https://bootstrap.pypa.io/ez_setup.py</a><br>2、安装easy_install-3.5<br>    python3.5 ez_setup.py<br>3、安装pip3.5<br>    easy_install-3.5 pip<br>4、升级pip3.5版本<br>    pip3.5 install –upgrade pip<br>5、注意：遇到失败情况时可能是由于没有权限，可以尝试在命令前加sudo</p>
-<h1 id="在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><a href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录" class="headerlink" title="在linux下可以通过设置PYTHONPATH的方法指定python工程目录"></a>在linux下可以通过设置PYTHONPATH的方法指定python工程目录</h1><p>命令如下：也可在 ~/.bashrc 中 添加以下命令达到永久指定的效果<br>    export PYTHONPATH=”${PYTHONPATH}:/my/other/path”<br>遇到不能为root添加PYTHONPATH的情况，用了一下方法解决：<br>    sudo visudo(which open the /etc/sudoers file in a safe way)<br>然后添加：<br>    Default env_keep+=”PYTHONPATH”<br>保存之后生效</p>
-<h1 id="UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><a href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte" class="headerlink" title="UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte"></a>UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</h1><p>image_data = tf.gfile.FastGFile(filenames[i], ‘r’).read()<br>我使用的是python3,后来在python2下就没有出现这个问题。</p>
-<h1 id="在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><a href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。" class="headerlink" title="在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。"></a>在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</h1><p>解决方法是打开vs自带的Command Prompt工具运行setup.py文件</p>
-<h1 id="pycharm切换python版本"><a href="#pycharm切换python版本" class="headerlink" title="pycharm切换python版本"></a>pycharm切换python版本</h1><p>settings-&gt;project-&gt;project interpreter </p>
-<h1 id="使用cx-Freeze-打包python程序成exe文件"><a href="#使用cx-Freeze-打包python程序成exe文件" class="headerlink" title="使用cx_Freeze 打包python程序成exe文件"></a>使用cx_Freeze 打包python程序成exe文件</h1><p>期间遇到了一些坑，最后顺利解决。主要就是在要打包的脚本文件夹内编写以下脚本，并执行<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># setup.py</span></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">from</span> cx_Freeze <span class="keyword">import</span> setup, Executable</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">os.environ[<span class="string">'TCL_LIBRARY'</span>] = <span class="string">r'C:\Users\ThinkPad\AppData\Local\Programs\Python\Python36\tcl\tcl8.6'</span></div><div class="line">os.environ[<span class="string">'TK_LIBRARY'</span>] = <span class="string">r'C:\Users\ThinkPad\AppData\Local\Programs\Python\Python36\tcl\tk8.6'</span></div><div class="line"></div><div class="line">Base=<span class="keyword">None</span></div><div class="line">setup(name = <span class="string">'labelme'</span>,</div><div class="line">      version = <span class="string">'0.0.1'</span>,</div><div class="line">      executables = [Executable(<span class="string">'app.py'</span>,base=Base)],</div><div class="line">      options = &#123;<span class="string">'build_exe'</span>: &#123;<span class="string">'includes'</span>: [<span class="string">'atexit'</span>]&#125;&#125;)</div></pre></td></tr></table></figure></p>
-<p>然后 python setup.py build 运行此脚本即可在 build 找到打包好的程序。<br>注意python的根目录应该是包含此脚本的文件夹。之前因为不是这样导致打包的程序不能正确运行。<br>这样打包出来的程序运行起来会有黑框，如果不想要那个黑框，可以把Base=None改为<br>Base=’Win32GUI’</p>
-<h1 id="python3-中的一些编码问题一定要注意"><a href="#python3-中的一些编码问题一定要注意" class="headerlink" title="python3 中的一些编码问题一定要注意"></a>python3 中的一些编码问题一定要注意</h1><p>with open(filename, ‘w’) as f<br>with open(filename, ‘wb’) as f<br>b64encode(imageData.encode(‘utf-8’))<br>b64encode(imageData).encode(‘ascii’)</p>
-<h1 id="opencv读图片Premature-end-of-JPEG-file？"><a href="#opencv读图片Premature-end-of-JPEG-file？" class="headerlink" title="opencv读图片Premature end of JPEG file？"></a>opencv读图片Premature end of JPEG file？</h1><p>主要是由于图片不完整造成的，可以用以下脚本检验图片是否有效。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_pic</span><span class="params">(path)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        Image.open(path).load() </div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">print</span> <span class="string">'ERROR: %s'</span> % path</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure></p>
-<p><a href="https://www.zhihu.com/question/30372655/answer/157762216" target="_blank" rel="external">知乎回答</a></p>
-<h1 id="pyconfig-h-can’t-find"><a href="#pyconfig-h-can’t-find" class="headerlink" title="pyconfig.h can’t find"></a>pyconfig.h can’t find</h1><p>解决方法：sudo apt-get install python-dev (或者python3.5-dev等相应版本)</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/python//" class="article-tag-list-link color2">python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/08/python/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/20/tensorflow-programming-structure-your-tf-model/">展开全文 >></a>
         </p>
       
 
@@ -621,7 +266,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
     </nav>
   
 
@@ -729,19 +374,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
