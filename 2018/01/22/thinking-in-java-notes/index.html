@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Fengyang">
 <meta property="og:description" content="第1章 对象导论第2章 一切都是对象1、理解static关键词。当声明一个事物是static时，就意味着这个域或方法不会与包含它的那个类的任何对象实例关联在一起。 第3章 操作符1、注意 == 操作符和equals()方法的区别。2、移位操作符&amp;lt;&amp;lt;和&amp;gt;&amp;gt;，对于&amp;lt;&amp;lt;左移操作符，低位补0即可，对于&amp;gt;&amp;gt;右移操作符，采用“符号扩展”，符号为正，在高位插入0">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-22T12:53:34.822Z">
+<meta property="og:updated_time" content="2018-01-22T15:47:20.102Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Thinking in Java Notes -- Basic">
 <meta name="twitter:description" content="第1章 对象导论第2章 一切都是对象1、理解static关键词。当声明一个事物是static时，就意味着这个域或方法不会与包含它的那个类的任何对象实例关联在一起。 第3章 操作符1、注意 == 操作符和equals()方法的区别。2、移位操作符&amp;lt;&amp;lt;和&amp;gt;&amp;gt;，对于&amp;lt;&amp;lt;左移操作符，低位补0即可，对于&amp;gt;&amp;gt;右移操作符，采用“符号扩展”，符号为正，在高位插入0">
@@ -181,7 +181,7 @@
   <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第1章-对象导论"><span class="toc-text">第1章 对象导论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第2章-一切都是对象"><span class="toc-text">第2章 一切都是对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第3章-操作符"><span class="toc-text">第3章 操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第4章-控制执行流程"><span class="toc-text">第4章 控制执行流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第5章-初始化与清理"><span class="toc-text">第5章 初始化与清理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第6章-访问权限控制"><span class="toc-text">第6章 访问权限控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第7章-复用类"><span class="toc-text">第7章 复用类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第8章-多态"><span class="toc-text">第8章 多态</span></a></li></ol>
 </div>
 
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=521415702&auto=1&height=66"></iframe></p>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=29023561&auto=1&height=66"></iframe></p>
 <h2 id="第1章-对象导论"><a href="#第1章-对象导论" class="headerlink" title="第1章 对象导论"></a>第1章 对象导论</h2><h2 id="第2章-一切都是对象"><a href="#第2章-一切都是对象" class="headerlink" title="第2章 一切都是对象"></a>第2章 一切都是对象</h2><p>1、理解static关键词。当声明一个事物是static时，就意味着这个域或方法不会与包含它的那个类的任何对象实例关联在一起。</p>
 <h2 id="第3章-操作符"><a href="#第3章-操作符" class="headerlink" title="第3章 操作符"></a>第3章 操作符</h2><p>1、注意 == 操作符和equals()方法的区别。<br>2、移位操作符&lt;&lt;和&gt;&gt;，对于&lt;&lt;左移操作符，低位补0即可，对于&gt;&gt;右移操作符，采用“符号扩展”，符号为正，在高位插入0，符号为负则在高位插入1。Java中增加了一种有别于其它语言的“无符号”右移操作符&gt;&gt;&gt;，无论正负都在高位插入0。</p>
 <h2 id="第4章-控制执行流程"><a href="#第4章-控制执行流程" class="headerlink" title="第4章 控制执行流程"></a>第4章 控制执行流程</h2><h2 id="第5章-初始化与清理"><a href="#第5章-初始化与清理" class="headerlink" title="第5章 初始化与清理"></a>第5章 初始化与清理</h2><p>1、只能根据参数列表区分重载方法，而不能根据返回值的类型区分重载方法。<br>2、JVM垃圾回收机制。需要之后深入理解。<br>3、成员初始化。Java尽力保证，所有变量在使用前都能得到恰当的初始化。对于方法的局部变量，Java以编译时错误的形式来贯彻这种保证。如果类的数据成员是基本类型，那么可以不用初始化，其保证会有一个默认的初始值。在类里定义一个对象引用时，如果不将其初始化，此引用就会获得一个特殊值null。注意初始化时出现的“向前引用”的错误。<br>4、初始化顺序：类的内部，变量定义的先后顺序决定了初始化的顺序。<br>5、静态数据的初始化：无论创建多少个对象，静态数据都只占用一份存储区域。static关键字不能应用于局部变量，因此它只能作用于域。初始化的顺序是先静态对象（如果它们还没有因为前面的对象创建过程而被初始化），而后是“非静态对象”。<br>6、对象的创建过程大概如下：<br>假设有个名为Dog的类。<br>a、即便没有显式地使用static关键字，构造器实际上也是静态方法，因此，当首次创建类型为Dog的对象时(构造器可以看做static方法)，或者Dog类的静态方法/静态域首次被访问时，Java解释器必须查找类路径，以定位Dog.class文件。<br>b、然后载入Dog.class，有关静态初始化的所有动作都会执行。因此，静态初始化只在Class对象首次加载的时候进行一次。<br>c、当用new Dog() 创建对象的时候，首先将在堆上为Dog对象分配足够的存储空间。<br>d、这块存储空间会被清零，这就自动地将Dog对象中的所有基本类型数据都设置成了默认值，而引用则被设置成了null。<br>e、执行所有出现于字段定义处的初始化动作。<br>f、执行构造器。</p>
@@ -281,6 +281,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2018/01/22/thinkingng-in-javavava-notes-interfaces-and-inner-classes/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Thinking in Java Notes -- Interfaces and Inner Classes
+        
+      </div>
+    </a>
   
   
     <a href="/2018/01/21/paper-and-notes/" id="article-nav-older" class="article-nav-link-wrap">
