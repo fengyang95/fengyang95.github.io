@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
   <title>Tensorflow Programming--Basic | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Tensorflow基本操作12345import tensorflow as tfa = tf.add(3,5)sess = tf.Session()print(sess.run(a))sess.close() 或者这样写更好：1234import tensorflow as tfa = tf.add(3,5)with tf.Session() as sess:    print(sess.ru">
+  <meta name="description" content="Tensorflow基本操作12345import tensorflow as tfa = tf.add(3,5)sess = tf.Session()print(sess.run(a))sess.close() 或者这样写更好：1234import tensorflow as tfa = tf.add(3,5)with tf.Session() as sess:    print(sess.r">
 <meta name="keywords" content="tensorflow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Tensorflow Programming--Basic">
 <meta property="og:url" content="https://wwdguu.github.io/2018/01/18/tensorflow-programming-basic/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="Tensorflow基本操作12345import tensorflow as tfa = tf.add(3,5)sess = tf.Session()print(sess.run(a))sess.close() 或者这样写更好：1234import tensorflow as tfa = tf.add(3,5)with tf.Session() as sess:    print(sess.ru">
+<meta property="og:description" content="Tensorflow基本操作12345import tensorflow as tfa = tf.add(3,5)sess = tf.Session()print(sess.run(a))sess.close() 或者这样写更好：1234import tensorflow as tfa = tf.add(3,5)with tf.Session() as sess:    print(sess.r">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wwdguu.github.io/2018/01/18/tensorflow-programming-basic/operations.JPG">
 <meta property="og:image" content="https://wwdguu.github.io/2018/01/18/tensorflow-programming-basic/data_types.JPG">
-<meta property="og:updated_time" content="2018-01-19T06:30:25.838Z">
+<meta property="og:updated_time" content="2018-01-24T07:48:55.755Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tensorflow Programming--Basic">
-<meta name="twitter:description" content="Tensorflow基本操作12345import tensorflow as tfa = tf.add(3,5)sess = tf.Session()print(sess.run(a))sess.close() 或者这样写更好：1234import tensorflow as tfa = tf.add(3,5)with tf.Session() as sess:    print(sess.ru">
+<meta name="twitter:description" content="Tensorflow基本操作12345import tensorflow as tfa = tf.add(3,5)sess = tf.Session()print(sess.run(a))sess.close() 或者这样写更好：1234import tensorflow as tfa = tf.add(3,5)with tf.Session() as sess:    print(sess.r">
 <meta name="twitter:image" content="https://wwdguu.github.io/2018/01/18/tensorflow-programming-basic/operations.JPG">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
@@ -188,7 +188,8 @@
   <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Tensorflow基本操作"><span class="toc-text">Tensorflow基本操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tf-Graph"><span class="toc-text">tf.Graph()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用图的优点"><span class="toc-text">使用图的优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tensorboard简单使用"><span class="toc-text">Tensorboard简单使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用API"><span class="toc-text">常用API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运算操作"><span class="toc-text">运算操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tensorflow数据类型"><span class="toc-text">Tensorflow数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tensorflow和Numpy中的数据类型比较"><span class="toc-text">Tensorflow和Numpy中的数据类型比较</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用原则"><span class="toc-text">使用原则</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#constants的弊端"><span class="toc-text">constants的弊端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#variables"><span class="toc-text">variables</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#variables初始化"><span class="toc-text">variables初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tf-Variable-assign"><span class="toc-text">tf.Variable.assign()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#assign-add-和-assign-sub"><span class="toc-text">assign_add() 和 assign_sub()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#每个session都拥有它自己的变量的拷贝"><span class="toc-text">每个session都拥有它自己的变量的拷贝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用一个变量初始化另一个变量"><span class="toc-text">用一个变量初始化另一个变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Session-和-InteractiveSesssion"><span class="toc-text">Session 和 InteractiveSesssion</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Control-Dependencies"><span class="toc-text">Control Dependencies</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Placeholder"><span class="toc-text">Placeholder</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Feeding-values-to-TF-ops"><span class="toc-text">Feeding values to TF ops</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lazy-Loading"><span class="toc-text">Lazy Loading</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
-        <h2 id="Tensorflow基本操作"><a href="#Tensorflow基本操作" class="headerlink" title="Tensorflow基本操作"></a>Tensorflow基本操作</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">a = tf.add(<span class="number">3</span>,<span class="number">5</span>)</div><div class="line">sess = tf.Session()</div><div class="line">print(sess.run(a))</div><div class="line">sess.close()</div></pre></td></tr></table></figure>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=26124797&auto=1&height=66"></iframe></p>
+<h2 id="Tensorflow基本操作"><a href="#Tensorflow基本操作" class="headerlink" title="Tensorflow基本操作"></a>Tensorflow基本操作</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">a = tf.add(<span class="number">3</span>,<span class="number">5</span>)</div><div class="line">sess = tf.Session()</div><div class="line">print(sess.run(a))</div><div class="line">sess.close()</div></pre></td></tr></table></figure>
 <p>或者这样写更好：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">a = tf.add(<span class="number">3</span>,<span class="number">5</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(a))</div></pre></td></tr></table></figure></p>
 <p>Session对象封装了Operation对象的执行环境和Tensor对象的验证。</p>
 <p>更复杂的图的例子<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">x = <span class="number">2</span></div><div class="line">y = <span class="number">3</span></div><div class="line">add_op = tf.add(x,y)</div><div class="line">mul_op = tf.mul(x,y)</div><div class="line">useless = tf.mul(x,add_op)</div><div class="line">pow_op = tf.pow(add_op,mul_op)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    z, not_useless = sess.run([op3,useless])</div></pre></td></tr></table></figure></p>
@@ -491,11 +492,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -503,7 +504,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -511,15 +516,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -527,11 +524,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
             
             <div class="clearfix"></div>
