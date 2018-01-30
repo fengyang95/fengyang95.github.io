@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-how-to-use-git" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-cs231n-assignment1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/22/how-to-use-git/">How to use git</a>
+      <a class="article-title" href="/2017/09/23/cs231n-assignment1/">cs231n assignment1</a>
     </h1>
   
 
         
-        <a href="/2017/09/22/how-to-use-git/" class="archive-article-date">
-  	<time datetime="2017-09-22T10:39:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-22</time>
+        <a href="/2017/09/23/cs231n-assignment1/" class="archive-article-date">
+  	<time datetime="2017-09-23T09:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-23</time>
 </a>
         
       </header>
@@ -183,14 +183,15 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建本地仓库并上传代码到GitHub"><span class="toc-text">创建本地仓库并上传代码到GitHub</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IDEA创建项目并push到Github"><span class="toc-text">IDEA创建项目并push到Github</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#k-Nearest-Neighbor-classifier"><span class="toc-text">k-Nearest Neighbor classifier</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#compute-distances"><span class="toc-text">compute distances</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#compute-distances-with-two-loops"><span class="toc-text">compute distances with two loops</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#compute-distances-with-one-loop"><span class="toc-text">compute distances with one loop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#compute-distances-with-no-loop"><span class="toc-text">compute distances with no loop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cross-validation"><span class="toc-text">Cross-validation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Split-up-the-training-data-into-folds"><span class="toc-text">Split up the training data into folds</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Perform-k-fold-cross-validation"><span class="toc-text">Perform k-fold cross validation</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
-        <h1 id="创建本地仓库并上传代码到GitHub"><a href="#创建本地仓库并上传代码到GitHub" class="headerlink" title="创建本地仓库并上传代码到GitHub"></a>创建本地仓库并上传代码到GitHub</h1><p><em>1）新建Text文件夹作为仓库根目录（文件夹名字随意命名）
-</em>2）将需要上传的代码文件加入到Text根目录<br><em>3）在根目录下建立仓库<br>    使用命令行或Git Bash，输入下面命令：先进入到Text根目录下，再输入git init（初始化一个仓库）
-</em>4）将所有文件添加到仓库<br>    使用命令行或Git Bash，输入下面命令：git add .<br><em>5）提交<br>    使用命令行或Git Bash，输入下面命令：git commit -m “CommitInfo”
-</em>6）添加源到GitHub<br>    git remote add origin git@github.com:YourName/YourRepositroy.git<br>*7）上传源到GitHub<br>    git push -u origin master</p>
-<h1 id="IDEA创建项目并push到Github"><a href="#IDEA创建项目并push到Github" class="headerlink" title="IDEA创建项目并push到Github"></a>IDEA创建项目并push到Github</h1><p><a href="http://blog.csdn.net/u011853294/article/details/53228720" target="_blank" rel="external">配置方式</a></p>
+        <h1 id="k-Nearest-Neighbor-classifier"><a href="#k-Nearest-Neighbor-classifier" class="headerlink" title="k-Nearest Neighbor classifier"></a>k-Nearest Neighbor classifier</h1><h2 id="compute-distances"><a href="#compute-distances" class="headerlink" title="compute distances"></a>compute distances</h2><h3 id="compute-distances-with-two-loops"><a href="#compute-distances-with-two-loops" class="headerlink" title="compute distances with two loops"></a>compute distances with two loops</h3><p>思想很简单，但是耗时较长，代码如下。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_distances_two_loops</span><span class="params">(X,X_train)</span>:</span></div><div class="line">    <span class="keyword">assert</span>(X.shape[<span class="number">1</span>]==X_train.shape[<span class="number">1</span>])</div><div class="line">    num_test=X.shape[<span class="number">0</span>]</div><div class="line">    num_train=X_train.shape[<span class="number">0</span>]</div><div class="line">    dists=np.zeros((num_test,num_train))</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_test):</div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(num_train):</div><div class="line">            dists[i][j]=np.linalg.norm(X[i,:]-X_train[j,:])</div><div class="line">    <span class="keyword">return</span> dists</div></pre></td></tr></table></figure></p>
+<h3 id="compute-distances-with-one-loop"><a href="#compute-distances-with-one-loop" class="headerlink" title="compute distances with one loop"></a>compute distances with one loop</h3><p>利用numpy.sum代替一个循环，但是在测试中比第一种方法更耗时。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_distances_one_loop</span><span class="params">(X,X_train)</span>:</span></div><div class="line">    <span class="keyword">assert</span>(X.shape[<span class="number">1</span>]==X_train.shape[<span class="number">1</span>])</div><div class="line">    num_test=X.shape[<span class="number">0</span>]</div><div class="line">    num_train=X_train.shape[<span class="number">0</span>]</div><div class="line">    dists=np.zeros((num_test,num_train))</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_test):</div><div class="line">        dists[i,:]=np.linalg.norm(X[i,:]-X_train,axis=<span class="number">1</span>)</div><div class="line">    <span class="keyword">return</span> dists</div></pre></td></tr></table></figure></p>
+<h3 id="compute-distances-with-no-loop"><a href="#compute-distances-with-no-loop" class="headerlink" title="compute distances with no loop"></a>compute distances with no loop</h3><p>利用矩阵运算代替循环，用时极短但是不容易理解。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_distances_no_loop</span><span class="params">(X,X_train)</span>:</span></div><div class="line">    <span class="keyword">assert</span>(X.shape[<span class="number">1</span>]==X_train.shape[<span class="number">1</span>])</div><div class="line">    num_test=X.shape[<span class="number">0</span>]</div><div class="line">    num_train=X_train.shape[<span class="number">0</span>]</div><div class="line">    dists=np.zeros((num_test,num_train))</div><div class="line">    M=X.dot(X_train.T)</div><div class="line">    te=np.square(X).sum(axis=<span class="number">1</span>)</div><div class="line">    tr=np.square(X_train).sum(axis=<span class="number">1</span>)</div><div class="line">    dists = np.sqrt(<span class="number">-2</span>*M+tr+np.matrix(te).T)</div><div class="line">    <span class="keyword">return</span> dists</div></pre></td></tr></table></figure></p>
+<h2 id="Cross-validation"><a href="#Cross-validation" class="headerlink" title="Cross-validation"></a>Cross-validation</h2><h3 id="Split-up-the-training-data-into-folds"><a href="#Split-up-the-training-data-into-folds" class="headerlink" title="Split up the training data into folds"></a>Split up the training data into folds</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">y_train_ = y_train.reshape(<span class="number">-1</span>, <span class="number">1</span>)</div><div class="line">X_train_folds , y_train_folds = np.array_split(X_train,num_folds),p.array_split(y_train_,num_folds)</div></pre></td></tr></table></figure>
+<h3 id="Perform-k-fold-cross-validation"><a href="#Perform-k-fold-cross-validation" class="headerlink" title="Perform k-fold cross validation"></a>Perform k-fold cross validation</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> k_ <span class="keyword">in</span> k_choices:</div><div class="line">    k_to_accuracies.setdefault(k_, [])</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(num_folds):</div><div class="line">    classifier = KNearestNeighbor()</div><div class="line">    X_val_train = np.vstack(X_train_folds[<span class="number">0</span>:i] + X_train_folds[i+<span class="number">1</span>:])</div><div class="line">    y_val_train = np.vstack(y_train_folds[<span class="number">0</span>:i] + y_train_folds[i+<span class="number">1</span>:])</div><div class="line">    y_val_train = y_val_train[:,<span class="number">0</span>]</div><div class="line">    classifier.train(X_val_train, y_val_train)</div><div class="line">    <span class="keyword">for</span> k_ <span class="keyword">in</span> k_choices:</div><div class="line">        y_val_pred = classifier.predict(X_train_folds[i], k=k_)</div><div class="line">        num_correct = np.sum(y_val_pred == y_train_folds[i][:,<span class="number">0</span>])</div><div class="line">        accuracy = float(num_correct) / len(y_val_pred)</div><div class="line">        k_to_accuracies[k_] = k_to_accuracies[k_] + [accuracy]</div></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="">完整代码</a><br><a href="http://cs231n.github.io/assignments2017/assignment1/" target="_blank" rel="external">Assignment1</a></p>
 
       
 
@@ -204,7 +205,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
         		</li>
       		
 		</ul>
@@ -216,7 +217,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/git//" class="article-tag-list-link color4">git</a>
+        			<a href="/categories/cs231n//" class="article-tag-list-link color2">cs231n</a>
         		</li>
       		
 		</ul>
@@ -225,7 +226,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/22/how-to-use-git/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/09/23/cs231n-assignment1/">展开全文 >></a>
         </p>
       
 
@@ -260,7 +261,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/35/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="page-number" href="/page/35/">35</a><span class="page-number current">36</span><a class="page-number" href="/page/37/">37</a><a class="extend next" rel="next" href="/page/37/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/35/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="page-number" href="/page/35/">35</a><span class="page-number current">36</span><a class="page-number" href="/page/37/">37</a><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/37/">Next &raquo;</a>
     </nav>
   
 
@@ -356,7 +357,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -364,7 +365,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
