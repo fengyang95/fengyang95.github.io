@@ -204,7 +204,7 @@
 <p>Implement <strong><code>gaussian_kernel</code></strong> in <code>edge.py</code> and run the code below.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> edge <span class="keyword">import</span> conv, gaussian_kernel</div><div class="line"></div><div class="line"><span class="comment"># Define 3x3 Gaussian kernel with std = 1</span></div><div class="line">kernel = gaussian_kernel(<span class="number">3</span>, <span class="number">1</span>)</div><div class="line">kernel_test = np.array(</div><div class="line">    [[ <span class="number">0.05854983</span>, <span class="number">0.09653235</span>, <span class="number">0.05854983</span>],</div><div class="line">     [ <span class="number">0.09653235</span>, <span class="number">0.15915494</span>, <span class="number">0.09653235</span>],</div><div class="line">     [ <span class="number">0.05854983</span>, <span class="number">0.09653235</span>, <span class="number">0.05854983</span>]]</div><div class="line">)</div><div class="line"></div><div class="line"><span class="comment"># Test Gaussian kernel</span></div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> np.allclose(kernel, kernel_test):</div><div class="line">    print(<span class="string">'Incorrect values! Please check your implementation.'</span>)</div></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Test with different kernel_size and sigma</span></div><div class="line">kernel_size = <span class="number">5</span></div><div class="line">sigma = <span class="number">1.4</span></div><div class="line"></div><div class="line"><span class="comment"># Load image</span></div><div class="line">img = io.imread(<span class="string">'iguana.png'</span>, as_grey=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="comment"># Define 5x5 Gaussian kernel with std = sigma</span></div><div class="line">kernel = gaussian_kernel(kernel_size, sigma)</div><div class="line"></div><div class="line"><span class="comment"># Convolve image with kernel to achieve smoothed effect</span></div><div class="line">smoothed = conv(img, kernel)</div><div class="line"></div><div class="line">plt.subplot(<span class="number">1</span>,<span class="number">2</span>,<span class="number">1</span>)</div><div class="line">plt.imshow(img)</div><div class="line">plt.title(<span class="string">'Original image'</span>)</div><div class="line">plt.axis(<span class="string">'off'</span>)</div><div class="line"></div><div class="line">plt.subplot(<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>)</div><div class="line">plt.imshow(smoothed)</div><div class="line">plt.title(<span class="string">'Smoothed image'</span>)</div><div class="line">plt.axis(<span class="string">'off'</span>)</div><div class="line"></div><div class="line">plt.show()</div></pre></td></tr></table></figure>
-<p><img src="output_5_0.png" alt="png"></p>
+<p><img src="output_5_0.png" alt=""></p>
 <h4 id="Question-5-points"><a href="#Question-5-points" class="headerlink" title="Question (5 points)"></a>Question (5 points)</h4><p>What is the effect of the kernel_size and sigma?</p>
 <p><strong>Your Answer:</strong> Write your solution in this markdown cell.</p>
 <h3 id="1-2-Finding-gradients-15-points"><a href="#1-2-Finding-gradients-15-points" class="headerlink" title="1.2 Finding gradients (15 points)"></a>1.2 Finding gradients (15 points)</h3><p>The gradient of a 2D scalar function $I:\mathbb{R}^2\rightarrow{\mathbb{R}}$ in Cartesian coordinate is defined by:</p>
@@ -326,29 +326,7 @@ Thetas: 135
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/cv//" class="article-tag-list-link color3">cv</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
 
       
         <p class="article-more-link">
