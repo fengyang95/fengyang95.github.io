@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-linux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-cs231n-Convolutional-Neural-Networks" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/08/linux/">Linux使用问题</a>
+      <a class="article-title" href="/2017/09/30/cs231n-Convolutional-Neural-Networks/">Convolutional-Neural-Networks</a>
     </h1>
   
 
         
-        <a href="/2017/10/08/linux/" class="archive-article-date">
-  	<time datetime="2017-10-08T02:28:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-08</time>
+        <a href="/2017/09/30/cs231n-Convolutional-Neural-Networks/" class="archive-article-date">
+  	<time datetime="2017-09-30T14:26:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-30</time>
 </a>
         
       </header>
@@ -183,11 +183,61 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#linux常用命令"><span class="toc-text">linux常用命令</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#神经网络-Neural-Networks"><span class="toc-text">神经网络(Neural Networks)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#神经网络的结构"><span class="toc-text">神经网络的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#卷积神经网络-Convolutional-Neural-Networks"><span class="toc-text">卷积神经网络(Convolutional Neural Networks)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#结构介绍"><span class="toc-text">结构介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#卷积网络的层的种类"><span class="toc-text">卷积网络的层的种类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#举例"><span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结-1"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结构细节"><span class="toc-text">结构细节</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#卷积层"><span class="toc-text">卷积层</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#不考虑神经元的分析"><span class="toc-text">不考虑神经元的分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#从神经元角度的分析"><span class="toc-text">从神经元角度的分析</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#局部联系"><span class="toc-text">局部联系</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#例1"><span class="toc-text">例1</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#例2"><span class="toc-text">例2</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#空间分布"><span class="toc-text">空间分布</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#depth"><span class="toc-text">depth</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#stride"><span class="toc-text">stride</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#zero-padding"><span class="toc-text">zero-padding</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#计算输出体积大小"><span class="toc-text">计算输出体积大小</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#一些注意事项"><span class="toc-text">一些注意事项</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#zero-padding的正确设置"><span class="toc-text">zero-padding的正确设置</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#strides的限制"><span class="toc-text">strides的限制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#实际操作的一个例子"><span class="toc-text">实际操作的一个例子</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#参数共享"><span class="toc-text">参数共享</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#利用大矩阵乘法实现卷积层"><span class="toc-text">利用大矩阵乘法实现卷积层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#反向传播"><span class="toc-text">反向传播</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1x1卷积"><span class="toc-text">1x1卷积</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#扩张卷积-Dilated-convolutions"><span class="toc-text">扩张卷积(Dilated convolutions)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#池化层"><span class="toc-text">池化层</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#常见的池化方式"><span class="toc-text">常见的池化方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#池化操作的替代"><span class="toc-text">池化操作的替代</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#归一化层"><span class="toc-text">归一化层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#全连接层"><span class="toc-text">全连接层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#转换全连接层到卷积层"><span class="toc-text">转换全连接层到卷积层</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#卷积网络的架构"><span class="toc-text">卷积网络的架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Layer-Patterns"><span class="toc-text">Layer Patterns</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Layer-Sizing-Patterns"><span class="toc-text">Layer Sizing Patterns</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Input-Layer"><span class="toc-text">Input Layer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Conv-Layer"><span class="toc-text">Conv Layer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pool-Layer"><span class="toc-text">Pool Layer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CONV层为什么设置S-1？"><span class="toc-text">CONV层为什么设置S=1？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Padding的作用"><span class="toc-text">Padding的作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#内存限制"><span class="toc-text">内存限制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见的实例"><span class="toc-text">常见的实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算的注意事项"><span class="toc-text">计算的注意事项</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
-        <p>整理一些使用Linux中遇到的问题及解决方法。</p>
-<h1 id="linux常用命令"><a href="#linux常用命令" class="headerlink" title="linux常用命令"></a>linux常用命令</h1><p>1、ctrl+z可以将正在执行的前台命令放到后台并暂停。<br>2、fg将后台命令调到前台继续执行。<br>3、htop可以实现监控<br>4、查看硬盘剩余空间 #df -h #df -H<br>5、查看目录占用空间 #du -hs 目录名</p>
+        <p>主要介绍神经网络和卷积神经网络的一些东西。</p>
+<h1 id="神经网络-Neural-Networks"><a href="#神经网络-Neural-Networks" class="headerlink" title="神经网络(Neural Networks)"></a>神经网络(Neural Networks)</h1><p>之前的线性score function 是 f=Wx，现在扩展到2层的神经网络的表示是：f=W2<em>max(0,W1</em>x)。类似的，如果扩展到3层网络可以这样表示：f=W3<em>max(0,W2</em>max(0,W1*x))。<br><img src="2_layer.jpg" alt=""></p>
+<p>一个简单的2层神经网络可以这样实现：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> n p</div><div class="line">form numpy.random <span class="keyword">import</span> randn</div><div class="line"></div><div class="line">N,D_in,H,D_out=<span class="number">64</span>,<span class="number">1000</span>,<span class="number">100</span>,<span class="number">10</span></div><div class="line">x,y=randn(N,D_in),randn(N,D_out)</div><div class="line">w1,w2=randn(D_in,H),randn(H,D_out)</div><div class="line"></div><div class="line"><span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">2000</span>):</div><div class="line">    h=<span class="number">1</span>/(<span class="number">1</span>+np.exp(-x.dot(W1)))</div><div class="line">    y_pred=h.dot(W2)</div><div class="line">    loss=np.square(y_pred-y).sum()</div><div class="line">    print(t,loss)</div><div class="line"></div><div class="line">    grad_y_pred=<span class="number">2.0</span>*(y_pred-y)</div><div class="line">    grad_w2=h.T.dot(grad_y_pred)</div><div class="line">    grad_h=grad_y_pred.dot(W2.T)</div><div class="line">    grad_w1=x.T.dot(grad_h*h*(<span class="number">1</span>-h))</div><div class="line"></div><div class="line">    w1-=<span class="number">1e-4</span>*grad_w1</div><div class="line">    w2-=<span class="number">1e-4</span>*grad_w2</div></pre></td></tr></table></figure></p>
+<h2 id="神经网络的结构"><a href="#神经网络的结构" class="headerlink" title="神经网络的结构"></a>神经网络的结构</h2><p>一个完整的神经网络应该包括1个输入层，若干隐藏层，1个输出层。<br><img src="network_architectures.jpg" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>1、神经网络中把每一层的神经元做一个全连接。<br>2、对于每一层的计算都可以用高效的矢量计算来实现。<br>3、神经网络和真正的神经是不一样的，只是在某种程度上有些相似性。</p>
+<h1 id="卷积神经网络-Convolutional-Neural-Networks"><a href="#卷积神经网络-Convolutional-Neural-Networks" class="headerlink" title="卷积神经网络(Convolutional Neural Networks)"></a>卷积神经网络(Convolutional Neural Networks)</h1><h2 id="结构介绍"><a href="#结构介绍" class="headerlink" title="结构介绍"></a>结构介绍</h2><p>卷积神经网络有着神经网络所有的特征：每一层由神经元组成，我们可以学习它的W和b;每一个神经元有一个输入，进行一个点积运算之后，可以紧接着一个非线性的操作；整个网络最后也是运算一个score function，输出scores;在最后一层全连接层仍然会计算一个损失函数；以及神经网络的一些其它性质和技巧在卷积神经网络中依然适用。</p>
+<p>但是卷积神经网络和普通神经网络相比有以下区别：<br>卷积神经网络明确假设输入是图片，这允许我们将某些属性编码到架构中，使得前向网络能够更为有效地实现，并且大大减少了网络中的参数数量。</p>
+<p>通常的神经网络接受一个输入（通常是一个一维向量），并通过中间的隐藏层对其进行一些变换，每一层隐藏层包含多个神经元，其中每一个神经元都和上一层的各个神经元全连接。同一层的神经元之间是相互独立，并不存在任何连接。最后一层全连接层叫做输出层，在分类问题中它就代表每个类的分数。</p>
+<p>普通的神经网络不能直接对图片操作，而是将图像矩阵拉伸成一维向量，比如对于32x32x3的图片，这样对于一个神经元就会有3072个权重。对于更大的图片，权重的数量将会更多。关键的问题是，这样的神经元会有很多，这样的话参数的数量将会增长很快。这样使得全连接有些浪费，并且参数过多很容易造成过拟合。</p>
+<p>对于卷积神经网络来说，每一层的神经元包括三个维度(width,height,depth),这样，每一层的神经元就只和前面一层的很小一部分区域有联系，这区别于普通神经网络的全连接层。另外，对于之前的CIFAR-10的例子，最后输出层的输出结果是一个1x1x10的矩阵。<br>如下图所示：左边是普通的神经网络，右边是一个卷积神经网络。卷积神经网络的每一层都有一个简单的API把一个形状的3维体积通过一个可微函数转换为另一个形状的3维体积。<br><img src="cnn.jgp" alt=""></p>
+<h2 id="卷积网络的层的种类"><a href="#卷积网络的层的种类" class="headerlink" title="卷积网络的层的种类"></a>卷积网络的层的种类</h2><p>正如上面所说，一个简单的卷积神经网络由一系列层组成，每一层通过一个可微函数将一个三维体积转换成另一个不同形状的三维体积。主要使用一下三种类型的层来构建卷积神经网络：卷积层，池化层以及全连接层，把这三种类型的层组合在一起就可以构建一个完整的卷积神经网络。</p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>对于CIFAR-10这个数据集的分类问题，我们可以构建这样一个卷积神经网络：<br>[INPUT-CONV-RELU-POOL-FC]。具体分析如下：<br>1、INPUT[32x32x3],即输入一张原始图片，大小为32x32,通道数为3<br>2、CONV(卷积层)计算连接到局部输入的神经元的输出，每次计算权重和局部输入的卷积，如果我们用12个滤波器的话，最后的输出将会是[32x32x12]。<br>3、RELU层就将执行一次激活函数，不改变输入大小，依然是[32x32x12]。<br>4、POOL层将在空间维度上进行一次下采样(downsample)，然后输出维数为[16x16x12]<br>5、FC层将计算一个得分函数(score function)，输出体积为[1x1x10]。这一层的神经元将和前一层的所有体积相关联。<br>这样，通过一层层的运算，卷积神经网络将输入的原始图像转换为得分向量。值得一提的是：其中有些层的操作是由参数的，而有些层的操作是没有参数的。比如CONV/FC层就包括神经元的W和b参数，而RELU/POOL层的操作则是不变的，不需要任何参数。COVN/FC层的参数将通过梯度下降的算法进行优化以便达到良好的识别效果。<br><img src="cnn_example.jpg" alt=""></p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>1、卷积神经网络的结构就是实现简单的从一个形状到另一个形状的转换。<br>2、它由不同类型的层组成，目前最常用的就是卷积层，池化层，激活层以及全连接层。<br>3、每层可以有参数(比如CONV、FC)也可以没有参数(比如RELU、POOL)，每层可以有超参数(比如CONV、FC、POOL)也可以没有超参数(比如RELU)。</p>
+<h3 id="结构细节"><a href="#结构细节" class="headerlink" title="结构细节"></a>结构细节</h3><h4 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h4><p>卷积层是一个卷积神经网络的核心，大部分的运算量都集中在卷积层。</p>
+<h5 id="不考虑神经元的分析"><a href="#不考虑神经元的分析" class="headerlink" title="不考虑神经元的分析"></a>不考虑神经元的分析</h5><p>卷积层的参数包括一系列可以学习的滤波器。每个滤波器在空间上是小块的，但是在深度上是和输入一致的。例如，一个典型的在第一个卷积层的滤波器的尺寸是[5x5x3]。在前向计算的过程中，我们用滤波器的大小在输入体积上面滑动，然后在每个位置计算滤波器和其覆盖的输入部分的点积之和作为这个位置的计算结果。整个过程下来，我们将产生一个二维的激活图，其中每个点的结果表示输入的体积对于滤波器在该位置的响应。更直观地说，网络将学习当他们看到某种类型的视觉特征（例如某一方向的边缘或第一层上的一些颜色的斑点）或最终在网络的较高层上的整个蜂窝或轮状图案时激活的过滤器。 现在，我们将在每个CONV层中拥有一整套滤波器（例如12个滤波器），并且它们中的每一个将产生单独的二维激活图。 我们将沿深度维度堆叠这些激活图，并产生输出量。</p>
+<h5 id="从神经元角度的分析"><a href="#从神经元角度的分析" class="headerlink" title="从神经元角度的分析"></a>从神经元角度的分析</h5><p>输出结果中的每个元素也可理解为神经元的输出，其只在输入中看到一个小区域，并和其左右的神经元在空间上共享参数。现在分别讨论神经元之间的联系，空间上的排布以及参数共享的一些细节。</p>
+<h6 id="局部联系"><a href="#局部联系" class="headerlink" title="局部联系"></a>局部联系</h6><p>当处理诸如图像的高维输入时，将神经元连接到前一层的所有神经元是不切实际的。但是我们可以将每个神经元连接到前一层的局部区域。这种连通性的空间范围是神经元的超参数，称为接受场(receptive filed)，等价于滤波器大小。这里需要再一次强调我们处理空间尺寸和深度时的不一致性。这种连接在空间是局部的，但是在深度上是全连接的。</p>
+<h6 id="例1"><a href="#例1" class="headerlink" title="例1"></a>例1</h6><p>假设输入尺寸是[32x32x3],滤波器大小是[5x5],这样的话每个神经元将对应于一个[5x5x3]的区域，这样就有5<em>5</em>3=75(再加1个偏置b)的weights。</p>
+<h6 id="例2"><a href="#例2" class="headerlink" title="例2"></a>例2</h6><p>如果输入尺寸是[16x16x20],滤波器大小是[3x3],那么卷积层中的每个神经元将有3<em>3</em>20=180(再加上1个偏置b)的weights和输入体积相关联。<br><img src="local_connectivity.jpg" alt=""></p>
+<h6 id="空间分布"><a href="#空间分布" class="headerlink" title="空间分布"></a>空间分布</h6><p>上面阐述了一层卷积层中的每个神经元和输入的体积之间的联系。但是没有说明在输出体积中有多少个神经元以及它们之间是怎么排布的。有以下三个超参数会影响神经元的空间分布：分别是depth,stride和zero-padding。下面分别讨论细节。</p>
+<h6 id="depth"><a href="#depth" class="headerlink" title="depth"></a>depth</h6><p>depth和我们期望的滤波器的种类有关，每个滤波器会学习到输入中的一些不同特征。<br>例如，如果第一卷积层作为原始图像的输入，则沿着深度维度的不同神经元可以在存在各种定向边缘或颜色的斑点的情况下激活。我们将参考一组神经元，它们都是与输入的相同区域作为深度列。</p>
+<h6 id="stride"><a href="#stride" class="headerlink" title="stride"></a>stride</h6><p>stride是指计算卷积时跳过的像素点数，如果是依次计算的话，则stride是1。stride越大，在相同输入情况下，输出的空间尺寸会越小。</p>
+<h6 id="zero-padding"><a href="#zero-padding" class="headerlink" title="zero-padding"></a>zero-padding</h6><p>有时为了运算方便，会对输入图像进行边界的零填充，零填充的尺寸大小也是一个超参数。通过控制零填充的大小，我们可以方便控制输出体积的大小。</p>
+<h6 id="计算输出体积大小"><a href="#计算输出体积大小" class="headerlink" title="计算输出体积大小"></a>计算输出体积大小</h6><p>了解了以上性质之后，我们可以计算输出的体积大小，假设输入体积大小是W，滤波器大小是F，stride大小是S,zero-padding大小是P，然后就可以计算出输出尺寸V是：<br>V=(W-F+2*P)/S+1。比如W=5，S=1，P=1，F=3，那么V=5，如果改变S=2，那么V=3。如下图所示：<br><img src="calculate.jpg" alt=""></p>
+<h6 id="一些注意事项"><a href="#一些注意事项" class="headerlink" title="一些注意事项"></a>一些注意事项</h6><h6 id="zero-padding的正确设置"><a href="#zero-padding的正确设置" class="headerlink" title="zero-padding的正确设置"></a>zero-padding的正确设置</h6><p>当S为1时，一种常见的做法是设置P=（F-1)/2，这样使得V=W。使得输入和输出在空间大小上保持一致。</p>
+<h6 id="strides的限制"><a href="#strides的限制" class="headerlink" title="strides的限制"></a>strides的限制</h6><p>不合适的设置S可能使得产生无效的结果。比如W=10，P=0，F=3，如果S=2，那么V=(W-F+2*P)/S+1=4.5将不是一个整数。如果出现这样的情况，我们将采用改变P或者裁剪输入等方法来避免这个问题。</p>
+<h6 id="实际操作的一个例子"><a href="#实际操作的一个例子" class="headerlink" title="实际操作的一个例子"></a>实际操作的一个例子</h6><p><a href="http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks" target="_blank" rel="external">Krizhevsky et al.</a></p>
+<p>2012年ImageNet比赛的冠军的一个例子。输入图像是[227x227x3],F=11,S=4,P=0,计算得到V=(227-11)/4+1=55。而depth=96。最后得到的输出是[55x55x96]。这就表示输出体积中的55<em>55</em>96个神经元之一都和输入中的[11x11x3]大小的区域相关联。</p>
+<h6 id="参数共享"><a href="#参数共享" class="headerlink" title="参数共享"></a>参数共享</h6><p>参数共享的目的是为了控制卷积层中参数的数目。考虑上面的那个例子。在第一层卷积层中有55<em>55</em>96=290400个神经元，每个神经元都有11<em>11</em>3=363个weights和1个bias，这样的话，在第一层中将会有290400<em>364=105705600个参数，显然，这个数目太大了。<br>事实证明，我们可以通过一个合理的假设大大减少参数数量：如果一个特征在某些空间位置（x，y）上计算有用，那么在不同的位置（x2,y2）计算也是有用的。换句话说，将深度的单个二维切片表示为深度切片（例如，尺寸[55×55×96]的体积具有96个深度切片，每个尺寸[55x55]），我们将限制每个深度切片中的神经元使用相同的权重和偏差。使用此参数共享方案，我们的示例中的第一个Conv Layer现在将只有96个唯一的权重集（每个深度片一个），总共96 </em> 11 <em> 11 </em> 3 = 34,848个唯一权重或34,944个参数（ +96偏置）。或者，每个深度切片中的所有55 * 55个神经元现在将使用相同的参数。在反向传播中的实践中，体积中的每个神经元将计算其权重的梯度，但是这些梯度将在每个深度切片上相加，并且仅更新每个切片的单个权重集合。<br>注意，如果单个深度切片中的所有神经元都使用相同的权重向量，则CONV层的前向可以在每个深度切片中计算为神经元权重与输入核的卷积（因此名称为卷积层）。 这就是为什么通常将权重集合称为与输入进行卷积的滤波器。<br>请注意，有时参数共享假设可能没有意义。 特别是当ConvNet的输入图像具有某些特定的居中结构时，我们期望在图像的一侧学习完全不同的特征。 一个实际的例子是当输入是一张位于图像中心的脸，我们可能会期望在不同的空间位置学习眼睛或头发的特征。在这种情况下，通常放松参数共享方案，简单地使用本地连接层(Locally-Connected Layer)。</p>
+<h5 id="利用大矩阵乘法实现卷积层"><a href="#利用大矩阵乘法实现卷积层" class="headerlink" title="利用大矩阵乘法实现卷积层"></a>利用大矩阵乘法实现卷积层</h5><p>注意，卷积运算基本上在输入的滤波器和局部区域之间执行点积。 CONV层的常见实现模式是利用这一事实，并将卷积层的正向传递作为一个大矩阵乘法如下实现：<br>1、在通常称为im2col的操作中，输入图像中的局部区域被拉伸成列。 例如，如果输入是[227x227x3],并且要在步幅4中与11x11x3滤波器进行卷积，则我们将在输入中取出[11x11x3]个像素块，并将每个块拉伸为大小为11 <em> 11 </em> 3 =363.在步长4的输入中迭代该过程给出沿宽度和高度的（227-11）/ 4 + 1 = 55个位置，导致尺寸为[363×3025]的im2col的输出矩阵X_col，其中每列是一个伸展的接受场，总共有55 * 55 = 3025。请注意，由于接收字段重叠，输入卷中的每个数字可能会复制在多个不同的列中。<br>2、CONV层的权重同样伸展成行。 例如，如果有大小为[11x11x3]的96个滤波器，则这将产生大小为[96 x 363]的矩阵W_row。<br>3、卷积的结果现在相当于执行一个大的矩阵乘法np.dot（W_row，X_col），它计算每个过滤器和每个接收域位置之间的点积。 在我们的示例中，此操作的输出将为[96 x 3025]，给出每个位置上每个过滤器的点积的输出。<br>4、结果必须最终重新整理为正确的输出维度[55x55x96]。<br>这种方法仍然有缺点，它可能使用大量的内存，因为输入卷中的某些值在X_col中被复制多次。然而，好处是有许多非常有效的矩阵乘法实现。相同的im2col思想可以重用以执行池化操作，这将在之后讨论。</p>
+<h5 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h5><p>卷积运算的反向传播（对于数据和权重）也是卷积（但是具有空间翻转的滤波器)。</p>
+<h5 id="1x1卷积"><a href="#1x1卷积" class="headerlink" title="1x1卷积"></a>1x1卷积</h5><p>有些论文使用了1x1卷积，对于二维的信号，1x1卷积没有任何意义（只是点取向缩放）。 然而，在ConvNets中，情况并非如此，因为我们必须记住，我们操作三维体积，并且过滤器总是延伸到输入卷的整个深度。 例如，如果输入为[32x32x3],则进行1x1卷积将有效地进行三维点积（因为输入深度为3个通道）。</p>
+<h5 id="扩张卷积-Dilated-convolutions"><a href="#扩张卷积-Dilated-convolutions" class="headerlink" title="扩张卷积(Dilated convolutions)"></a>扩张卷积(Dilated convolutions)</h5><h4 id="池化层"><a href="#池化层" class="headerlink" title="池化层"></a>池化层</h4><p>在ConvNet体系结构中，通常在连续Conv层之间定期插入一个Pooling层。 其功能是逐步减少表示的空间大小，以减少网络中的参数和计算量，从而也可以控制过拟合。 汇集层在输入的每个深度层上独立运行，并使用MAX操作在空间上调整其大小。最常见的形式是一个大小为2x2的过滤器的池化层，每个深度切片在宽度和高度均为2，每个深度切片下降2个步长，丢弃75％的激活。在这种情况下，每个MAX操作将占用超过4个数字（一些深度片段中的2×2个区域),其深度维度保持不变。<br>常用的池化操作是设置F=3，S=2(也叫做重叠池)，更常见的是F=2，S=2。如果F太大的话，破坏性太强就不适用了。</p>
+<h5 id="常见的池化方式"><a href="#常见的池化方式" class="headerlink" title="常见的池化方式"></a>常见的池化方式</h5><p>出了最大池化，池化单元还可以是其他形式，比如average pooling和L2-norm pooling。average pooling以前常用，但是现在实践证明max pooling的表现更好。<br>举例如下：<br><img src="pooling.jpg" alt=""></p>
+<p>在池层的正向传递期间，通常要跟踪最大激活的索引（有时也称为交换机），以便使得反向传播期间梯度路径是有效的。</p>
+<h5 id="池化操作的替代"><a href="#池化操作的替代" class="headerlink" title="池化操作的替代"></a>池化操作的替代</h5><p>有一种方法是为了追求简单性：所有卷积网络舍弃pooling 操作，而只支持重复CONV层的架构。为了减少输出的大小，可以在CONV层中使用更大的步幅。已经发现，丢弃池层(Discarding pooling layers)对于训练良好生成模型（如变分自动编码器（VAE）或生成对抗网络（GAN））很重要。 </p>
+<h4 id="归一化层"><a href="#归一化层" class="headerlink" title="归一化层"></a>归一化层</h4><p>实践中归一化层的作用非常有限，往往不会被采用。</p>
+<h4 id="全连接层"><a href="#全连接层" class="headerlink" title="全连接层"></a>全连接层</h4><p>完全连接层中的神经元与上一层中的所有激活具有完全连接，如常规神经网络所示。 因此，它们的激活可以用矩阵乘法后跟偏移偏移来计算。</p>
+<h4 id="转换全连接层到卷积层"><a href="#转换全连接层到卷积层" class="headerlink" title="转换全连接层到卷积层"></a>转换全连接层到卷积层</h4><p>全连接层和卷积层的区别就是卷积层只和输入的部分区域相联系。但是，两种层中的神经元都是计算点积，于是实际上它们的函数形式是相同的，因此，将全连接层转换成卷积层是可能的。<br>1、对于每一个卷积层，都会有一个对应的全连接层和它实现相同的前向函数。它的权重矩阵将是一个大的矩阵，除了某些块（由于本地连接）之外，大部分都是零，其中许多块中的权重相等（由于参数共享）。<br>2、相反，任何FC层都可以转换为CONV层,例如，K=4096的FC层，其输入尺寸为7×7×512,这样的输入容积可以等效地表示为具有F=7，P = 0，S = 1，K=4096的CONV层。换句话说，我们将滤波器大小设置为输入的大小，因此输出将为1×1×4096，只有一个深度列“适合”输入体积，于是给出与初始FC层相同的结果。</p>
+<p>以上两种转换中，实践中最为有用的还是从全连接层转换到卷积层。现在考虑这样一个网络结构：输入为224x224x3,通过5层池化层和一系列卷积层之后将其变为7x7x512的尺寸。在这个例子中，最后通过2层4096的全连接层和最后的有1000个神经元的全连接层计算得分函数，我们可以根据刚刚说的方法把这三层全连接层转换为卷积层。<br>1、对于第一层，改为用一个F=7的卷积层，输入为7x7x512，实现输出为1x1x4096。<br>2、第二层使用F=1的卷积层，使得输出仍然为1x1x4096。<br>3、最后一层仍替换为F=1的卷积层，最后使得输出为1x1x1000。</p>
+<h2 id="卷积网络的架构"><a href="#卷积网络的架构" class="headerlink" title="卷积网络的架构"></a>卷积网络的架构</h2><p>前面介绍了卷积网络的主要类型的层，包括CONV,POOL,FC，RELU。下面介绍怎么将这些层结构组合成一个完整的卷积神经网络。</p>
+<h3 id="Layer-Patterns"><a href="#Layer-Patterns" class="headerlink" title="Layer Patterns"></a>Layer Patterns</h3><p>最常见的卷积神经网络结构是堆砌几个CONV-RELU层，然后紧跟POOL层，重复这个结构直到输出的尺寸变为比较小。比较常见的结构是最后还加入一个全连接层作为输出层，其计算输出(比如得分函数)。最常见的卷积神经网络遵循以下的模式：<br>INPUT -&gt; [[CONV -&gt; RELU]<em>N -&gt; POOL?]</em>M -&gt; [FC -&gt; RELU]<em>K -&gt; FC<br>其中</em>表示重复次数,?表示可选，N&gt;=0,M&gt;=0,K&gt;=0，并且通常N&lt;=3，K&lt;3。<br>实际应用中，通常使用小的过滤器堆叠CONV层，而不是使用一个具有大过滤器的CONV层，这样使我们能够表达更强大的输入特征，并具有较少的参数。当然这也会带来一些缺点，如果我们打算进行反向传播，我们可能需要更多的内存来保存所有的中间CONV层结果。</p>
+<h3 id="Layer-Sizing-Patterns"><a href="#Layer-Sizing-Patterns" class="headerlink" title="Layer Sizing Patterns"></a>Layer Sizing Patterns</h3><p>主要介绍一些关于尺寸的超参数设置技巧。</p>
+<h4 id="Input-Layer"><a href="#Input-Layer" class="headerlink" title="Input Layer"></a>Input Layer</h4><p>通常设置为2的倍数。常见的有32，64,96,224,384,512。</p>
+<h4 id="Conv-Layer"><a href="#Conv-Layer" class="headerlink" title="Conv Layer"></a>Conv Layer</h4><p>应该使用较小的滤波器尺寸，比如3x3或者5x5，S=1，设置P使得不改变输入尺寸，比如当F=3时，设置P=1。F=5，设置P=2。更一般化就是P=(F-1)/2使得输出尺寸不改变。更大的滤波器尺寸很少使用，通常是放在离输入层很近的位置。</p>
+<h4 id="Pool-Layer"><a href="#Pool-Layer" class="headerlink" title="Pool Layer"></a>Pool Layer</h4><p>池化层的目的是进行降采样，通常的做法是使用F=2，S=2，使得输出为原来的1/4，这将会丢弃75%的激活。另一种不太常用的做法是F=3，S=2。更大的尺寸就不推荐了，这通常会导致更差的表现。</p>
+<h4 id="CONV层为什么设置S-1？"><a href="#CONV层为什么设置S-1？" class="headerlink" title="CONV层为什么设置S=1？"></a>CONV层为什么设置S=1？</h4><p>实践中，S越小结果越好，所以设置S=1。另外，S=1使得我们仅在池化层实现下采样，在卷积层只改变深度。</p>
+<h4 id="Padding的作用"><a href="#Padding的作用" class="headerlink" title="Padding的作用"></a>Padding的作用</h4><p>padding使得通过卷积层后尺寸不改变，这在实践中效果更好。如果不使用填充，这样输入每通过一个卷积层其尺寸都会减小一点，这样其边界信息会逐步丢失。</p>
+<h4 id="内存限制"><a href="#内存限制" class="headerlink" title="内存限制"></a>内存限制</h4><p>有时由于内存限制，需要对网络结构进行一些折中。</p>
+<h3 id="常见的实例"><a href="#常见的实例" class="headerlink" title="常见的实例"></a>常见的实例</h3><p><a href="http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf" target="_blank" rel="external">LeNet</a><br><a href="http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks" target="_blank" rel="external">AlexNet</a><br><a href="http://arxiv.org/abs/1311.2901" target="_blank" rel="external">ZF Net</a><br><a href="http://arxiv.org/abs/1409.4842" target="_blank" rel="external">GoogleNet</a><br><a href="http://www.robots.ox.ac.uk/~vgg/research/very_deep/" target="_blank" rel="external">VGGNet</a><br><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="external">ResNet</a></p>
+<h3 id="计算的注意事项"><a href="#计算的注意事项" class="headerlink" title="计算的注意事项"></a>计算的注意事项</h3><p>构建ConvNet架构时要注意的最大瓶颈是内存瓶颈，GPU是有内存限制的。下面是三个主要的内存开销。<br>1、中间卷大小：这些是ConvNet每层激活的原始数量，以及它们的梯度（大小相等）。通常，大部分的激活都在ConvNet的早期层（即第一个Conv Layers）上。由于它们需要进行反向传播，因此它们将会保留下来，一个聪明的实现是只有在测试时间才能运行ConvNet，原则上可以通过将当前的激活存储在任何层上，并将以前的激活放在下面的层上。<br>2、参数大小：它们包括保存网络参数的数字，反向传播过程中的梯度，如果优化使用moemntum，Adagrad或RMSProp，通常也是一个缓存。因此，单独存储参数矢量的存储器通常必须乘以至少3个左右的系数。<br>3、每个ConvNet实现都必须维护杂项内存，例如图像数据批次，也可能是其扩充版本等。在出现内存不足的情况下，一个通常的做法是减小batch size的大小，因为大多数内存通常被激活所消耗。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、<a href="http://cs231n.github.io/convolutional-networks/" target="_blank" rel="external">cs231n 2017 cnn notes</a><br>2、<a href="http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture5.pdf" target="_blank" rel="external">cs231n 2017 cnn slides</a></p>
 
       
 
@@ -201,7 +251,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cs231n</a>
         		</li>
       		
 		</ul>
@@ -213,7 +263,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
+        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
         		</li>
       		
 		</ul>
@@ -222,7 +272,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/08/linux/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/09/30/cs231n-Convolutional-Neural-Networks/">展开全文 >></a>
         </p>
       
 
@@ -257,7 +307,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/29/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="page-number" href="/page/29/">29</a><span class="page-number current">30</span><a class="page-number" href="/page/31/">31</a><a class="page-number" href="/page/32/">32</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/31/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/29/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="page-number" href="/page/29/">29</a><span class="page-number current">30</span><a class="page-number" href="/page/31/">31</a><a class="page-number" href="/page/32/">32</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/31/">Next &raquo;</a>
     </nav>
   
 
@@ -357,10 +407,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
@@ -373,11 +419,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -389,11 +435,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
             
             <div class="clearfix"></div>

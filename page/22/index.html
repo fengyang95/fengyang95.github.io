@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-use-tensorflow" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-motion-detection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/24/use-tensorflow/">tensorflow遇到的问题记录</a>
+      <a class="article-title" href="/2017/10/27/motion-detection/">motion-detection</a>
     </h1>
   
 
         
-        <a href="/2017/11/24/use-tensorflow/" class="archive-article-date">
-  	<time datetime="2017-11-24T07:56:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-24</time>
+        <a href="/2017/10/27/motion-detection/" class="archive-article-date">
+  	<time datetime="2017-10-27T11:10:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-27</time>
 </a>
         
       </header>
@@ -183,39 +183,13 @@
       
         
 <div id="toc">
-  
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Background-Subtraction"><span class="toc-text">Background Subtraction</span></a></li></ol>
 </div>
 
-        <pre><code>主要记录一些使用tensorflow的一些问题。
+        <pre><code>主要介绍一些关于运动物体检测的算法。
+</code></pre><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、<a href="http://developex.com/blog/motion-detection-and-objects-tracking-algorithm-implementation/" target="_blank" rel="external">blog:Motion detection and objects tracking algorithm implementation</a><br>2、<a href="https://en.wikipedia.org/wiki/Background_subtraction#cite_note-Bouwmans1-10" target="_blank" rel="external">wiki:Background_subtraction</a><br>3、<a href="https://en.wikipedia.org/wiki/Optical_flow" target="_blank" rel="external">wiki:Optical_flow</a></p>
+<h1 id="Background-Subtraction"><a href="#Background-Subtraction" class="headerlink" title="Background Subtraction"></a>Background Subtraction</h1><p>1、<a href="https://arxiv.org/abs/1702.01731" target="_blank" rel="external">paper: A Deep Convolutional Neural Network for Background Subtraction</a><br>2、<a href="https://github.com/SaoYan/bgsCNN" target="_blank" rel="external">bgsCNN</a><br>3、<a href="https://github.com/andrewssobral/bgslibrary" target="_blank" rel="external">bgslibrary</a></p>
 
-1、
-</code></pre><p><a href="https://stackoverflow.com/questions/37674306/what-is-the-difference-between-same-and-valid-padding-in-tf-nn-max-pool-of-t" target="_blank" rel="external">What is the difference between ‘SAME’ and ‘VALID’ padding in tf.nn.max_pool of tensorflow?</a></p>
-<pre><code>2、使用config文件时，文件夹分隔符用&apos;/&apos;,之前用成了&apos;\&apos;导致出现编码错误。
-
-3、遇到类似这种错误：
-    ValueError: Cannot feed value of shape (784,) for Tensor &apos;input:0&apos;, which has shape &apos;(?, 784)&apos;
-是由于输入维数不匹配造成的，解决方法是将输入加1维，比如原来是：
-    result = sess.run(y_conv, feed_dict= {x:img})
-改为：
-    result = sess.run(y_conv, feed_dict= {x:[img]})
-4、tensor.get_shape() 和 tf.shape(tensor)
-    在TensorFlow中，一个tensor具备静态和动态两种shape。静态的shape可以用tf.Tensor.get_shape()方法读出：这种shape是由此tensor在创建时使用的操作推导得出的，可能是partially complete的。如果静态shape没有完整定义的话，则一个tensor的动态shape可通过求tf.shape(t)的值得到。tf.Tensor.set_shape()方法会更新一个Tensor对象的静态shape，当静态shape信息不能够直接推导得出的时候，此方法常用来提供额外的shape信息。它不改变此tensor动态shape的信息。tf.reshape()操作会以不同的动态shape创建一个新的tensor。
-    tensor.get_shape()返回tuple,可以通过tensor.get_shape().as_list()得到list。
-</code></pre><p><a href="http://www.tensorfly.cn/bbs/forum.php?mod=viewthread&amp;tid=18" target="_blank" rel="external">tf中文社区</a></p>
-<pre><code>5、How to convert .meta, .data and .index model files into one graph.pb file?
-</code></pre><p><a href="https://github.com/tensorflow/models/issues/2283" target="_blank" rel="external">tf models issues 2283</a><br><a href="https://stackoverflow.com/questions/45864363/tensorflow-how-to-convert-meta-data-and-index-model-files-into-one-graph-pb" target="_blank" rel="external">stackoverflow answer</a><br><a href="http://blog.csdn.net/lujiandong1/article/details/53385092" target="_blank" rel="external">csdn blog</a></p>
-<pre><code>6、
-</code></pre><p><a href="https://stackoverflow.com/questions/43405358/tensorflow-slim-multi-gpu-training" target="_blank" rel="external">TensorFlow-Slim Multi-GPU training</a></p>
-<pre><code>7、在本地查看tensorboard
-</code></pre><p><a href="https://stackoverflow.com/questions/38513333/is-it-possible-to-see-tensorboard-over-ssh" target="_blank" rel="external">see tensorboard over ssh</a></p>
-<pre><code>简单来说分两步进行：
-
-1、通过以下命令连接服务器：
-</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh -L 16006:127.0.0.1:6006 account@server.address</div></pre></td></tr></table></figure>
-<pre><code>2、正常使用tensorboard命令
-3、即可在本地 http://127.0.0.1:16006 查看信息
-其中16006端口可以是其他任意端口。
-</code></pre>
       
 
       
@@ -228,7 +202,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
         		</li>
       		
 		</ul>
@@ -240,7 +214,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
+        			<a href="/categories/cv//" class="article-tag-list-link color3">cv</a>
         		</li>
       		
 		</ul>
@@ -249,7 +223,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/11/24/use-tensorflow/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/10/27/motion-detection/">展开全文 >></a>
         </p>
       
 
@@ -284,7 +258,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/21/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><a class="page-number" href="/page/24/">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/23/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/21/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><a class="page-number" href="/page/24/">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/23/">Next &raquo;</a>
     </nav>
   
 
@@ -384,10 +358,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
@@ -400,11 +370,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -416,11 +386,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
             
             <div class="clearfix"></div>

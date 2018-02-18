@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-cs131-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-tensorflow-programming-eager-execution" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/01/cs131-notes/">cs131_notes</a>
+      <a class="article-title" href="/2018/01/29/tensorflow-programming-eager-execution/">Tensorflow Programming -- Eager Execution</a>
     </h1>
   
 
         
-        <a href="/2018/02/01/cs131-notes/" class="archive-article-date">
-  	<time datetime="2018-01-31T17:13:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-01</time>
+        <a href="/2018/01/29/tensorflow-programming-eager-execution/" class="archive-article-date">
+  	<time datetime="2018-01-28T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-29</time>
 </a>
         
       </header>
@@ -183,10 +183,30 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CS131-笔记"><span class="toc-text">CS131 笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#homework"><span class="toc-text">homework</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#homework1"><span class="toc-text">homework1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#homework2"><span class="toc-text">homework2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#homework3"><span class="toc-text">homework3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#homework4"><span class="toc-text">homework4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#homework5"><span class="toc-text">homework5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#homework6"><span class="toc-text">homework6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#homework7"><span class="toc-text">homework7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#homework8"><span class="toc-text">homework8</span></a></li></ol></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Eager-Execution"><span class="toc-text">Eager Execution</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#计算图的优点"><span class="toc-text">计算图的优点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#优化的"><span class="toc-text">优化的</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#自动缓冲区重用"><span class="toc-text">自动缓冲区重用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#不断折叠"><span class="toc-text">不断折叠</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#操作间并行性"><span class="toc-text">操作间并行性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#计算和内存之间的自动权衡"><span class="toc-text">计算和内存之间的自动权衡</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可部署"><span class="toc-text">可部署</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#图就是模型的中间表示"><span class="toc-text">图就是模型的中间表示</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可重写"><span class="toc-text">可重写</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#尝试自动设备放置或-量化"><span class="toc-text">尝试自动设备放置或 量化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算图的缺点"><span class="toc-text">计算图的缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#难以调试"><span class="toc-text">难以调试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#计算图构建之后会报告错误"><span class="toc-text">计算图构建之后会报告错误</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#执行不能用pdb或者打印语句来调试"><span class="toc-text">执行不能用pdb或者打印语句来调试</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Un-Pythonic"><span class="toc-text">Un-Pythonic</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#编写一个Tensorflow程序是元编程的练习"><span class="toc-text">编写一个Tensorflow程序是元编程的练习</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#控制流-如-tf-while-loop-与Python不同"><span class="toc-text">控制流(如  tf.while_loop)与Python不同</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#不能轻松地将计算图构建与自定义数据结构混合"><span class="toc-text">不能轻松地将计算图构建与自定义数据结构混合</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eager-Execution-1"><span class="toc-text">Eager Execution</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Eager-Execution的优点"><span class="toc-text">Eager Execution的优点</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#与Python调试工具兼容"><span class="toc-text">与Python调试工具兼容</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#提供即时的错误报告"><span class="toc-text">提供即时的错误报告</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#允许使用Python数据结构"><span class="toc-text">允许使用Python数据结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启用Pythonic控制流程"><span class="toc-text">启用Pythonic控制流程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Eager-Execution可以简化代码"><span class="toc-text">Eager Execution可以简化代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Tensors和NumPy数组的行为相似"><span class="toc-text">Tensors和NumPy数组的行为相似</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#梯度"><span class="toc-text">梯度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linear-Regression-in-Eager"><span class="toc-text">Linear Regression in Eager</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-Collection-of-Operations"><span class="toc-text">A Collection of Operations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#什么情况下使用eager-execution"><span class="toc-text">什么情况下使用eager execution?</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#作为研究人员希望一个灵活的框架"><span class="toc-text">作为研究人员希望一个灵活的框架</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#需要开发一个新的模型"><span class="toc-text">需要开发一个新的模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#刚接触TensorFlow"><span class="toc-text">刚接触TensorFlow</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
-        <h1 id="CS131-笔记"><a href="#CS131-笔记" class="headerlink" title="CS131 笔记"></a>CS131 笔记</h1><h2 id="homework"><a href="#homework" class="headerlink" title="homework"></a>homework</h2><h3 id="homework1"><a href="#homework1" class="headerlink" title="homework1"></a>homework1</h3><h3 id="homework2"><a href="#homework2" class="headerlink" title="homework2"></a>homework2</h3><h3 id="homework3"><a href="#homework3" class="headerlink" title="homework3"></a>homework3</h3><h3 id="homework4"><a href="#homework4" class="headerlink" title="homework4"></a>homework4</h3><h3 id="homework5"><a href="#homework5" class="headerlink" title="homework5"></a>homework5</h3><h3 id="homework6"><a href="#homework6" class="headerlink" title="homework6"></a>homework6</h3><h3 id="homework7"><a href="#homework7" class="headerlink" title="homework7"></a>homework7</h3><h3 id="homework8"><a href="#homework8" class="headerlink" title="homework8"></a>homework8</h3>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=406730941&auto=1&height=66"></iframe></p>
+<h2 id="Eager-Execution"><a href="#Eager-Execution" class="headerlink" title="Eager Execution"></a>Eager Execution</h2><p>目前使用TensorFlow时，需要编写一个Python程序，首先构建一个表示计算的图，然后调用Session.run()将这个计算图交给C++运行库执行，从这个意义上说，Tensorflow提供了一个声明式编程模型，其计算图的构建和实际的执行是分离的。</p>
+<h3 id="计算图的优点"><a href="#计算图的优点" class="headerlink" title="计算图的优点"></a>计算图的优点</h3><p>TensorFlow从某种意义上说是一种编程语言和一种用于机器学习模型的编译器，其将机器学习模型作为输入，编码成一个名为Graph的低级表示，然后将其重写为优化的可执行形式，沿途使用类似编译器的优化。这种模式有许多好处：<br>1、优化可以减少训练模型或运行推理的挂钟时间和内存占用时间<br>2、计算图作为平台不可知的中间表示，简化了部署。<br>3、重写图形的能力使得我们可以尝试像自动设备放置和重量量化这样的策略。 </p>
+<h4 id="优化的"><a href="#优化的" class="headerlink" title="优化的"></a>优化的</h4><h5 id="自动缓冲区重用"><a href="#自动缓冲区重用" class="headerlink" title="自动缓冲区重用"></a>自动缓冲区重用</h5><h5 id="不断折叠"><a href="#不断折叠" class="headerlink" title="不断折叠"></a>不断折叠</h5><h5 id="操作间并行性"><a href="#操作间并行性" class="headerlink" title="操作间并行性"></a>操作间并行性</h5><h5 id="计算和内存之间的自动权衡"><a href="#计算和内存之间的自动权衡" class="headerlink" title="计算和内存之间的自动权衡"></a>计算和内存之间的自动权衡</h5><h4 id="可部署"><a href="#可部署" class="headerlink" title="可部署"></a>可部署</h4><h5 id="图就是模型的中间表示"><a href="#图就是模型的中间表示" class="headerlink" title="图就是模型的中间表示"></a>图就是模型的中间表示</h5><h4 id="可重写"><a href="#可重写" class="headerlink" title="可重写"></a>可重写</h4><h5 id="尝试自动设备放置或-量化"><a href="#尝试自动设备放置或-量化" class="headerlink" title="尝试自动设备放置或 量化"></a>尝试自动设备放置或 量化</h5><h3 id="计算图的缺点"><a href="#计算图的缺点" class="headerlink" title="计算图的缺点"></a>计算图的缺点</h3><p>尽管计算图的表示方法有很多优点，但是其缺点也不小。声明式范例导致难以调试的程序，因为在构建计算图之后会报告错误。而且由于计算图执行是由Session管理的，所以不能够使用pdb甚至是打印语句来调试模型。构建图形就像使用汇编语言进行编码-原则上我们可以使用计算图来实现我们所需要的任何机器学习模型，但是这样做可能比较困难。编写一个TensorFlow程序是元编程的一个练习: 使用Python用TensorFlow图形语言编写程序。因此，我们不能使用本地Python控制流结构，而必须依赖它们在TensorFlow中的等价物。而且，不能轻易地将图形构造与自定义数据混合在一起，我们可能想要使用Python类来表示结构化数据，但是无法传递类，无法沿着图的边缘流动。总结下来就是如下缺点：</p>
+<h4 id="难以调试"><a href="#难以调试" class="headerlink" title="难以调试"></a>难以调试</h4><h5 id="计算图构建之后会报告错误"><a href="#计算图构建之后会报告错误" class="headerlink" title="计算图构建之后会报告错误"></a>计算图构建之后会报告错误</h5><h5 id="执行不能用pdb或者打印语句来调试"><a href="#执行不能用pdb或者打印语句来调试" class="headerlink" title="执行不能用pdb或者打印语句来调试"></a>执行不能用pdb或者打印语句来调试</h5><h4 id="Un-Pythonic"><a href="#Un-Pythonic" class="headerlink" title="Un-Pythonic"></a>Un-Pythonic</h4><h5 id="编写一个Tensorflow程序是元编程的练习"><a href="#编写一个Tensorflow程序是元编程的练习" class="headerlink" title="编写一个Tensorflow程序是元编程的练习"></a>编写一个Tensorflow程序是元编程的练习</h5><h5 id="控制流-如-tf-while-loop-与Python不同"><a href="#控制流-如-tf-while-loop-与Python不同" class="headerlink" title="控制流(如  tf.while_loop)与Python不同"></a>控制流(如  tf.while_loop)与Python不同</h5><h5 id="不能轻松地将计算图构建与自定义数据结构混合"><a href="#不能轻松地将计算图构建与自定义数据结构混合" class="headerlink" title="不能轻松地将计算图构建与自定义数据结构混合"></a>不能轻松地将计算图构建与自定义数据结构混合</h5><h3 id="Eager-Execution-1"><a href="#Eager-Execution-1" class="headerlink" title="Eager Execution"></a>Eager Execution</h3><p>我们可以直接从Python执行TensorFlow操作吗？实际上，我们不能将任何给定的计算图打破到它的组件操作并直接从Python中调用它们。<br>Eager Execution是用于计算的类Numpy库，支持GPU加速和自动分化，以及灵活的机器学习研究和实验平台。<br>使用Eager的例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$python</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf <span class="comment"># version &gt;= 1.50</span></div><div class="line"><span class="keyword">import</span> tensorflow.contrib.eager <span class="keyword">as</span> tfe</div><div class="line">tfe.enable_eager_execution()</div></pre></td></tr></table></figure></p>
+<h4 id="Eager-Execution的优点"><a href="#Eager-Execution的优点" class="headerlink" title="Eager Execution的优点"></a>Eager Execution的优点</h4><h5 id="与Python调试工具兼容"><a href="#与Python调试工具兼容" class="headerlink" title="与Python调试工具兼容"></a>与Python调试工具兼容</h5><h5 id="提供即时的错误报告"><a href="#提供即时的错误报告" class="headerlink" title="提供即时的错误报告"></a>提供即时的错误报告</h5><h5 id="允许使用Python数据结构"><a href="#允许使用Python数据结构" class="headerlink" title="允许使用Python数据结构"></a>允许使用Python数据结构</h5><p>例如用于结构化输入。</p>
+<h5 id="启用Pythonic控制流程"><a href="#启用Pythonic控制流程" class="headerlink" title="启用Pythonic控制流程"></a>启用Pythonic控制流程</h5><h4 id="Eager-Execution可以简化代码"><a href="#Eager-Execution可以简化代码" class="headerlink" title="Eager Execution可以简化代码"></a>Eager Execution可以简化代码</h4><p>我们不再需要担心以下这些问题:<br>1、placeholders<br>下面是一个程序，它将一个矩阵与自身相乘。我们首先用一个占位符定义一个计算图，并将矩阵提供给平方。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">x = tf.placeholder(tf.float32, shape=[<span class="number">1</span>,<span class="number">1</span>])</div><div class="line">m = tf.matmul(x, x)</div><div class="line"></div><div class="line">print(m)</div><div class="line"><span class="comment"># Tensor("MatMul:0",shape=(1, 1),dtype=float32)</span></div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    m_out = sess.run(m, feed_dict=&#123;x:[[<span class="number">2.0</span>]]&#125;)</div><div class="line">print(m_out)</div><div class="line"><span class="comment"># [[4.0]]</span></div></pre></td></tr></table></figure></p>
+<p>而如果使用了Eager Execution，下面三行代码提供了相同的效果。没有Session，没有placeholder和matmul操作，立即得出运算结果。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">2.</span>]] <span class="comment"># No need for placeholders!</span></div><div class="line">m = tf.matmul(x,x)</div><div class="line">print(m) <span class="comment"># No sessions!</span></div><div class="line"><span class="comment"># tf.Tensor([[4.]], shape=(1,1), dtype=float32)</span></div></pre></td></tr></table></figure></p>
+<p>2、sessions<br>3、control dependencies<br>4、”lazy loading”<br>Eager Execution还有利于避免元编程的一些缺点。例如，以下的代码就是在程序中间快速破解分析Tensor X的代码。循环的每一次迭代都是将操作添加到计算图的内存中表示。在这种情况下，每次调用session.run()都会执行random_uniform操作，所以这里的代码片段并没有打印Tensor的一致快照。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x = tf.random_uniform([<span class="number">2</span>, <span class="number">2</span>])</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(x.shape[<span class="number">0</span>]):</div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(x.shape[<span class="number">1</span>]):</div><div class="line">            print(sess.run(x[i,j]))</div></pre></td></tr></table></figure></p>
+<p>而当在Eager Execution的情况下，没有一个计算图的概念或者一个操作的重复执行，所以最明显的做法是很好的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = tf.random_uniform([<span class="number">2</span>,<span class="number">2</span>])</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(x.shape[<span class="number">0</span>]):</div><div class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(x.shape[<span class="number">1</span>]):</div><div class="line">        print(x[i,j])</div></pre></td></tr></table></figure></p>
+<p>5、{name, variable, op} scopes</p>
+<h4 id="Tensors和NumPy数组的行为相似"><a href="#Tensors和NumPy数组的行为相似" class="headerlink" title="Tensors和NumPy数组的行为相似"></a>Tensors和NumPy数组的行为相似</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">x = tf.constant([<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>])</div><div class="line"><span class="comment"># Tensors are backed by Numpy arrays</span></div><div class="line"><span class="keyword">assert</span> type(x.numpy()) == np.ndarray</div><div class="line">squared = np.square(x) <span class="comment"># Tensors are compatible with Numpy functions</span></div><div class="line"><span class="comment"># Tensors are iterable </span></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> x:</div><div class="line">    print(i)</div></pre></td></tr></table></figure>
+<h4 id="梯度"><a href="#梯度" class="headerlink" title="梯度"></a>梯度</h4><p>自动梯度求解已经加入到eager execution中。当启用eager execution时，执行的操作将在一个”tape”中进行追踪，以回放计算梯度。如果熟悉autograd包的话，这个API非常相似。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">square</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">return</span> x**<span class="number">2</span></div><div class="line"></div><div class="line">grad = tfe.gradients_function(square)</div><div class="line"></div><div class="line">print(square(<span class="number">3.</span>)) <span class="comment"># tf.Tensor(9., shape=(), dtype=float32)</span></div><div class="line">print(grad(<span class="number">3.</span>)) <span class="comment"># tf.Tensor(6., shape=(), dtype=float32)</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">x = tfe.Variable(<span class="number">2.0</span>)</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">loss</span><span class="params">(y)</span>:</span></div><div class="line">    <span class="keyword">return</span> (y - x ** <span class="number">2</span>) ** <span class="number">2</span></div><div class="line">grad = tfe.implicit_gradients(loss)</div><div class="line"></div><div class="line">print(loss(<span class="number">7.</span>)) <span class="comment"># tf.Tensor(9., shape=(), dtype=float32)</span></div><div class="line">print(grad(<span class="number">7.</span>)) <span class="comment"># [(&lt;tf.Tensor: -24.0, shape=(), dtype=float32&gt;, </span></div><div class="line">                <span class="comment">#    &lt;tf.Variable 'Variable:0' shape=()                </span></div><div class="line">                <span class="comment">#     dtype=float32, numpy=2.0&gt;)]</span></div></pre></td></tr></table></figure>
+<p>即便eager execution没被允许，计算梯度的API依然有效。<br>tfe.gradients_function()<br>tfe.value_and_gradients_function()<br>tfe.implicit_gradients()<br>tfe.implicit_value_and_gradients()<br>详情可参考：<br><a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/eager/python/g3doc/guide.md" target="_blank" rel="external">eager execution document</a></p>
+<h2 id="Linear-Regression-in-Eager"><a href="#Linear-Regression-in-Eager" class="headerlink" title="Linear Regression in Eager"></a>Linear Regression in Eager</h2><h3 id="A-Collection-of-Operations"><a href="#A-Collection-of-Operations" class="headerlink" title="A Collection of Operations"></a>A Collection of Operations</h3><p>TensorFlow = Operation Kernels + Execution<br>Graph construction: 使用Session来执行操作的组合<br>Eager execution: 用Python执行操作的组合。<br>观察TensorFlow的一种方式是作为一系列操作：数学，线性代数，图像处理，Tensorboard可视化的总结生成等以及执行构成它们的计算的手段。Session提供了一种方法来执行这些操作，在执行的时候，Python是执行组合的方法，但是底层的操作保持不变，结果，API表面的大部分也保持不变。<br>不管eager execution是否被允许，大多数TensorFlow API都可以工作，但是当eager exectution允许时，有一些特殊情况需要注意：<br>1、在eager execution模式下最好使用tfe.Variable<br>2、管理好自己的变量存储，变量集合是不被允许的。<br>3、使用 tf.contrib.summary<br>4、使用tfe.Iterator 进行数据迭代<br>5、最好使用面向对象的层(比如 tf.layers.Dense)<br>6、使用tfe.py_func 代替 tf.py_func</p>
+<h3 id="什么情况下使用eager-execution"><a href="#什么情况下使用eager-execution" class="headerlink" title="什么情况下使用eager execution?"></a>什么情况下使用eager execution?</h3><h4 id="作为研究人员希望一个灵活的框架"><a href="#作为研究人员希望一个灵活的框架" class="headerlink" title="作为研究人员希望一个灵活的框架"></a>作为研究人员希望一个灵活的框架</h4><p>python控制流和数据结构使得实验成为可能</p>
+<h4 id="需要开发一个新的模型"><a href="#需要开发一个新的模型" class="headerlink" title="需要开发一个新的模型"></a>需要开发一个新的模型</h4><p>即时的错误报告简化了调试</p>
+<h4 id="刚接触TensorFlow"><a href="#刚接触TensorFlow" class="headerlink" title="刚接触TensorFlow"></a>刚接触TensorFlow</h4><p>eager execution使得我们方便在Python REPL中学习TF API。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/04%20Eager%20Execution%20%2B%20word2vec.pdf" target="_blank" rel="external">04_eager_execution slides</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/04_Lecture%20note_%20Eager%20execution%20and%20interface.pdf" target="_blank" rel="external">04_eager_execution notes</a></p>
+
       
 
       
@@ -199,7 +219,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -211,7 +231,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/cv//" class="article-tag-list-link color3">cv</a>
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -220,7 +240,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/01/cs131-notes/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/29/tensorflow-programming-eager-execution/">展开全文 >></a>
         </p>
       
 
@@ -255,7 +275,7 @@
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -355,10 +375,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
@@ -371,11 +387,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -387,11 +403,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
             
             <div class="clearfix"></div>

@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-effective-java-classes-and-interfaces" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-thinkingng-in-javavava-notes-interfaces-and-inner-classes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/23/effective-java-classes-and-interfaces/">Effective Java -- Classes and Interfaces</a>
+      <a class="article-title" href="/2018/01/23/thinkingng-in-javavava-notes-interfaces-and-inner-classes/">Thinking in Java Notes -- Interfaces and Inner Classes</a>
     </h1>
   
 
         
-        <a href="/2018/01/23/effective-java-classes-and-interfaces/" class="archive-article-date">
-  	<time datetime="2018-01-23T06:36:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-23</time>
+        <a href="/2018/01/23/thinkingng-in-javavava-notes-interfaces-and-inner-classes/" class="archive-article-date">
+  	<time datetime="2018-01-22T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-23</time>
 </a>
         
       </header>
@@ -183,17 +183,23 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Classes-and-Interfaces"><span class="toc-text">Effective Java Items about Classes and Interfaces</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-15-Minimize-the-accessibility-of-classes-and-members"><span class="toc-text">Item 15: Minimize the accessibility of classes and members</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-16-In-public-classes-use-accessor-methods-not-public-fields"><span class="toc-text">Item 16: In public classes, use accessor methods, not public fields</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-17-Minimize-mutability"><span class="toc-text">Item 17: Minimize mutability</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-18-Favor-composition-over-inheritance"><span class="toc-text">Item 18: Favor composition over inheritance</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-19-Design-and-document-for-inheritance-or-else-prohibit-it"><span class="toc-text">Item 19: Design and document for inheritance or else prohibit it</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-20-Prefer-interfaces-to-abstract-classes"><span class="toc-text">Item 20: Prefer interfaces to abstract classes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-21-Design-interfaces-for-posterity"><span class="toc-text">Item 21: Design interfaces for posterity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-22-Use-interfaces-only-to-define-types"><span class="toc-text">Item 22: Use interfaces only to define types</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-23-Prefer-class-hierarchies-to-tagged-classes"><span class="toc-text">Item 23: Prefer class hierarchies to tagged classes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-24-Favor-static-member-classes-over-nonstatic"><span class="toc-text">Item 24: Favor static member classes over nonstatic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-25-Limit-source-files-to-a-single-top-level-class"><span class="toc-text">Item 25: Limit source files to a single top-level class</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Interfaces"><span class="toc-text">Interfaces</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#抽象类和抽象方法"><span class="toc-text">抽象类和抽象方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口"><span class="toc-text">接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完全解耦"><span class="toc-text">完全解耦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用接口实现多重继承"><span class="toc-text">用接口实现多重继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过继承来扩展接口"><span class="toc-text">通过继承来扩展接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#适配接口"><span class="toc-text">适配接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口中的域"><span class="toc-text">接口中的域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套接口"><span class="toc-text">嵌套接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口与工厂"><span class="toc-text">接口与工厂</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Inner-Classess"><span class="toc-text">Inner Classess</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建内部类"><span class="toc-text">创建内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#链接到外部类"><span class="toc-text">链接到外部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-this与-new"><span class="toc-text">使用.this与.new</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内部类与向上转型"><span class="toc-text">内部类与向上转型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在方法和作用域内的内部类"><span class="toc-text">在方法和作用域内的内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#匿名内部类"><span class="toc-text">匿名内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套类"><span class="toc-text">嵌套类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么需要内部类"><span class="toc-text">为什么需要内部类?</span></a></li></ol></li></ol>
 </div>
 
-        <h2 id="Effective-Java-Items-about-Classes-and-Interfaces"><a href="#Effective-Java-Items-about-Classes-and-Interfaces" class="headerlink" title="Effective Java Items about Classes and Interfaces"></a>Effective Java Items about Classes and Interfaces</h2><p>类和接口是Java的核心，其也是Java的基本抽象单元。Java提供了许多强大的基本元素，供程序员用来设计类和接口。以下一些指导原则可以帮助我们更好地利用这些元素设计出更加有用、健壮和灵活的类和接口。</p>
-<h3 id="Item-15-Minimize-the-accessibility-of-classes-and-members"><a href="#Item-15-Minimize-the-accessibility-of-classes-and-members" class="headerlink" title="Item 15: Minimize the accessibility of classes and members"></a>Item 15: Minimize the accessibility of classes and members</h3><p>使类和成员的可访问性最小化。我们始终应该尽可能地降低可访问性。你在仔细地设计了一个最小的公有API之后，应该防止把任何散乱的类、接口和成员变成API的一部分。除了公有静态final域的特殊情形之外，公有类都不应该包含公有域。并且要确保公有静态final所引用的对象都是不可变得。</p>
-<h3 id="Item-16-In-public-classes-use-accessor-methods-not-public-fields"><a href="#Item-16-In-public-classes-use-accessor-methods-not-public-fields" class="headerlink" title="Item 16: In public classes, use accessor methods, not public fields"></a>Item 16: In public classes, use accessor methods, not public fields</h3><p>在公有类中使用访问方法而非公有域。公有类永远都不应该暴露可变的域，虽然还是有问题，但是让公有类暴露不可变的域其危害比较小。但是，有时候会需要用包级私有的或者私有的嵌套来暴露域，无论这个类是可变的还是不可变的。</p>
-<h3 id="Item-17-Minimize-mutability"><a href="#Item-17-Minimize-mutability" class="headerlink" title="Item 17: Minimize mutability"></a>Item 17: Minimize mutability</h3><p>使可变性最小化。不可变的类比可变类更加易于设计、实现和使用。它们不容易出错，且更加安全。为了使类成为不可变，要遵循以下五条规则:<br>1、不要提供任何会修改对象状态的方法。<br>2、保证类不会被扩展。一般做法是使这个类成为final的。<br>3、使所有的域都是final的。<br>4、使所有的域都成为私有的。<br>5、确保对于任何可变组件的互斥访问。</p>
-<p>不可变对象本质上是线程安全的，它们不要求同步。不可变类可以被自由地共享。永远也不需要对不可变类进行保护性拷贝。不仅可以共享不可变对象，甚至也可以共享它们的内部信息。不可变对象为其他对象提供了大量的构件，无论是可变的还是不可变的。不可变类真正唯一的缺点是，对于每个不同的值都需要一个单独的对象。<br>为了确保不可变类不被子类化。除了使得类成为final的方法之外，还可以让类的所有构造器都变成私有的或者包级私有的，并添加公有的静态工厂来代替公有的构造器。</p>
-<h3 id="Item-18-Favor-composition-over-inheritance"><a href="#Item-18-Favor-composition-over-inheritance" class="headerlink" title="Item 18: Favor composition over inheritance"></a>Item 18: Favor composition over inheritance</h3><p>复合优先于继承。继承的功能非常强大，但是也存在诸多问题，因为它违背了封装原则。只有当子类和超类之间确实存在子类型关系时，使用继承才是恰当的。即便如此，如果子类和超类处在不同的包中，并且超类并不是为了继承而设计的，那么继承将会导致脆弱性。为了避免这种脆弱性，可以用复合和转发机制来代替继承，尤其是当存在适当的接口可以实现包装类的时候。包装类不仅比子类更加健壮，而且功能也更加强大。    </p>
-<h3 id="Item-19-Design-and-document-for-inheritance-or-else-prohibit-it"><a href="#Item-19-Design-and-document-for-inheritance-or-else-prohibit-it" class="headerlink" title="Item 19: Design and document for inheritance or else prohibit it"></a>Item 19: Design and document for inheritance or else prohibit it</h3><p>要么为继承而设计，并提供说明文档，要么就禁止继承。</p>
-<h3 id="Item-20-Prefer-interfaces-to-abstract-classes"><a href="#Item-20-Prefer-interfaces-to-abstract-classes" class="headerlink" title="Item 20: Prefer interfaces to abstract classes"></a>Item 20: Prefer interfaces to abstract classes</h3><h3 id="Item-21-Design-interfaces-for-posterity"><a href="#Item-21-Design-interfaces-for-posterity" class="headerlink" title="Item 21: Design interfaces for posterity"></a>Item 21: Design interfaces for posterity</h3><h3 id="Item-22-Use-interfaces-only-to-define-types"><a href="#Item-22-Use-interfaces-only-to-define-types" class="headerlink" title="Item 22: Use interfaces only to define types"></a>Item 22: Use interfaces only to define types</h3><h3 id="Item-23-Prefer-class-hierarchies-to-tagged-classes"><a href="#Item-23-Prefer-class-hierarchies-to-tagged-classes" class="headerlink" title="Item 23: Prefer class hierarchies to tagged classes"></a>Item 23: Prefer class hierarchies to tagged classes</h3><h3 id="Item-24-Favor-static-member-classes-over-nonstatic"><a href="#Item-24-Favor-static-member-classes-over-nonstatic" class="headerlink" title="Item 24: Favor static member classes over nonstatic"></a>Item 24: Favor static member classes over nonstatic</h3><h3 id="Item-25-Limit-source-files-to-a-single-top-level-class"><a href="#Item-25-Limit-source-files-to-a-single-top-level-class" class="headerlink" title="Item 25: Limit source files to a single top-level class"></a>Item 25: Limit source files to a single top-level class</h3>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=407002091&auto=1&height=66"></iframe></p>
+<h1 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h1><h2 id="抽象类和抽象方法"><a href="#抽象类和抽象方法" class="headerlink" title="抽象类和抽象方法"></a>抽象类和抽象方法</h2><p>包含抽象方法的类叫做抽象类，如果一个类包含一个或多个抽象方法，该类必须被限定为抽象的。如果从一个抽象类继承，并想创建该新类的对象，那么就必须为基类中的所有抽象方法提供方法定义。</p>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>interface关键字使得抽象的概念更向前迈进一步。interface关键字产生一个完全抽象的类，其根本没有提供任何具体实现。接口可以包含域，但是这些域隐式地是static和final的。接口中定义的方法必须是public的，否则，其就只能得到默认的包访问权限。</p>
+<h2 id="完全解耦"><a href="#完全解耦" class="headerlink" title="完全解耦"></a>完全解耦</h2><p>将接口从具体实现中解耦使得接口可以应用于多种不同的具体实现，因此代码也就更具有可复用性。？ </p>
+<h2 id="用接口实现多重继承"><a href="#用接口实现多重继承" class="headerlink" title="用接口实现多重继承"></a>用接口实现多重继承</h2><p>使用接口的核心原因是：为了能够向上转型为多个基类型以及由此带来的灵活性。第二个原因与使用抽象基类相同：防止客户端程序员创建该类的对象，并确保这仅仅是建立一个接口。如何在接口和抽象类之间进行选择？如果要创建不带任何方法定义和成员变量的基类，那么就应该选择接口而不是抽象类。如果知道某事物应该成为一个基类，那么第一选择是使它成为一个接口。</p>
+<h2 id="通过继承来扩展接口"><a href="#通过继承来扩展接口" class="headerlink" title="通过继承来扩展接口"></a>通过继承来扩展接口</h2><p>通过继承可以容易地在接口中添加新的方法声明，还可以通过继承在新接口中组合数个接口。注意在打算组合的不同接口中使用相同的方法名通常会造成代码可读性的混乱，需要尽量避免这种情况。</p>
+<h2 id="适配接口"><a href="#适配接口" class="headerlink" title="适配接口"></a>适配接口</h2><p>接口最吸引人的原因之一是允许同一个接口有多个不同的具体实现。简单的情况中，它的体现形式通常是一个接受接口类型的方法，而该接口的实现和向该方法传递的对象则取决于方法的使用者。</p>
+<h2 id="接口中的域"><a href="#接口中的域" class="headerlink" title="接口中的域"></a>接口中的域</h2><p>接口中的任何域都自动是static和final的。</p>
+<h2 id="嵌套接口"><a href="#嵌套接口" class="headerlink" title="嵌套接口"></a>嵌套接口</h2><h2 id="接口与工厂"><a href="#接口与工厂" class="headerlink" title="接口与工厂"></a>接口与工厂</h2><p>接口是实现多重继承的途径，而生成遵循某个接口的对象的典型方式就是工厂方法设计模式。</p>
+<h1 id="Inner-Classess"><a href="#Inner-Classess" class="headerlink" title="Inner Classess"></a>Inner Classess</h1><p>将一个类的定义放在另一个类的定义内部，这就是内部类。</p>
+<h2 id="创建内部类"><a href="#创建内部类" class="headerlink" title="创建内部类"></a>创建内部类</h2><p>如果想从外部类的非静态方法之外的任意位置创建某个内部类的对象，那么必须像在main()方法中 那样，具体地指明这个对象的类型: OuterClassName.InnerClassName。</p>
+<h2 id="链接到外部类"><a href="#链接到外部类" class="headerlink" title="链接到外部类"></a>链接到外部类</h2><p>当生成一个内部类的对象时，此对象与制造它的外围对象之间就有了一种联系，所以它能访问其外围对象的所有成员，而不需要任何特殊条件。此外，内部类 还拥有其外围类的所有元素的访问权。</p>
+<h2 id="使用-this与-new"><a href="#使用-this与-new" class="headerlink" title="使用.this与.new"></a>使用.this与.new</h2><h2 id="内部类与向上转型"><a href="#内部类与向上转型" class="headerlink" title="内部类与向上转型"></a>内部类与向上转型</h2><h2 id="在方法和作用域内的内部类"><a href="#在方法和作用域内的内部类" class="headerlink" title="在方法和作用域内的内部类"></a>在方法和作用域内的内部类</h2><h2 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h2><h2 id="嵌套类"><a href="#嵌套类" class="headerlink" title="嵌套类"></a>嵌套类</h2><h2 id="为什么需要内部类"><a href="#为什么需要内部类" class="headerlink" title="为什么需要内部类?"></a>为什么需要内部类?</h2><p>…?<br>不太看得懂，剩下的以后再补充</p>
+
       
 
       
@@ -227,7 +233,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/23/effective-java-classes-and-interfaces/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/23/thinkingng-in-javavava-notes-interfaces-and-inner-classes/">展开全文 >></a>
         </p>
       
 
@@ -262,7 +268,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 
@@ -362,10 +368,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
@@ -378,11 +380,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -394,11 +396,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
             
             <div class="clearfix"></div>
