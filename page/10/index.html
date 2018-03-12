@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-tensorflow-programming-structure-your-tf-model" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-effective-java-methods-common-to-all-objects" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/20/tensorflow-programming-structure-your-tf-model/">Structure Your Tensorflow Model Notes</a>
+      <a class="article-title" href="/2018/01/21/effective-java-methods-common-to-all-objects/">Effective Java -- Methods Common to All Objects</a>
     </h1>
   
 
         
-        <a href="/2018/01/20/tensorflow-programming-structure-your-tf-model/" class="archive-article-date">
-  	<time datetime="2018-01-20T07:03:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-20</time>
+        <a href="/2018/01/21/effective-java-methods-common-to-all-objects/" class="archive-article-date">
+  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
 </a>
         
       </header>
@@ -183,25 +183,15 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何结构化Tensorflow模型"><span class="toc-text">如何结构化Tensorflow模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#tensorflow中模型的结构"><span class="toc-text">tensorflow中模型的结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步，构建计算图"><span class="toc-text">第一步，构建计算图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步，计算"><span class="toc-text">第二步，计算</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Word2Vec-skip-gram-model实例"><span class="toc-text">Word2Vec, skip-gram model实例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步，构建计算图-1"><span class="toc-text">第一步，构建计算图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步，执行-计算"><span class="toc-text">第二步，执行 计算</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Name-Scope"><span class="toc-text">Name Scope</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要学习梯度？"><span class="toc-text">为什么要学习梯度？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Methods-Common-to-All-Objects"><span class="toc-text">Effective Java Items about Methods Common to All Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-10-Obey-the-general-contract-when-overriding-equals"><span class="toc-text">Item 10: Obey the general contract when overriding equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-11-Always-override-hashCode-when-you-override-equals"><span class="toc-text">Item 11: Always override hashCode when you override equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-12-Always-override-toString"><span class="toc-text">Item 12: Always override toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-13-Override-clone-judiciously"><span class="toc-text">Item 13: Override clone judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-14-Consider-implementing-Comparable"><span class="toc-text">Item 14: Consider implementing Comparable</span></a></li></ol></li></ol>
 </div>
 
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=500293527&auto=1&height=66"></iframe><br>之前已经介绍了使用tensorflow构建线性回归以及用逻辑回归来进行MNIST手写字母识别,这些都属于比较简单的网络结构。当我们需要构建更为复杂的结构时，就需要好好计划编码结构，不然代码混乱不说而且难于调试。这里主要介绍如何高效结构化模型，以word2vec作为例子说明。<br>关于word2vec的理论知识可以参考cs224n的课件。主要介绍利用tensorflow搭建skip-gram模型。原理可参考：<br><a href="http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/" target="_blank" rel="external">Word2Vec Tutorial–The Skip-Gram Model</a></p>
-<h2 id="如何结构化Tensorflow模型"><a href="#如何结构化Tensorflow模型" class="headerlink" title="如何结构化Tensorflow模型"></a>如何结构化Tensorflow模型</h2><h3 id="tensorflow中模型的结构"><a href="#tensorflow中模型的结构" class="headerlink" title="tensorflow中模型的结构"></a>tensorflow中模型的结构</h3><h4 id="第一步，构建计算图"><a href="#第一步，构建计算图" class="headerlink" title="第一步，构建计算图"></a>第一步，构建计算图</h4><p>1、为输入和输出定义placeholders<br>2、定义权重weights<br>3、定义inference model<br>4、定义损失函数<br>5、定义优化器</p>
-<h4 id="第二步，计算"><a href="#第二步，计算" class="headerlink" title="第二步，计算"></a>第二步，计算</h4><p>1、初次初始化所有模型变量<br>2、输入训练数据，可能还会涉及随机化数据样本的顺序。<br>3、对训练数据执行推理模型，从而计算每个训练输入以当前模型参数的输出结果。<br>4、计算损失<br>5、调整模型参数使得模型的损失最大或者最小。<br><img src="compute.jpg" alt=""></p>
-<h3 id="Word2Vec-skip-gram-model实例"><a href="#Word2Vec-skip-gram-model实例" class="headerlink" title="Word2Vec, skip-gram model实例"></a>Word2Vec, skip-gram model实例</h3><h4 id="第一步，构建计算图-1"><a href="#第一步，构建计算图-1" class="headerlink" title="第一步，构建计算图"></a>第一步，构建计算图</h4><p>1、为输入和输出定义placeholders<br>输入是中心词，输出是目标(上下文)词，我们直接输入这些词的索引而不是one-hot向量，例如：如果中心词是单词表中的第1001个单词，我们输入数字1001。每个样本输入都是一个标量，所以我们以形状[BATCH_SIZE]的占位符定义批量大小为BATCH_SIZE的输入。同样，输出也是用同样的方法定义。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">center_words = tf.placeholder(tf.int32, shape=[BATCH_SIZE])</div><div class="line">target_words = tf.placeholder(tf.int32, shape=[BATCH_SIZE])</div></pre></td></tr></table></figure></p>
-<p>2、定义权重weights<br>每行对应一个词的表示向量。如果用一个词表示一个大小为EMBED_SIZE的向量，那么嵌入矩阵的形状为[VOCAB_SIZE,EMBED_SIZE]。我们将嵌入矩阵初始化为随机分布的值。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">embed_matrix = tf.Variable(tf.random_uniform([VOCAB_SIZE,EMBED_SIZE],<span class="number">-1.0</span>,<span class="number">1.0</span>))</div></pre></td></tr></table></figure></p>
-<p>3、定义推理模型<br>我们的目标是得到词汇表中单词的向量表示，embed_matrix的维度是[VOCAB_SIZE x EMBED_SIZE]，embedding矩阵的每一行和该索引出的单词的矢量表示相对应。为了得到批次中所有中心词的表示，我们得到所有相应行的切片嵌入矩阵。Tensorflow为我们提供了一个简单的API：tf.nn.embedding_lookup()。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.nn.embedding_lookup(parmas, ids, partition_strategy=<span class="string">'mod'</span>, name=<span class="keyword">None</span>, validate_indices=<span class="keyword">True</span>, max_norm=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
-<p>于是为了得到输入中心词的嵌入矩阵表示，我们这样操作:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">embed = tf.nn.embedding_lookup(embed_matrix, center_words)</div></pre></td></tr></table></figure></p>
-<p>4、定义损失函数<br>对于NCE损失，我们需要隐藏层的权重和偏置来计算。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">nce_weight = tf.Variable(tf.truncated_normal([VOCAB_SIZE, EMBED_SIZE],stddev=<span class="number">1.0</span>/EMBED_SIZE**<span class="number">0.5</span>))</div><div class="line">nce_bias = tf.Variable(tf.zeros([VOCAB_SIZE]))</div><div class="line">loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weight,</div><div class="line">                                     biases=nce_bias,</div><div class="line">                                     labels=target_words,</div><div class="line">                                     inputs=embed,</div><div class="line">                                     num_sampled=NUM_SAMPLED,</div><div class="line">                                     num_classes=VOCAB_SIZE))</div></pre></td></tr></table></figure></p>
-<p>5、定义优化器<br>我们使用梯度下降法。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.GradientDescentOptimizer(LEARNING_RATE).minimize(loss)</div></pre></td></tr></table></figure></p>
-<h4 id="第二步，执行-计算"><a href="#第二步，执行-计算" class="headerlink" title="第二步，执行 计算"></a>第二步，执行 计算</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variable_initializer())</div><div class="line">    average_loss = <span class="number">0.0</span></div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> range(NUM_TRAIN_STEPS):</div><div class="line">        batch = batch_gen.next()</div><div class="line">        loss_batch, _=sess.run([loss, optimizer],</div><div class="line">                                feed_dict=&#123;center_words: batch[<span class="number">0</span>], target_words: batch[<span class="number">1</span>]&#125;)</div><div class="line">        average_loss +=loss_batch</div><div class="line">        <span class="keyword">if</span> (index + <span class="number">1</span>) % <span class="number">200</span> == <span class="number">0</span>:</div><div class="line">            print(<span class="string">'Average loss at step &#123;&#125;: &#123;:5.1f&#125;'</span>.format(index+<span class="number">1</span>,</div><div class="line">                                                    average_loss/(index+<span class="number">1</span>)))</div></pre></td></tr></table></figure>
-<h3 id="Name-Scope"><a href="#Name-Scope" class="headerlink" title="Name Scope"></a>Name Scope</h3><p>给出张量的名称，在Tensorboard中查看<br><img src="tensorboard.jpg" alt=""><br>这看起来可读性并不强，节点到处都是。Tensorboard并不知道哪些节点之间关联性比较强并将它们组合在一起。当构建更为复杂的模型时，这看起来会更混乱。实际上我们可以同过name scope的方法指定节点之间的关联关系，这样有着相同name scope的节点会被放置在一起。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.name_scope(name_of_that_scope):</div><div class="line">    <span class="comment"># declare op_1</span></div><div class="line">    <span class="comment"># declare op_2</span></div></pre></td></tr></table></figure></p>
-<p>这样我们就可以将之前的代码再规范一下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'data'</span>):</div><div class="line">    center_words = tf.placeholder(tf.int32, shape=[BATCH_SIZE], name=<span class="string">'center_words'</span>)</div><div class="line">    target_words = tf.placeholder(tf.in32, shape=[BATCH_SIZE, <span class="number">1</span>], name=<span class="string">'target_words'</span>)</div><div class="line"><span class="keyword">with</span> tf.name_scope(embed):</div><div class="line">    embed_matrix = tf.Variable(tf.random_uniform([VOCAB_SIZE, EMBED_SIZE], <span class="number">-1.0</span>, <span class="number">1.0</span>), name=<span class="string">'embed_matrx'</span>)</div><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'loss'</span>):</div><div class="line">    embed = tf.nn.embedding_lookup(embed_matrix, center_words, name=<span class="string">'embed'</span>)</div><div class="line">    nce_weights = tf.Variable(tf.truncated_normal([VOCAB_SIZE, EMBED_SIZE],</div><div class="line">            stddev=<span class="number">1.0</span> / math.sqrt(EMBED_SIZE)), name=<span class="string">'nce_weights'</span>)</div><div class="line">    nce_bias = tf.Variable(tf.zeros([VOCAB_SIZE]), name=<span class="string">'nce_bias'</span>)</div><div class="line">    loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weights, biases=nce_bias, labels=target_words, inputs=embbed, num_sampled=NUM_SAMPLED, num_classes=VOCAB_SIZE), name=<span class="string">'loss'</span>)</div></pre></td></tr></table></figure></p>
-<p>这样Tensorboard中的图看起来更加直观了，鼠标点击相应的块会出现该块的具体内容。<br><img src="with_name_scope.JPG" alt=""><br>Tensorboard中有两种类型的边界，一种是实线一种是虚线，实线代表data flow边，而虚线代表控制依赖的边。<br>此外，为了让代码的复用性更强，我们可以将模型写成一个类，如下所示：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span>  <span class="title">SkipGramModel</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, params)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_create_placeholder</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">    <span class="title">def</span> <span class="title">_create_embedding</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">    <span class="title">def</span> <span class="title">_create_loss</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">    <span class="title">def</span> <span class="title">_create_optimizer</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div></pre></td></tr></table></figure></p>
-<h3 id="为什么要学习梯度？"><a href="#为什么要学习梯度？" class="headerlink" title="为什么要学习梯度？"></a>为什么要学习梯度？</h3><p>从以上例子可以看出 ，我们在构建模型的时候并没有计算梯度，而是Tensorflow自动帮我们求解的，那么我们为什么还要学习梯度呢？因为Tensorflow虽然帮我们计算了梯度，但是它并没有告诉我们函数是否会受到梯度爆炸或者消失的影响，所以我们仍然需要了解梯度下降的工作原理。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_04.pdf" target="_blank" rel="external">notes_04</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_04.pdf" target="_blank" rel="external">slides_04</a><br><a href="http://colah.github.io/posts/2014-10-Visualizing-MNIST/" target="_blank" rel="external">Visualizing MNIST</a></p>
-
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=483671599&auto=1&height=66"></iframe></p>
+<h2 id="Effective-Java-Items-about-Methods-Common-to-All-Objects"><a href="#Effective-Java-Items-about-Methods-Common-to-All-Objects" class="headerlink" title="Effective Java Items about Methods Common to All Objects"></a>Effective Java Items about Methods Common to All Objects</h2><p>设计Object类的目的是为了扩展，它所有的非final方法(equals, hashCode, toString, clone, finalize)都有着明确的通用约定，它们都被设计成要被覆盖的。任何一个类在覆盖这些方法时都要遵守一些通用规定。</p>
+<h3 id="Item-10-Obey-the-general-contract-when-overriding-equals"><a href="#Item-10-Obey-the-general-contract-when-overriding-equals" class="headerlink" title="Item 10: Obey the general contract when overriding equals"></a>Item 10: Obey the general contract when overriding equals</h3><p>equals方法实现了等价关系，主要要满足以下条件：自反性，对称性，传递性，一致性，非空性。为了高效编写符合要求的equals方法，书中总结了以下方法：<br>1、使用==操作符检查参数是否是这个对象的引用。<br>2、使用instanceof操作符检查“参数是否为正确的类型”。<br>3、把参数转换成正确的类型。<br>4、对于该类中的每个“关键”域,检查参数中的域是否与该对象中对应的域相匹配。<br>5、编写好equals方法之后，再仔细检查是否满足之前的几个条件。<br>6、覆盖equals时要同时覆盖hashCode<br>7、不要企图让equals方法过于智能。<br>8、不要将equals声明中的Object对象替换为其他的类型。</p>
+<h3 id="Item-11-Always-override-hashCode-when-you-override-equals"><a href="#Item-11-Always-override-hashCode-when-you-override-equals" class="headerlink" title="Item 11: Always override hashCode when you override equals"></a>Item 11: Always override hashCode when you override equals</h3><p>每个覆盖了equals方法的类中，也必须同时覆盖hashCode方法。</p>
+<h3 id="Item-12-Always-override-toString"><a href="#Item-12-Always-override-toString" class="headerlink" title="Item 12: Always override toString"></a>Item 12: Always override toString</h3><p>遵守toString的约定并不像遵守equals和hashCode的约定那么重要，但是提供好的toString实现可以使得类使用起来更为舒适。</p>
+<h3 id="Item-13-Override-clone-judiciously"><a href="#Item-13-Override-clone-judiciously" class="headerlink" title="Item 13: Override clone judiciously"></a>Item 13: Override clone judiciously</h3><h3 id="Item-14-Consider-implementing-Comparable"><a href="#Item-14-Consider-implementing-Comparable" class="headerlink" title="Item 14: Consider implementing Comparable"></a>Item 14: Consider implementing Comparable</h3>
       
 
       
@@ -214,7 +204,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
@@ -226,7 +216,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
@@ -235,7 +225,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/20/tensorflow-programming-structure-your-tf-model/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/21/effective-java-methods-common-to-all-objects/">展开全文 >></a>
         </p>
       
 
@@ -270,7 +260,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/9/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><a class="extend next" rel="next" href="/page/11/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/9/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/11/">Next &raquo;</a>
     </nav>
   
 
@@ -370,7 +360,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -378,11 +372,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -394,11 +384,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
