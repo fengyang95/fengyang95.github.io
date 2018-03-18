@@ -183,7 +183,7 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><span class="toc-text">在linux下可以通过设置PYTHONPATH的方法指定python工程目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><span class="toc-text">UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><span class="toc-text">在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pycharm切换python版本"><span class="toc-text">pycharm切换python版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用cx-Freeze-打包python程序成exe文件"><span class="toc-text">使用cx_Freeze 打包python程序成exe文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#python3-中的一些编码问题一定要注意"><span class="toc-text">python3 中的一些编码问题一定要注意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#opencv读图片Premature-end-of-JPEG-file？"><span class="toc-text">opencv读图片Premature end of JPEG file？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pyconfig-h-can’t-find"><span class="toc-text">pyconfig.h can’t find</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><span class="toc-text">在linux下可以通过设置PYTHONPATH的方法指定python工程目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><span class="toc-text">UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><span class="toc-text">在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pycharm切换python版本"><span class="toc-text">pycharm切换python版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用cx-Freeze-打包python程序成exe文件"><span class="toc-text">使用cx_Freeze 打包python程序成exe文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#python3-中的一些编码问题一定要注意"><span class="toc-text">python3 中的一些编码问题一定要注意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#opencv读图片Premature-end-of-JPEG-file？"><span class="toc-text">opencv读图片Premature end of JPEG file？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pyconfig-h-can’t-find"><span class="toc-text">pyconfig.h can’t find</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#import-win32file-时出现-dll缺失，系统找不到指定文件问题"><span class="toc-text">import win32file 时出现  dll缺失，系统找不到指定文件问题</span></a></li></ol>
 </div>
 
         <p>整理一些使用Python过程中遇到的问题和解决方法。</p>
@@ -199,6 +199,7 @@
 <h1 id="opencv读图片Premature-end-of-JPEG-file？"><a href="#opencv读图片Premature-end-of-JPEG-file？" class="headerlink" title="opencv读图片Premature end of JPEG file？"></a>opencv读图片Premature end of JPEG file？</h1><p>主要是由于图片不完整造成的，可以用以下脚本检验图片是否有效。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_pic</span><span class="params">(path)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        Image.open(path).load() </div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">print</span> <span class="string">'ERROR: %s'</span> % path</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure></p>
 <p><a href="https://www.zhihu.com/question/30372655/answer/157762216" target="_blank" rel="external">知乎回答</a></p>
 <h1 id="pyconfig-h-can’t-find"><a href="#pyconfig-h-can’t-find" class="headerlink" title="pyconfig.h can’t find"></a>pyconfig.h can’t find</h1><p>解决方法：sudo apt-get install python-dev (或者python3.5-dev等相应版本)</p>
+<h1 id="import-win32file-时出现-dll缺失，系统找不到指定文件问题"><a href="#import-win32file-时出现-dll缺失，系统找不到指定文件问题" class="headerlink" title="import win32file 时出现  dll缺失，系统找不到指定文件问题"></a>import win32file 时出现  dll缺失，系统找不到指定文件问题</h1><p>解决方法：site-package文件夹中pywin32_system32文件中的dll文件复制到C/windows/system32文件夹中。</p>
 
       
 
@@ -364,11 +365,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -376,7 +377,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -396,15 +397,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
