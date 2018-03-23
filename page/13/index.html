@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-2017-summary" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-tensorflow-programming-linear-and-logistic-regression" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/18/2017-summary/">My 2017</a>
+      <a class="article-title" href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/">Linear and Logistic Regression in Tensorflow Notes</a>
     </h1>
   
 
         
-        <a href="/2018/01/18/2017-summary/" class="archive-article-date">
-  	<time datetime="2018-01-18T12:17:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-18</time>
+        <a href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/" class="archive-article-date">
+  	<time datetime="2018-01-18T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-19</time>
 </a>
         
       </header>
@@ -183,15 +183,24 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2017总结"><span class="toc-text">2017总结</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#线性回归和逻辑回归"><span class="toc-text">线性回归和逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线性回归"><span class="toc-text">线性回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何判断一个模型是正确的？"><span class="toc-text">如何判断一个模型是正确的？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用相关系数R的平方"><span class="toc-text">使用相关系数R的平方</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在测试集上运行"><span class="toc-text">在测试集上运行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用虚拟数据测试模型"><span class="toc-text">用虚拟数据测试模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部分代码分析"><span class="toc-text">部分代码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化"><span class="toc-text">优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#更多关于梯度计算"><span class="toc-text">更多关于梯度计算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优化器种类"><span class="toc-text">优化器种类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#各种优化器的比较"><span class="toc-text">各种优化器的比较</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑回归"><span class="toc-text">逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理解one-hot-encodiing"><span class="toc-text">理解one-hot encodiing</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
 </div>
 
-        <h1 id="2017总结"><a href="#2017总结" class="headerlink" title="2017总结"></a>2017总结</h1><p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=355992&auto=1&height=66"></iframe><br>2017年都已经过去二十来天了，也应该总结一下过去的一年里的一些进步和不足了，主要说一下技术方面的。</p>
-<p>寒假刷了PAT的题库，3月份的考试考了甲级95分，题目基本上都有套路可循，算差强人意，主要是熟练了一些常用的数据结构和算法。<br>之后找暑期实习的时候主要是投算法岗和C++岗，因为非科班出身而项目经验也比较少，面试了好几家都没成功。后面收到一个算法岗的offer就没继续面试了，准备期间大概过了下C++的基础还有 《Effective C++》《C++标准库 第二版》等C++书籍。<br>然后学校里上了一点图形学的基础课，写了一些图像处理相关的代码，主要熟悉了opencv。</p>
-<p>暑假实习的时候做的事情也比较杂，前一个月是做传统的图像图形的问题，最后没做出什么成果，不过在此期间又进一步熟悉了opencv以及一些三维重建的知识。第二个月做了一个深度学习的小项目，之前从来也没接触过deep learning，做得比较艰难，论文看不懂，代码主要就是根据开源代码再自己改一点点结构，最后勉勉强强完成了任务。实习的那段时间还是比较辛苦的，一边要忙着公司的事，一边还要抽空看看专业课准备保研，压力非常大，不过也挺充实的。那段时间还看了一点《Fluent Python》，python用得更熟练了。还趁着周末的时间看了一点《Thinking in Java》，算是把Java入门了。</p>
-<p>秋季开学之后，保研很快就确定了，虽然没有去计算机学院，不过好歹是做计算机视觉方向的事情。然后很快投入深度学习方向的学习，主要是看了CS231n的课程，为了准备毕设看了一些目标检测方向的论文，可惜编程练习没有做，还有就是学了tensorflow的一些使用，但是还是不够熟练，搭建网络还是很吃力。编程方面主要就是稍深入学习了Java，看了《Java语言程序设计》《Effective Java》等书籍，写了一些Java的代码。因为之前有C++的基础，Java学起来相对来说没那么吃力，问题还是代码量不够。还有比较重要的就是为了记录下学习的过程，搭建了这个博客，随时记录一些学习笔记和心得，现在大概有20篇文章了，不过水平有限，文章大都是一些翻译和简单的笔记整理，很少有自己的独到见解，可读性也不是很强，可能很多地方只有我自己才能看懂，今年应该还是会坚持多写多记录，提高写作水平，争取写出一些水平稍高的博客。</p>
-<p>总的来说，2017年算是比较重要的一年吧，有纠结也有彷徨，好在一步一步走过来了，还是能够很明显感受到自己的进步，编程能力也在慢慢提高。希望2018年会有更大的进步吧。</p>
-<p>2018年希望在以下方面能有一些进步：<br>1、进一步熟悉tensorflow，早日能够熟练搭建网络结构，寒假期间重点突击一下。<br>2、更深入学习Java，在实践中学习，坚持阅读相关书籍并做笔记，多写代码。有机会还想学一下js。<br>3、多看论文和博客，更深入学习计算机视觉方面的知识，重点在深度学习。<br>4、在本科毕业之前多补一些计算机的基础课程，比如数据库，计算机网络等，尽量缩小和计算机科班的差距。<br>5、争取高质量完成毕业设计，顺利毕业。<br>6、更新博客，至少每周一篇新文章。</p>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=474117771&auto=1&height=66"></iframe></p>
+<h1 id="线性回归和逻辑回归"><a href="#线性回归和逻辑回归" class="headerlink" title="线性回归和逻辑回归"></a>线性回归和逻辑回归</h1><p>之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。</p>
+<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a></p>
+<h3 id="如何判断一个模型是正确的？"><a href="#如何判断一个模型是正确的？" class="headerlink" title="如何判断一个模型是正确的？"></a>如何判断一个模型是正确的？</h3><h4 id="使用相关系数R的平方"><a href="#使用相关系数R的平方" class="headerlink" title="使用相关系数R的平方"></a>使用相关系数R的平方</h4><p><a href="http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit" target="_blank" rel="external">R-squared</a></p>
+<h4 id="在测试集上运行"><a href="#在测试集上运行" class="headerlink" title="在测试集上运行"></a>在测试集上运行</h4><h4 id="用虚拟数据测试模型"><a href="#用虚拟数据测试模型" class="headerlink" title="用虚拟数据测试模型"></a>用虚拟数据测试模型</h4><h3 id="部分代码分析"><a href="#部分代码分析" class="headerlink" title="部分代码分析"></a>部分代码分析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.GradientDescentOptimizer(learning_rate=<span class="number">0.01</span>).minimize(loss)</div><div class="line">sess.run(optimizer, feed_dict=&#123;X: x, Y: y&#125;)</div></pre></td></tr></table></figure>
+<p>有两个疑问？<br>1、为什么train_op在tf.Session.run()的提取列表中？<br>2、Tensorflow怎么知道要更新哪些变量？<br>实际上，我们可以将任何Tensorflow的操作作为tf.Session.run()的提取变量。Tensorflow会执行计算图中这些操作所依赖的部分。在以上例子中，train_op的目的是使loss最小，而loss依赖于w和b的值。<br><img src="graph.jpg" alt=""><br>从图中可以看出，节点GrandientDescentOptimizer依赖于节点weights，bias和gradients。</p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>GradientDescentOptimizer意味着我们的更新策略是梯度下降。Tensorflow已经为我们做了自动微分，然后更新w和b的值使得loss最小。默认情况下，optimizer训练目标函数所依赖的变量中的所有可训练变量，如果这里面有一些你不想训练的变量，可以将在定义参数时其参数trainable设置为False。一个具体的例子是变量global_step，这个变量是用来记录你运行模型多少次数的变量，其不应该为可训练的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">global_step = tf.Variable(<span class="number">0</span>,trainable=<span class="keyword">False</span>, dtype=tf.int32)</div><div class="line">learning_rate = <span class="number">0.01</span> * <span class="number">0.99</span> ** tf.cast(global_step, tf.float32)</div><div class="line">increment_step = global_step.assign_add(<span class="number">1</span>)</div><div class="line">optimizer = tf.GradientDescentOptimizer(learning_rate) <span class="comment"># learning rate 可以是一个tensor</span></div></pre></td></tr></table></figure></p>
+<p>tf.Variable的完整定义是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tf.Variable(initial_value=<span class="keyword">None</span>, trainable=<span class="keyword">True</span>, collections=<span class="keyword">None</span>,</div><div class="line">    validate_shape=<span class="keyword">True</span>, caching_device=<span class="keyword">None</span>, name=<span class="keyword">None</span>, variable_def=<span class="keyword">None</span>,</div><div class="line">    dtype=<span class="keyword">None</span>, expected_shape=<span class="keyword">None</span>, import_scope=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>我们甚至可以让optimizer计算特定变量的梯度，也可以修改由optimizer计算出的梯度。<br>如下所示是一些例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">optimizer = GradientDescentOptimizer(learning_rate=<span class="number">0.1</span>)</div><div class="line"><span class="comment"># 计算一系列变量的梯度</span></div><div class="line">grads_and_vars = opt.compute_gradients(loss, &lt;list of variables&gt;)</div><div class="line"><span class="comment"># grads_and_vars 是由元组(gradient, valriable)</span></div><div class="line"><span class="comment">#组成的列表。可以对其中的gradient项做一些操作。</span></div><div class="line">substracted_grads_and_vars = [(gv[<span class="number">0</span>] - <span class="number">1.0</span>, gv[<span class="number">1</span>]) <span class="keyword">for</span> gv <span class="keyword">in</span> grads_and_vars]</div><div class="line"><span class="comment"># 让optimizer应用减过1的梯度。</span></div><div class="line">optimizer.apply_gradients(subtracted_grads_and_vars)</div></pre></td></tr></table></figure></p>
+<h4 id="更多关于梯度计算"><a href="#更多关于梯度计算" class="headerlink" title="更多关于梯度计算"></a>更多关于梯度计算</h4><p>优化器类会自动计算graph的梯度，但创建新的优化器或专家用户可以调用下面的低级函数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.gradients(ys, xs, grad_ys=<span class="keyword">None</span>, name=<span class="string">'gradients'</span>, colocate_gradients_with_ops=<span class="keyword">False</span>, gate_gradients=<span class="keyword">False</span>, aggregation_method=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>当只训练一个模型的一个部分时，这种方法很有用。例如我们可以使用tf.gradient()计算中间层loss的梯度G，然后我们使用优化器来最小化中间层输出M和M + G之间的差异，<br>只更新网络的下半部分。</p>
+<h4 id="优化器种类"><a href="#优化器种类" class="headerlink" title="优化器种类"></a>优化器种类</h4><p><img src="optimizer.jpg" alt=""></p>
+<h5 id="各种优化器的比较"><a href="#各种优化器的比较" class="headerlink" title="各种优化器的比较"></a>各种优化器的比较</h5><p>cs231n的笔记中有介绍。也可参考：<br><a href="http://sebastianruder.com/optimizing-gradient-descent/" target="_blank" rel="external">Optimizing Gradient Descent</a></p>
+<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><p>用逻辑回归解决MNIST字符识别的一个例子</p>
+<h3 id="理解one-hot-encodiing"><a href="#理解one-hot-encodiing" class="headerlink" title="理解one-hot encodiing"></a>理解one-hot encodiing</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_03.pdf" target="_blank" rel="external">slides_03</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a><br><a href="https://zhuanlan.zhihu.com/p/28924642" target="_blank" rel="external">cs20si: tensorflow for research 学习笔记3</a></p>
 
       
 
@@ -205,7 +214,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -217,7 +226,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -226,7 +235,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/18/2017-summary/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/">展开全文 >></a>
         </p>
       
 
@@ -261,7 +270,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/">39</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
     </nav>
   
 
@@ -361,19 +370,23 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">sql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -389,7 +402,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -397,7 +410,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
