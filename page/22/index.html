@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-java-settings" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-effective-java-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/10/java-settings/">java-settings</a>
+      <a class="article-title" href="/2018/01/13/effective-java-notes/">一些Java编码规范条款</a>
     </h1>
   
 
         
-        <a href="/2018/01/10/java-settings/" class="archive-article-date">
-  	<time datetime="2018-01-10T02:09:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-10</time>
+        <a href="/2018/01/13/effective-java-notes/" class="archive-article-date">
+  	<time datetime="2018-01-13T02:22:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-13</time>
 </a>
         
       </header>
@@ -183,11 +183,22 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#配置Java项目时的一些方法"><span class="toc-text">配置Java项目时的一些方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#maven指定JDK版本"><span class="toc-text">maven指定JDK版本</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#记录一些Java编码条款，方便查看"><span class="toc-text">记录一些Java编码条款，方便查看</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java（3rd-Edition）中的编码条款"><span class="toc-text">Effective Java（3rd Edition）中的编码条款</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-and-Destroying-Objects"><span class="toc-text">Create and Destroying Objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mothods-Common-to-All-Objects"><span class="toc-text">Mothods Common to All Objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Classes-and-Interfaces"><span class="toc-text">Classes and Interfaces</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generics"><span class="toc-text">Generics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Enums-and-Annotations"><span class="toc-text">Enums and Annotations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambdas-and-Streams"><span class="toc-text">Lambdas and Streams</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Methods"><span class="toc-text">Methods</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#General-Programming"><span class="toc-text">General Programming</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exceptions"><span class="toc-text">Exceptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Concurrency"><span class="toc-text">Concurrency</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Serialization"><span class="toc-text">Serialization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
 </div>
 
-        <h1 id="配置Java项目时的一些方法"><a href="#配置Java项目时的一些方法" class="headerlink" title="配置Java项目时的一些方法"></a>配置Java项目时的一些方法</h1><h2 id="maven指定JDK版本"><a href="#maven指定JDK版本" class="headerlink" title="maven指定JDK版本"></a>maven指定JDK版本</h2><p>在pom.xml中如下配置<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></div></pre></td></tr></table></figure></p>
-
+        <h1 id="记录一些Java编码条款，方便查看"><a href="#记录一些Java编码条款，方便查看" class="headerlink" title="记录一些Java编码条款，方便查看"></a>记录一些Java编码条款，方便查看</h1><h2 id="Effective-Java（3rd-Edition）中的编码条款"><a href="#Effective-Java（3rd-Edition）中的编码条款" class="headerlink" title="Effective Java（3rd Edition）中的编码条款"></a>Effective Java（3rd Edition）中的编码条款</h2><h3 id="Create-and-Destroying-Objects"><a href="#Create-and-Destroying-Objects" class="headerlink" title="Create and Destroying Objects"></a>Create and Destroying Objects</h3><p><a href="">Item1: Consider static factory methods instead of constructors</a><br><a href="">Item2: Consider a builder when faced with many constructors</a><br><a href="">Item3: Enforce the singleton property with a private constructor or an enum type</a><br><a href="">Item4: Enforce noninstantiability with a private constructor</a><br><a href="">Item5: Prefer dependency injection to hardwiring resources</a><br><a href="">Item6: Avoid creating unnecessary objects</a><br><a href="">Item7: Eliminate absolete object references</a><br><a href="">Item8: Avoid finalizers and cleaners</a><br><a href="">Item9: Prefer try-with-resources to try-finally</a></p>
+<h3 id="Mothods-Common-to-All-Objects"><a href="#Mothods-Common-to-All-Objects" class="headerlink" title="Mothods Common to All Objects"></a>Mothods Common to All Objects</h3><p><a href="">Item10: Obey the general construct when overriding equals</a><br><a href="">Item11: Always override hashCode when you override equals</a><br><a href="">Item12: Always override toString</a><br><a href="">Item13: Override clone judiciously</a><br><a href="">Item14: Consider implementing Comparable</a></p>
+<h3 id="Classes-and-Interfaces"><a href="#Classes-and-Interfaces" class="headerlink" title="Classes and Interfaces"></a>Classes and Interfaces</h3><p><a href="">Item15: Minimize the accessibility of classes and members</a><br><a href="">Item16: In public classes, use accessor methods, not public fields</a><br><a href="">Item17: Minimize mutability</a><br><a href="">Item18: Favor composition over inheritance</a><br><a href="">Item19: Design and document for inheritance or else prohibit it</a><br><a href="">Item20: Prefer interfaces to abstract classes</a><br><a href="">Item21: Design interfaces for posterity</a><br><a href="">Item22: Use interfaces only to define types</a><br><a href="">Item23: Prefer class hierarchies to tagged classes</a><br><a href="">Item24: Favor static member classes over nonstatic</a><br><a href="">Item25: Limit source fields to a single top-level class</a></p>
+<h3 id="Generics"><a href="#Generics" class="headerlink" title="Generics"></a>Generics</h3><p><a href="">Item26: Don’t use raw types</a><br><a href="">Item27: Eliminate unchecked warnings</a><br><a href="">Item28: Prefer lists to arrays</a><br><a href="">Item29: Favor generic types</a><br><a href="">Item30: Favor generic methods</a><br><a href="">Item31: Use bounded wildcards to increase API flexibility</a><br><a href="">Item32: Combine generics and varargs judiciously</a><br><a href="">Item33: Consider typesafe heterogeneous containers</a></p>
+<h3 id="Enums-and-Annotations"><a href="#Enums-and-Annotations" class="headerlink" title="Enums and Annotations"></a>Enums and Annotations</h3><p><a href="">Item34: Use enums instead of int constants</a><br><a href="">Item35: Use instance fields instead of ordinals</a><br><a href="">Item36: Use EnumSet instead of bit fields</a><br><a href="">Item37: Use EnumMap instead of ordinal indexing</a><br><a href="">Item38: Emulate extensible enums with interfaces</a><br><a href="">Item39: Prefer annotations to naming patterns</a><br><a href="">Item40: Consistently use the Override annotation</a><br><a href="">Item41: Use marker interfaces to define types</a></p>
+<h3 id="Lambdas-and-Streams"><a href="#Lambdas-and-Streams" class="headerlink" title="Lambdas and Streams"></a>Lambdas and Streams</h3><p><a href="">Item42: Prefer lambdas to anonymous classes</a><br><a href="">Item43: Prefer method reference to lambdas</a><br><a href="">Item44: Favor the use of standard functional interfaces</a><br><a href="">Item45: Use streams judiciously</a><br><a href="">Item46: Prefer side-effect-free functions in streams</a><br><a href="">Item47: Prefer Collections to Stream as a return type</a><br><a href="">Item48: Use caution when making streams parallel</a></p>
+<h3 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h3><p><a href="">Item49: Check parameters for validity</a><br><a href="">Item50: Make defensive copies when needed</a><br><a href="">Item51: Design method signatures carefully</a><br><a href="">Item52: Use overloading judiciously</a><br><a href="">Item53: Use varargs</a><br><a href="">Item54: Return empty collections or arrays, not nulls</a><br><a href="">Item55: Return optionals judiciously</a><br><a href="">Item56: Write doc comments for all exposed API elements</a></p>
+<h3 id="General-Programming"><a href="#General-Programming" class="headerlink" title="General Programming"></a>General Programming</h3><p><a href="">Item57: Minimize the scope of local variables</a><br><a href="">Item58: Prefer for-each loops to traditional for loops</a><br><a href="">Item59: Know and use the libraries</a><br><a href="">Item60: Avoid float and double if exact answers are required</a><br><a href="">Item61: Prefer primitive types to boxed primitives</a><br><a href="">Item62: Avoid strings where other types are more appropriate</a><br><a href="">Item63: Beware the performance of string concatenation</a><br><a href="">Item64: Refer to objects by their interfaces</a><br><a href="">Item65: Prefer interfaces to reflection</a><br><a href="">Item66: Use native methods judiciously</a><br><a href="">Item67: Optimize judiciously</a><br><a href="">Item68: Adhere to generally accepted naming conventions</a></p>
+<h3 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h3><p><a href="">Item69: Use exceptions only for exceptional conditions</a><br><a href="">Item70: Use checked exceptions for recoverable conditions and runtime exceptions for programming errors</a><br><a href="">Item71: Avoid unnecessary use of checked exceptions</a><br><a href="">Item72: Favor the use of standard exceptions</a><br><a href="">Item73: Throw exceptions appropriate to the abstraction</a><br><a href="">Item74: Document all exceptions thrown by each method</a><br><a href="">Item75: Include failure-capture information in detail messages</a><br><a href="">Item76: Strive for failure atomicity</a><br><a href="">Item77: Don’t ignore exceptions</a></p>
+<h3 id="Concurrency"><a href="#Concurrency" class="headerlink" title="Concurrency"></a>Concurrency</h3><p><a href="">Item78: Synchronize access to shared mutable data</a><br><a href="">Item79: Avoid excessive synchronization</a><br><a href="">Item80: Prefer executors, tasks, and streams to threads</a><br><a href="">Item81: Prefer concurrency utilities to wait and notify</a><br><a href="">Item82: Document thread safety</a><br><a href="">Item83: Use lazy initialization judiciously</a><br><a href="">Item84: Don’t depend on the thread scheduler</a></p>
+<h3 id="Serialization"><a href="#Serialization" class="headerlink" title="Serialization"></a>Serialization</h3><p><a href="">Item85: Prefer alternatives to Java serialization</a><br><a href="">Item86: Implement Serializable with great caution</a><br><a href="">Item87: Consider using a custom serialized form</a><br><a href="">Item88: Write readObject methods defensively</a><br><a href="">Item89: For instance control, prefer enum types to readResolve</a><br><a href="">Item90: Consider serialization proxies instead of serialized instances</a></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><pre><code>Effective Java, Third Edition
+</code></pre>
       
 
       
@@ -221,7 +232,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/10/java-settings/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/13/effective-java-notes/">展开全文 >></a>
         </p>
       
 
@@ -256,7 +267,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/21/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><a class="page-number" href="/page/24/">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="extend next" rel="next" href="/page/23/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/21/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><a class="page-number" href="/page/24/">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><a class="extend next" rel="next" href="/page/23/">Next &raquo;</a>
     </nav>
   
 
@@ -356,11 +367,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -368,15 +375,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -384,15 +391,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -405,6 +404,18 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
               </li>
             
             <div class="clearfix"></div>
