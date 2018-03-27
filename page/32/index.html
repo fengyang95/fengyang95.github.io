@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-cnn-architecture" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Object-Detection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/09/cnn-architecture/">常用卷积神经网络结构</a>
+      <a class="article-title" href="/2017/10/11/Object-Detection/">Object Detection with CNN</a>
     </h1>
   
 
         
-        <a href="/2017/10/09/cnn-architecture/" class="archive-article-date">
-  	<time datetime="2017-10-09T05:52:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-09</time>
+        <a href="/2017/10/11/Object-Detection/" class="archive-article-date">
+  	<time datetime="2017-10-10T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-11</time>
 </a>
         
       </header>
@@ -183,17 +183,10 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#AlexNet"><span class="toc-text">AlexNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VGGNet"><span class="toc-text">VGGNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GoogleNet"><span class="toc-text">GoogleNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ResNet"><span class="toc-text">ResNet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码实现"><span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  
 </div>
 
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=423104954&auto=1&height=66"></iframe><br>主要介绍几种当前常见的卷积网络结构。包括AlexNet,VGGNet,GoogleNet,ResNet等。</p>
-<h1 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h1><p>AlexNet结构获得了2012年ILSVRC的冠军。其主要结构如下,这是cs231n的课件做的一个总结：<br><img src="alex_net.jpg" alt=""></p>
-<h1 id="VGGNet"><a href="#VGGNet" class="headerlink" title="VGGNet"></a>VGGNet</h1><p>VGGNet是2014年ILSVRC的分类第二名，和AlexNet相比的改进是滤波器的尺寸更小，只用3x3的滤波器；还有就是更深的网络结果。具体如下；<br><img src="vgg_net.jpg" alt=""></p>
-<p>用3x3的滤波器的原因：3个3x3的卷积层的组合的effective of field和一个7x7的卷积层是一致的。并且还有以下两个优点：1、网络更深，引入更多非线性；<br>2、引入更少的参数，对于每层C个通道的结构，3层3x3的参数个数为 3<em>3</em>3<em>C</em>C=27<em>C</em>C,而1个7x7的参数为7<em>7</em>C<em>C=49</em>C*C。<br>下面是对参数的一个分析,可见占用内存最多的层是在前面的卷积层，而拥有参数最多的层在最后的全连接层：<br><img src="vgg16_parameters.jpg" alt=""></p>
-<h1 id="GoogleNet"><a href="#GoogleNet" class="headerlink" title="GoogleNet"></a>GoogleNet</h1><p>GoogleNet结构获得2014年ILSVRC的分类第一名。它具有更深的网络结构，达到22层，但是采用了更高效的计算。<br><img src="google_net.jpg" alt=""><br>它的最大的一个亮点是采用Inception module的结构。<br><img src="naive_inception_module.jpg" alt=""><br>从前一层开始并行计算4种不同类型和参数的网络层，在depth上叠加得到输出。但是这带来一个比较大的问题就是计算量太大，因为卷积层和池化层都会保留depth,所以每个并行的层都会带来整个输出的depth的增加。这个问题的一个解决方法就是使用更小深度的1x1的卷积层来减少深度。<br><img src="naive_inception_computation.jpg" alt=""><br><img src="1x1_conv.jpg" alt=""><br>最后得到的优化的Inception module结构如下：<br><img src="inception_dimension_reduction.jpg" alt=""><br>于是整个GoogleNet就以多个Inception小模块为基础搭建而成。GoogleNet还有另外一个亮点是摒弃了计算量巨大的FC层。<br><img src="full_googlenet.jpg" alt=""></p>
-<h1 id="ResNet"><a href="#ResNet" class="headerlink" title="ResNet"></a>ResNet</h1><p>ResNet结构获得了2015年ILSVRC的第一名。它的最大亮点就是采用了残差学习的新思想。它将输入的结果加到通过普通网络层的输出上形成新的输出。这样使得训练很深的网络结构变得有效。<br><img src="resnet.jpg" alt=""><br>这个方法解决了之前的一个很大的问题，事实上，在这之前，如果我们将网络层数增加到特别深的情况下，其性能是会变差的，但是并不是由过拟合造成的，而是因为太深的网络结构难以优化。<br>而这个残差网络就能很好解决难以优化的问题。<br><img src="compare.jpg" alt=""><br>这样一来整个网络结构就如下所示：<br><img src="full_resnet.jpg" alt=""><br>对于比较深的网络，还应采用类似GoogleNet的1x1的”bottleneck” layer来提高网络的计算效率。<br><img src="resnet_bottlelayer.jpg" alt=""></p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>主要是基于tensorflow的一些实现。<br><a href="https://github.com/tensorflow/models" target="_blank" rel="external">tensorflow models</a></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture9.pdf" target="_blank" rel="external">cs231n spring2017 lecture9 slides</a><br><a href="http://deeplearning.csail.mit.edu/cvpr2017_tutorial_kaiminghe.pdf" target="_blank" rel="external">cvpr2017_tutorial_kaiminghe</a><br><a href="http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks" target="_blank" rel="external">AlexNet</a><br><a href="http://arxiv.org/abs/1409.4842" target="_blank" rel="external">GoogleNet</a><br><a href="http://www.robots.ox.ac.uk/~vgg/research/very_deep/" target="_blank" rel="external">VGGNet</a><br><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="external">ResNet</a></p>
+        <p>主要介绍一些利用卷积神经网络的方法进行目标检测的方法。<br>网上有很多关于这些方法的详细介绍。以下是一些blog或者slide的链接。<br><a href="https://zhuanlan.zhihu.com/p/21412911" target="_blank" rel="external">基于深度学习的目标检测研究进展</a><br><a href="http://deeplearning.csail.mit.edu/instance_ross.pdf" target="_blank" rel="external">slide1</a><br><a href="http://blog.csdn.net/myarrow/article/details/51878004" target="_blank" rel="external">cs231n学习笔记-CNN-目标检测、定位、分割</a><br><a href="https://www.zhihu.com/question/57403701" target="_blank" rel="external">知乎 如何评价Mask-RCNN</a><br><a href="http://www.yuthon.com/2017/04/27/Notes-From-Faster-R-CNN-to-Mask-R-CNN/" target="_blank" rel="external">Notes: From Faster R-CNN to Mask R-CNN</a><br><a href="https://zhuanlan.zhihu.com/p/26655034" target="_blank" rel="external">CNN图像分割进化史：三年从R-CNN到Mask R-CNN</a></p>
 
       
 
@@ -228,7 +221,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/09/cnn-architecture/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/10/11/Object-Detection/">展开全文 >></a>
         </p>
       
 
@@ -263,7 +256,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/31/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><a class="page-number" href="/page/34/">34</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><a class="extend next" rel="next" href="/page/33/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/31/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><a class="page-number" href="/page/34/">34</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><a class="extend next" rel="next" href="/page/33/">Next &raquo;</a>
     </nav>
   
 
@@ -363,19 +356,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -383,7 +372,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -399,11 +392,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">

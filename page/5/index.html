@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-Properties in Python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-effective-python-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/11/Properties in Python/">Properties in Python</a>
+      <a class="article-title" href="/2018/03/12/effective-python-notes/">Effective Python 编写高质量代码的59个有效方法</a>
     </h1>
   
 
         
-        <a href="/2018/03/11/Properties in Python/" class="archive-article-date">
-  	<time datetime="2018-03-11T02:22:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-11</time>
+        <a href="/2018/03/12/effective-python-notes/" class="archive-article-date">
+  	<time datetime="2018-03-12T13:51:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-12</time>
 </a>
         
       </header>
@@ -183,77 +183,15 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Properties-in-Python"><span class="toc-text">Properties in Python</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#property-初探"><span class="toc-text">property 初探</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深入理解-property"><span class="toc-text">深入理解 property</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#property会覆盖实例属性"><span class="toc-text">property会覆盖实例属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为property添加文档"><span class="toc-text">为property添加文档</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特性工厂函数"><span class="toc-text">特性工厂函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#条款总览"><span class="toc-text">条款总览</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#用Pythonic方式来思考"><span class="toc-text">用Pythonic方式来思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类与继承"><span class="toc-text">类与继承</span></a></li></ol></li></ol>
 </div>
 
-        <h1 id="Properties-in-Python"><a href="#Properties-in-Python" class="headerlink" title="Properties in Python"></a>Properties in Python</h1><h2 id="property-初探"><a href="#property-初探" class="headerlink" title="property 初探"></a>property 初探</h2><p>Properties 通常用于把公开的属性变成使用读值方法和设值方法管理的属性，且在不影响客户端代码的前提下实施业务规则。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LineItem</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, description, weight, price)</span>:</span></div><div class="line">        self.description = description</div><div class="line">        self.weight = weight</div><div class="line">        self.price = price</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">subtotal</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.weight * self.price</div><div class="line">    </div><div class="line">    <span class="comment"># 读值方法</span></div><div class="line"><span class="meta">    @property</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">weight</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__weight</div><div class="line">    </div><div class="line">    <span class="comment"># 设值方法</span></div><div class="line"><span class="meta">    @weight.setter</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">weight</span><span class="params">(self, value)</span>:</span></div><div class="line">        <span class="keyword">if</span> value &gt; <span class="number">0</span>:</div><div class="line">            self.__weight = value</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">raise</span> ValueError(<span class="string">'value must be  &gt; 0'</span>)</div></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">walnuts_valid = LineItem(<span class="string">'walnuts_valid'</span>,<span class="number">10</span>,<span class="number">10</span>)</div><div class="line">walnuts_invalid = LineItem(<span class="string">'walnuts_invalid'</span>, <span class="number">0</span>, <span class="number">10.00</span>)</div></pre></td></tr></table></figure>
-<pre><code>10
-
-
-
----------------------------------------------------------------------------
-
-ValueError                                Traceback (most recent call last)
-
-&lt;ipython-input-9-68054ba7debc&gt; in &lt;module&gt;()
-      1 walnuts_valid = LineItem(&apos;walnuts_valid&apos;,10,10)
-      2 print(walnuts_valid.weight)
-----&gt; 3 walnuts_invalid = LineItem(&apos;walnuts_invalid&apos;, 0, 10.00)
-
-
-&lt;ipython-input-8-2cd43540d5e1&gt; in __init__(self, description, weight, price)
-      2     def __init__(self, description, weight, price):
-      3         self.description = description
-----&gt; 4         self.weight = weight
-      5         self.price = price
-      6 
-
-
-&lt;ipython-input-8-2cd43540d5e1&gt; in weight(self, value)
-     19             self.__weight = value
-     20         else:
----&gt; 21             raise ValueError(&apos;value must be  &gt; 0&apos;)
-
-
-ValueError: value must be  &gt; 0
-</code></pre><p>如上所示，我们使用property禁止了用户为 weight 属性提供负值或零。值得注意的是，如果一个属性只有读值方法而没有设值方法，那么该属性就是只读属性，对其赋值的操作是不被允许的。</p>
-<h2 id="深入理解-property"><a href="#深入理解-property" class="headerlink" title="深入理解 property"></a>深入理解 property</h2><p>虽然内置的property经常用于装饰器，但是其实它是一个类。而Python中，函数和类通常可以互换。property构造方法的完整签名如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">property(fget=<span class="keyword">None</span>, fset=<span class="keyword">None</span>, fdel=<span class="keyword">None</span>, doc=<span class="keyword">None</span>)</div></pre></td></tr></table></figure>
-<p>其所有参数均是可选的，如果没有把某个函数传递给某个参数，那么得到的特性对象就不允许执行相应操作。<br>下面是一个不使用装饰器定义的经典方法。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LineItem</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, description, weight, price)</span>:</span></div><div class="line">        self.description = description</div><div class="line">        self.weight = weight</div><div class="line">        self.price = price</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">subtotal</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.weight * self.price</div><div class="line">    </div><div class="line">    <span class="comment"># 读值方法</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_weight</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__weight</div><div class="line">    </div><div class="line">    <span class="comment"># 设值方法</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set_weight</span><span class="params">(self, value)</span>:</span></div><div class="line">        <span class="keyword">if</span> value &gt; <span class="number">0</span>:</div><div class="line">            self.__weight = value</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">raise</span> ValueError(<span class="string">'value must be  &gt; 0'</span>)</div><div class="line">    weight = property(fget=get_weight, fset = set_weight)</div></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">walnuts_valid = LineItem(<span class="string">'walnuts_valid'</span>,<span class="number">10</span>,<span class="number">10</span>)</div><div class="line">walnuts_invalid = LineItem(<span class="string">'walnuts_invalid'</span>, <span class="number">0</span>, <span class="number">10.00</span>)</div></pre></td></tr></table></figure>
-<pre><code>---------------------------------------------------------------------------
-
-ValueError                                Traceback (most recent call last)
-
-&lt;ipython-input-11-2126031d851a&gt; in &lt;module&gt;()
-      1 walnuts_valid = LineItem(&apos;walnuts_valid&apos;,10,10)
-----&gt; 2 walnuts_invalid = LineItem(&apos;walnuts_invalid&apos;, 0, 10.00)
-
-
-&lt;ipython-input-10-74ad4ef73232&gt; in __init__(self, description, weight, price)
-      2     def __init__(self, description, weight, price):
-      3         self.description = description
-----&gt; 4         self.weight = weight
-      5         self.price = price
-      6 
-
-
-&lt;ipython-input-10-74ad4ef73232&gt; in set_weight(self, value)
-     17             self.__weight = value
-     18         else:
----&gt; 19             raise ValueError(&apos;value must be  &gt; 0&apos;)
-     20     weight = property(fget=get_weight, fset = set_weight)
-
-
-ValueError: value must be  &gt; 0
-</code></pre><h3 id="property会覆盖实例属性"><a href="#property会覆盖实例属性" class="headerlink" title="property会覆盖实例属性"></a>property会覆盖实例属性</h3><p>特性都是类属性，但是特性管理的其实是实例属性的存取。如果实例和所属的类具有同名数据属性，那么实例属性会覆盖类属性。但是实例属性不会遮盖类特性。新添加的类特性会遮盖现有的实例属性。</p>
-<h3 id="为property添加文档"><a href="#为property添加文档" class="headerlink" title="为property添加文档"></a>为property添加文档</h3><p>对于经典调用句法，只需要对property函数传入doc参数即可。对于装饰器用法，读值方法的文档字符串作为特性的文档。</p>
-<h2 id="特性工厂函数"><a href="#特性工厂函数" class="headerlink" title="特性工厂函数"></a>特性工厂函数</h2><p>LineItem类存在一个问题，如果其有多个属性需要做限制，那么我们将需要写若干个读值和设值方法来达到目的，而这些方法实际上都是类似的，显得有些麻烦。而借助特性工厂函数，我们可以不用手动实现这样若干对几乎一致的读值和设值方法。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">quantity</span><span class="params">(storage_name)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">qty_getter</span><span class="params">(instance)</span>:</span></div><div class="line">        <span class="keyword">return</span> instance.__dict__[storage_name]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">qty_setter</span><span class="params">(instance, value)</span>:</span></div><div class="line">        <span class="keyword">if</span> value &gt; <span class="number">0</span>:</div><div class="line">            instance.__dict__[storage_name] = value</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">raise</span> ValueError(<span class="string">'value must be &gt; 0'</span>)</div><div class="line">    <span class="keyword">return</span> property(qty_getter, qty_setter)</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LineItem</span>:</span></div><div class="line">    weight = quantity(<span class="string">'weight'</span>)</div><div class="line">    price = quantity(<span class="string">'price'</span>)</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, description, weight, price)</span>:</span></div><div class="line">        self.description = description</div><div class="line">        self.weight = weight</div><div class="line">        self.price = price</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">subtotal</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.weight * self.price</div></pre></td></tr></table></figure>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1、Fluent Python by Luciano Ramalho (O’Reilly). Copyright 2015 Luciano Ramalho, 978-1-491-94600-8<br>2、<a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143186781871161bc8d6497004764b398401a401d4cce000" target="_blank" rel="external">廖雪峰Python教程–@property</a></p>
+        <h1 id="条款总览"><a href="#条款总览" class="headerlink" title="条款总览"></a>条款总览</h1><h2 id="用Pythonic方式来思考"><a href="#用Pythonic方式来思考" class="headerlink" title="用Pythonic方式来思考"></a>用Pythonic方式来思考</h2><p>1、<strong>确认自己所用的Python版本</strong><br>2、<strong>遵循PEP 8 风格指南</strong><br>3、<strong>了解bytes、str与unicode的区别</strong><br>4、<strong>用辅助函数来取代复杂的表达式</strong><br>5、<strong>了解切割序列的方法</strong><br>6、<strong>在单次切片操作内，不要同时指定start、end和stride</strong><br>7、<strong>用列表推导取代 map 和 filter</strong><br>8、<strong>不要使用含有两个以上表达式的列表推导</strong><br>9、<strong>用生成器表达式来改写数据量较大的列表推导</strong><br>列表推导方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">value = [len(x) <span class="keyword">for</span> x <span class="keyword">in</span> open(<span class="string">'/tmp/my_file.txt'</span>)]</div><div class="line">print(value)</div></pre></td></tr></table></figure></p>
+<p>生成器表达式是对列表推导和生成器的一种泛化。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">it = (len(x) <span class="keyword">for</span> x <span class="keyword">in</span> open(<span class="string">'/tmp/my_file.txt'</span>))</div><div class="line">print(it)</div><div class="line">print(next(it))</div></pre></td></tr></table></figure></p>
+<p>输入数据量较大时，列表推导可能会因为占用太多内存而出问题 。有生成器表达式所返回的迭代器，可以逐次产生输入值，从而避免了内存用量问题。把某个生成器表达式所返回的迭代器，放在另一个生成器表达式的for子表达式中，可将二者组合起来。串在一起的生成器表达式执行速度更快。<br>10、<strong>尽量用enumerate取代range</strong><br>enumerate函数提供了一种精简的写法，可以在遍历迭代器时获知每个元素的索引。尽量用enumerate来改写那种将range与下标访问相结合的序列遍历代码。可以给enumerate提供第二个参数，以指定开始计数时所用的值(默认值是0)<br>11、<strong>用zip函数同时遍历两个迭代器</strong><br>12、<strong>不要在for和while循环后面写else块</strong><br>13、<strong>合理利用try\except\else\finally结构中的每个代码块</strong><br>无论try块是否发生异常，都可以利用try/finally复合语句中的finally块来执行清理工作。else块可以用来缩减try块中的代码量，并把没有发生异常时所要执行的语句与try/except代码块隔开。顺利运行try块后，若想使得某些操作能在finally块的清理代码之前执行，则可将这些操作写到else块中。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">example</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        do_something()</div><div class="line">    <span class="keyword">except</span> Error <span class="keyword">as</span>  e:</div><div class="line">        <span class="keyword">return</span> UNDEFINED</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        do_otherthing()</div><div class="line">    <span class="keyword">finally</span>:</div><div class="line">        clean()</div></pre></td></tr></table></figure></p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>14、<strong>尽量用异常来表示特殊情况，而不要返回None</strong><br>15、<strong>了解如何在闭包里使用外围作用域中的变量</strong><br>对于定义在某作用域内的闭包来说，它可以引用这些作用域中的变量。使用默认方式对闭包内的变量赋值，不会影响外围作用域中的同名变量。在Python3中，程序可以在闭包内用nonlocal语句来修饰某个名称，使得该闭包能够修改外围作用域中的同名变量。除了一些比较简单的函数，尽量不要使用nonlocal语句。<br>16、<strong>考虑用生成器来改写直接返回列表的函数</strong><br>17、<strong>在参数上面迭代时，要多加小心</strong><br>18、<strong>用数量可变的位置参数减少视觉杂讯</strong><br>在def语句中使用<em>args,即可令函数接受数量可变的位置参数。调用函数时，可以采用</em>操作符，把序列中的元素当成位置参数, 传给该函数。对生成器使用<em>操作符，可能导致程序耗尽内存并崩溃。在已经接受 </em>args参数的函数上面继续添加位置参数，可能会产生难以排查的bug。<br>19、<strong>用关键字参数来表示可选的行为</strong><br>函数参数可以按位置或关键字来指定。只使用位置参数来调用函数，可能会导致这些参数值的含义不够明确，而关键字参数则能够阐明每个参数的意图。给函数添加新的行为时，可以使用带默认值的关键字参数，以便与原有的函数调用代码保持兼容。可选的关键字参数，总是应该以关键字形式来指定，而不应该以位置参数的形式来指定。<br>20、<strong>用None和文档字符串来描述具有动态默认值的参数</strong><br>参数的默认值，只会在程序加载模块并读到本函数的定义时评估一次，对于{}或[]等动态的值，这可能会导致奇怪的行为。对于以动态值作为实际默认值的关键字参数来说，应该把形式上的默认值写为None，并在函数的文档字符串里描述该默认值所对应的实际行为。<br>21、<strong>用只能以关键字形式指定的参数来确保代码明晰</strong><br>实现方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">function</span><span class="params">(args1,args2,*,args3=default_args,args4=default_args)</span></span></div></pre></td></tr></table></figure></p>
+<p>关键字参数能够使函数调用的意图更加明确。对于各参数之间很容易混淆的函数，可以声明只能以关键字形式指定的参数，以确保调用者必须通过关键字来指定它们。对于接受多个Boolean标志的函数，更应该这样做。</p>
+<h2 id="类与继承"><a href="#类与继承" class="headerlink" title="类与继承"></a>类与继承</h2><p>22、<strong>尽量用辅助类来维护程序的状态，而不要用字典和元组</strong><br>不要使用包含其他字典的字典，也不要使用过长的元组。如果容器中包含简单而又不可变的数据，那么可以先使用namedtuple来表示，待稍后有需要时，再修改为完整的类。保留内部状态的字典如果变得比较复杂，那就应该吧这些代码拆解为多个辅助类。<br>23、<strong>简单的接口应该接受函数，而不是类的实例</strong><br>对于连接各种Python组件的简单接口来说，通常应该给其直接传入函数，而不是先定义某个类，然后再传入该类的实例。Python中的函数和方法都可以像一级类那样引用，因此，它们与其他类型的对象一样，也能够放在表达式里面。通过名为<strong>call</strong>的特殊方法，可以使得该类的实例能够像普通的Python函数那样得到调用。如果要用函数来保存状态，那就应该定义新的类，并令其实现<strong>call</strong>方法，而不要定义带状态的闭包。<br>24、<strong>以@classmethod形式的多态去通用地构建对象</strong><br>Python程序中，每个类只能有一个构造器，也就是<strong>init</strong>方法。通过@classmethod机制，可以用一种与构造器相仿的方式来构造类的对象。通过类方法多态机制，我们能够以更加通用的方式来构建并拼接具体的子类。<br>25、<strong>用super初始化父类</strong><br>Python使用标准的方法解析顺序来解决超类初始化次序及钻石继承问题。总是应该使用内置的super函数来初始化父类。</p>
 
       
 
@@ -288,7 +226,7 @@ ValueError: value must be  &gt; 0
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/11/Properties in Python/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/03/12/effective-python-notes/">展开全文 >></a>
         </p>
       
 
@@ -323,7 +261,7 @@ ValueError: value must be  &gt; 0
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
     </nav>
   
 
@@ -423,19 +361,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -443,7 +377,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -459,11 +397,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-mobilenet-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Properties in Python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/06/mobilenet-notes/">MobileNets论文笔记</a>
+      <a class="article-title" href="/2018/03/11/Properties in Python/">Properties in Python</a>
     </h1>
   
 
         
-        <a href="/2018/03/06/mobilenet-notes/" class="archive-article-date">
-  	<time datetime="2018-03-06T13:08:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-06</time>
+        <a href="/2018/03/11/Properties in Python/" class="archive-article-date">
+  	<time datetime="2018-03-11T02:22:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-11</time>
 </a>
         
       </header>
@@ -183,15 +183,77 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MobileNetV1"><span class="toc-text">MobileNetV1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MobileNetV2"><span class="toc-text">MobileNetV2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现-1"><span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Properties-in-Python"><span class="toc-text">Properties in Python</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#property-初探"><span class="toc-text">property 初探</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深入理解-property"><span class="toc-text">深入理解 property</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#property会覆盖实例属性"><span class="toc-text">property会覆盖实例属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为property添加文档"><span class="toc-text">为property添加文档</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特性工厂函数"><span class="toc-text">特性工厂函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
 </div>
 
-        <p>MobileNets论文笔记，包括MobileNetV1和MobileNetV2。</p>
-<h1 id="MobileNetV1"><a href="#MobileNetV1" class="headerlink" title="MobileNetV1"></a>MobileNetV1</h1><p>MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。<br>其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。<br><img src="https://wwdguu.github.io/2018/03/06/mobilenet-notes/dsc.png" alt="Depthwise Separable Convolution"></p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p><strong>网络结构定义</strong><br><img src="mobilenet_v1.JPG" alt="MobilenetV1网络结构"><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># MobilenetV1 base </span></div><div class="line">Conv = namedtuple(<span class="string">'Conv'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>])</div><div class="line">DepthSepConv = namedtuple(<span class="string">'DepthSepConv'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>])</div><div class="line">MOBILENT_CONV_DEFS = [</div><div class="line">    Conv(stride=<span class="number">2</span>, depth=<span class="number">32</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">64</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">128</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">128</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">256</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">256</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">1024</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">1024</span>)</div><div class="line">]</div></pre></td></tr></table></figure></p>
-<h1 id="MobileNetV2"><a href="#MobileNetV2" class="headerlink" title="MobileNetV2"></a>MobileNetV2</h1><p>MobileNetV2在MobileNetV1的基础上做了一些改进，其实我更感兴趣的是作者提出SSDLite，将MobileNetV2用于目标检测，其精度和速度都超过了YOLOv2。</p>
-<h2 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h2><p><strong>网络结构</strong><br><img src="mobilenet_v2.JPG" alt="MobilenetV2结构"><br><strong>微结构单元</strong><br>注意stride=1时有残差结构，stride=2时无残差结构。<br><img src="inverted_residual.JPG" alt="Inverted Residual"><br><strong>结构定义</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">InvertedResidual = namedtuple(<span class="string">'InvertedResidual'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>, <span class="string">'num'</span>, <span class="string">'t'</span>])</div><div class="line">MOBILENET_V2_CONV_DEFS = [</div><div class="line">    Conv(stride=<span class="number">2</span>, depth=<span class="number">32</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">16</span>, num=<span class="number">1</span>, t=<span class="number">1</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">24</span>, num=<span class="number">2</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">32</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">64</span>, num=<span class="number">4</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">96</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">160</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">320</span>, num=<span class="number">1</span>, t=<span class="number">6</span>),</div><div class="line">]</div></pre></td></tr></table></figure></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://arxiv.org/abs/1704.04861" target="_blank" rel="external">MobileNetV1 paper</a><br><a href="https://arxiv.org/abs/1801.04381" target="_blank" rel="external">MobileNetV2 paper</a><br><a href="http://cuijiahua.com/blog/2018/02/dl_6.html" target="_blank" rel="external">MobileNets详解</a><br><a href="https://github.com/ShuangXieIrene/ssds.pytorch/blob/master/lib/modeling/nets/mobilenet.py" target="_blank" rel="external">Mobilenet pytorch实现</a><br><a href="https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.py" target="_blank" rel="external">tensorflow mobilenet_v1</a><br><a href="https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v2.py" target="_blank" rel="external">tensorflow mobilenet_v2</a></p>
+        <h1 id="Properties-in-Python"><a href="#Properties-in-Python" class="headerlink" title="Properties in Python"></a>Properties in Python</h1><h2 id="property-初探"><a href="#property-初探" class="headerlink" title="property 初探"></a>property 初探</h2><p>Properties 通常用于把公开的属性变成使用读值方法和设值方法管理的属性，且在不影响客户端代码的前提下实施业务规则。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LineItem</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, description, weight, price)</span>:</span></div><div class="line">        self.description = description</div><div class="line">        self.weight = weight</div><div class="line">        self.price = price</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">subtotal</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.weight * self.price</div><div class="line">    </div><div class="line">    <span class="comment"># 读值方法</span></div><div class="line"><span class="meta">    @property</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">weight</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__weight</div><div class="line">    </div><div class="line">    <span class="comment"># 设值方法</span></div><div class="line"><span class="meta">    @weight.setter</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">weight</span><span class="params">(self, value)</span>:</span></div><div class="line">        <span class="keyword">if</span> value &gt; <span class="number">0</span>:</div><div class="line">            self.__weight = value</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">raise</span> ValueError(<span class="string">'value must be  &gt; 0'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">walnuts_valid = LineItem(<span class="string">'walnuts_valid'</span>,<span class="number">10</span>,<span class="number">10</span>)</div><div class="line">walnuts_invalid = LineItem(<span class="string">'walnuts_invalid'</span>, <span class="number">0</span>, <span class="number">10.00</span>)</div></pre></td></tr></table></figure>
+<pre><code>10
+
+
+
+---------------------------------------------------------------------------
+
+ValueError                                Traceback (most recent call last)
+
+&lt;ipython-input-9-68054ba7debc&gt; in &lt;module&gt;()
+      1 walnuts_valid = LineItem(&apos;walnuts_valid&apos;,10,10)
+      2 print(walnuts_valid.weight)
+----&gt; 3 walnuts_invalid = LineItem(&apos;walnuts_invalid&apos;, 0, 10.00)
+
+
+&lt;ipython-input-8-2cd43540d5e1&gt; in __init__(self, description, weight, price)
+      2     def __init__(self, description, weight, price):
+      3         self.description = description
+----&gt; 4         self.weight = weight
+      5         self.price = price
+      6 
+
+
+&lt;ipython-input-8-2cd43540d5e1&gt; in weight(self, value)
+     19             self.__weight = value
+     20         else:
+---&gt; 21             raise ValueError(&apos;value must be  &gt; 0&apos;)
+
+
+ValueError: value must be  &gt; 0
+</code></pre><p>如上所示，我们使用property禁止了用户为 weight 属性提供负值或零。值得注意的是，如果一个属性只有读值方法而没有设值方法，那么该属性就是只读属性，对其赋值的操作是不被允许的。</p>
+<h2 id="深入理解-property"><a href="#深入理解-property" class="headerlink" title="深入理解 property"></a>深入理解 property</h2><p>虽然内置的property经常用于装饰器，但是其实它是一个类。而Python中，函数和类通常可以互换。property构造方法的完整签名如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">property(fget=<span class="keyword">None</span>, fset=<span class="keyword">None</span>, fdel=<span class="keyword">None</span>, doc=<span class="keyword">None</span>)</div></pre></td></tr></table></figure>
+<p>其所有参数均是可选的，如果没有把某个函数传递给某个参数，那么得到的特性对象就不允许执行相应操作。<br>下面是一个不使用装饰器定义的经典方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LineItem</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, description, weight, price)</span>:</span></div><div class="line">        self.description = description</div><div class="line">        self.weight = weight</div><div class="line">        self.price = price</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">subtotal</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.weight * self.price</div><div class="line">    </div><div class="line">    <span class="comment"># 读值方法</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_weight</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__weight</div><div class="line">    </div><div class="line">    <span class="comment"># 设值方法</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set_weight</span><span class="params">(self, value)</span>:</span></div><div class="line">        <span class="keyword">if</span> value &gt; <span class="number">0</span>:</div><div class="line">            self.__weight = value</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">raise</span> ValueError(<span class="string">'value must be  &gt; 0'</span>)</div><div class="line">    weight = property(fget=get_weight, fset = set_weight)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">walnuts_valid = LineItem(<span class="string">'walnuts_valid'</span>,<span class="number">10</span>,<span class="number">10</span>)</div><div class="line">walnuts_invalid = LineItem(<span class="string">'walnuts_invalid'</span>, <span class="number">0</span>, <span class="number">10.00</span>)</div></pre></td></tr></table></figure>
+<pre><code>---------------------------------------------------------------------------
+
+ValueError                                Traceback (most recent call last)
+
+&lt;ipython-input-11-2126031d851a&gt; in &lt;module&gt;()
+      1 walnuts_valid = LineItem(&apos;walnuts_valid&apos;,10,10)
+----&gt; 2 walnuts_invalid = LineItem(&apos;walnuts_invalid&apos;, 0, 10.00)
+
+
+&lt;ipython-input-10-74ad4ef73232&gt; in __init__(self, description, weight, price)
+      2     def __init__(self, description, weight, price):
+      3         self.description = description
+----&gt; 4         self.weight = weight
+      5         self.price = price
+      6 
+
+
+&lt;ipython-input-10-74ad4ef73232&gt; in set_weight(self, value)
+     17             self.__weight = value
+     18         else:
+---&gt; 19             raise ValueError(&apos;value must be  &gt; 0&apos;)
+     20     weight = property(fget=get_weight, fset = set_weight)
+
+
+ValueError: value must be  &gt; 0
+</code></pre><h3 id="property会覆盖实例属性"><a href="#property会覆盖实例属性" class="headerlink" title="property会覆盖实例属性"></a>property会覆盖实例属性</h3><p>特性都是类属性，但是特性管理的其实是实例属性的存取。如果实例和所属的类具有同名数据属性，那么实例属性会覆盖类属性。但是实例属性不会遮盖类特性。新添加的类特性会遮盖现有的实例属性。</p>
+<h3 id="为property添加文档"><a href="#为property添加文档" class="headerlink" title="为property添加文档"></a>为property添加文档</h3><p>对于经典调用句法，只需要对property函数传入doc参数即可。对于装饰器用法，读值方法的文档字符串作为特性的文档。</p>
+<h2 id="特性工厂函数"><a href="#特性工厂函数" class="headerlink" title="特性工厂函数"></a>特性工厂函数</h2><p>LineItem类存在一个问题，如果其有多个属性需要做限制，那么我们将需要写若干个读值和设值方法来达到目的，而这些方法实际上都是类似的，显得有些麻烦。而借助特性工厂函数，我们可以不用手动实现这样若干对几乎一致的读值和设值方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">quantity</span><span class="params">(storage_name)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">qty_getter</span><span class="params">(instance)</span>:</span></div><div class="line">        <span class="keyword">return</span> instance.__dict__[storage_name]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">qty_setter</span><span class="params">(instance, value)</span>:</span></div><div class="line">        <span class="keyword">if</span> value &gt; <span class="number">0</span>:</div><div class="line">            instance.__dict__[storage_name] = value</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">raise</span> ValueError(<span class="string">'value must be &gt; 0'</span>)</div><div class="line">    <span class="keyword">return</span> property(qty_getter, qty_setter)</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LineItem</span>:</span></div><div class="line">    weight = quantity(<span class="string">'weight'</span>)</div><div class="line">    price = quantity(<span class="string">'price'</span>)</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, description, weight, price)</span>:</span></div><div class="line">        self.description = description</div><div class="line">        self.weight = weight</div><div class="line">        self.price = price</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">subtotal</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.weight * self.price</div></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1、Fluent Python by Luciano Ramalho (O’Reilly). Copyright 2015 Luciano Ramalho, 978-1-491-94600-8<br>2、<a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143186781871161bc8d6497004764b398401a401d4cce000" target="_blank" rel="external">廖雪峰Python教程–@property</a></p>
 
       
 
@@ -205,7 +267,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">paper</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
         		</li>
       		
 		</ul>
@@ -217,7 +279,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/paper//" class="article-tag-list-link color1">paper</a>
+        			<a href="/categories/python//" class="article-tag-list-link color2">python</a>
         		</li>
       		
 		</ul>
@@ -226,7 +288,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/06/mobilenet-notes/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/03/11/Properties in Python/">展开全文 >></a>
         </p>
       
 
@@ -261,7 +323,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
     </nav>
   
 
@@ -361,19 +423,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -381,7 +439,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -397,11 +459,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
