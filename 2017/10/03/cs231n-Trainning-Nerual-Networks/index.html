@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/overfitting1.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/visualization.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2017/10/03/cs231n-Trainning-Nerual-Networks/compare_update.jpg">
-<meta property="og:updated_time" content="2018-01-20T12:18:35.759Z">
+<meta property="og:updated_time" content="2018-03-29T10:42:38.593Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Trainning-Nerual-Networks">
 <meta name="twitter:description" content="主要介绍训练神经网络的一些技巧，是对cs231n spring 2017 课程 lecture 6、7两节内容的一个整理。 激活函数激活函数的作用就是引入一个非线性变换，起到一个激活作用。常见的激活函数有sigmoid,tanh,ReLU,Leaky ReLU等。下面分别介绍。 sigmoidsigmoid的表达式是 σ(x)=1/(1+exp(-x))。其图像如下图所示：它有两个明显的缺点使得现">
@@ -230,7 +230,7 @@
 <h2 id="随机小数初始化"><a href="#随机小数初始化" class="headerlink" title="随机小数初始化"></a>随机小数初始化</h2><p>另一种方式就是随机小数初始化，W=0.01*np.random.randn(D,H)。但是事实上这种初始化方式并没有更好的表现。因为如果一个神经网络层具有很小的权重，那么计算出的梯度也会逐渐。考虑一个10层的网络结果，有500个神经元，tanh作为激活函数。实验中出现，随着层数增加，最后就会出现绝大多数参数为0的情况，这又遇到了和全初始化为零一样的问题。有一种设想是改变随机数前面的系数从0.01改为1，这样在实践中又会造成几乎所有神经元的饱和，其值不是-1就是1，而梯度都为0。</p>
 <h2 id="用sqrt-N-校正"><a href="#用sqrt-N-校正" class="headerlink" title="用sqrt(N)校正"></a>用sqrt(N)校正</h2><p>初始化为W=np.random.randn(n)/sqrt(n)，这在以tanh为激活函数的时候有比较好的效果，但是在以ReLU为激活函数的时候效果就不太好了。其实目前在实践中最推荐的初始化方式是W=np.random.randn(n)/sqrt(2/n),激活函数为ReLU。</p>
 <h2 id="偏置量的初始化"><a href="#偏置量的初始化" class="headerlink" title="偏置量的初始化"></a>偏置量的初始化</h2><p>最常用的方式就是将偏置初始化为0，当然也有做法将偏置统一初始化为一个小数，比如0.01。</p>
-<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><p>参考<br><a href="https://arxiv.org/abs/1502.03167" target="_blank" rel="external">batch normalization 论文</a><br><a href="https://www.quora.com/Why-does-batch-normalization-help" target="_blank" rel="external">quaro</a><br><a href="http://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html" target="_blank" rel="external">参考1</a></p>
+<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><p>参考<br><a href="https://arxiv.org/abs/1502.03167" target="_blank" rel="external">batch normalization 论文</a><br><a href="https://www.quora.com/Why-does-batch-normalization-help" target="_blank" rel="external">quaro</a><br><a href="http://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html" target="_blank" rel="external">参考1</a><br><a href="http://jermmy.xyz/2017/09/02/2017-9-2-paper-notes-batch-normalization/" target="_blank" rel="external">论文笔记：Batch Normalization</a><br><a href="https://www.youtube.com/watch?v=BZh1ltr5Rkg&amp;t=21s" target="_blank" rel="external">视频讲解</a></p>
 <h1 id="Regularization-正则化"><a href="#Regularization-正则化" class="headerlink" title="Regularization(正则化)"></a>Regularization(正则化)</h1><p>正则化的目的就是防止过拟合。主要有以下几种方式。</p>
 <h2 id="L2-regularization"><a href="#L2-regularization" class="headerlink" title="L2 regularization"></a>L2 regularization</h2><p>这是一种比较常用的正则化方法，对每个权重的平方都进行正则化惩罚，常常设置为0.5<em>λ</em>W<em>W，λ是一个超参数，前面加一个0.5的系数是为了方便反向传播的时候求导为λ</em>W。</p>
 <h2 id="L1-regularization"><a href="#L1-regularization" class="headerlink" title="L1 regularization"></a>L1 regularization</h2><p>L1 regularization 也是常用的正则化方法，也可以同时使用这两种方法，设置惩罚项为<br>λ1<em>abs(W)+λ2</em>W*W。</p>
@@ -523,18 +523,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
@@ -543,11 +531,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -563,11 +559,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">

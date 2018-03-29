@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-pytorch-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-ads-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/25/pytorch-notes/">Pytorch使用问题记录</a>
+      <a class="article-title" href="/2018/03/18/ads-notes/">ads_notes</a>
     </h1>
   
 
         
-        <a href="/2018/03/25/pytorch-notes/" class="archive-article-date">
-  	<time datetime="2018-03-25T06:40:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-25</time>
+        <a href="/2018/03/18/ads-notes/" class="archive-article-date">
+  	<time datetime="2018-03-18T08:37:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-18</time>
 </a>
         
       </header>
@@ -183,12 +183,10 @@
       
         
 <div id="toc">
-  
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#高级数据结构课程资料"><span class="toc-text">高级数据结构课程资料</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#week1-AVL-Trees-Splay-Trees-and-Amoritized-Analysis"><span class="toc-text">week1 AVL Trees, Splay Trees and Amoritized Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AVL-Trees"><span class="toc-text">AVL Trees</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Splay-Trees"><span class="toc-text">Splay Trees</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Amoritized-Analysis"><span class="toc-text">Amoritized Analysis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Week2-Red-Black-Trees-and-B-Trees"><span class="toc-text">Week2 Red-Black Trees and B+ Trees</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Red-Black-Trees"><span class="toc-text">Red-Black Trees</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B-Trees"><span class="toc-text">B+ Trees</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
 </div>
 
-        <p>主要记录使用pytorch过程中的一些问题及解决方法<br>1、<strong>GPU训练网络后，在CPU中使用的问题</strong><br>1.1、使用load_static_dict API时需要根据是否使用GPU指定map参数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> self.num_gpu == <span class="number">0</span>:</div><div class="line">    map_location = <span class="keyword">lambda</span> storage, loc: storage</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    map_location = <span class="keyword">None</span></div></pre></td></tr></table></figure></p>
-<p>1.2、在我的一次实验中，多GPU训练后保存的pth模型和单GPU的有点不太一致，使得多GPU的模型不能在CPU上加载。解决方案是，先在多GPU训练，最后几个epoch使用单GPU训练，之后保存单GPU的训练模型。</p>
-
+        <h1 id="高级数据结构课程资料"><a href="#高级数据结构课程资料" class="headerlink" title="高级数据结构课程资料"></a>高级数据结构课程资料</h1><h2 id="week1-AVL-Trees-Splay-Trees-and-Amoritized-Analysis"><a href="#week1-AVL-Trees-Splay-Trees-and-Amoritized-Analysis" class="headerlink" title="week1 AVL Trees, Splay Trees and Amoritized Analysis"></a>week1 AVL Trees, Splay Trees and Amoritized Analysis</h2><h3 id="AVL-Trees"><a href="#AVL-Trees" class="headerlink" title="AVL Trees"></a>AVL Trees</h3><h3 id="Splay-Trees"><a href="#Splay-Trees" class="headerlink" title="Splay Trees"></a>Splay Trees</h3><h3 id="Amoritized-Analysis"><a href="#Amoritized-Analysis" class="headerlink" title="Amoritized Analysis"></a>Amoritized Analysis</h3><h2 id="Week2-Red-Black-Trees-and-B-Trees"><a href="#Week2-Red-Black-Trees-and-B-Trees" class="headerlink" title="Week2 Red-Black Trees and B+ Trees"></a>Week2 Red-Black Trees and B+ Trees</h2><h3 id="Red-Black-Trees"><a href="#Red-Black-Trees" class="headerlink" title="Red-Black Trees"></a>Red-Black Trees</h3><h3 id="B-Trees"><a href="#B-Trees" class="headerlink" title="B+ Trees"></a>B+ Trees</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2>
       
 
       
@@ -201,7 +199,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">pytorch</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">algorithm</a>
         		</li>
       		
 		</ul>
@@ -213,7 +211,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/pytorch//" class="article-tag-list-link color3">pytorch</a>
+        			<a href="/categories/algorithm//" class="article-tag-list-link color5">algorithm</a>
         		</li>
       		
 		</ul>
@@ -222,7 +220,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/25/pytorch-notes/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/03/18/ads-notes/">展开全文 >></a>
         </p>
       
 
@@ -257,7 +255,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 
@@ -353,18 +351,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
@@ -373,11 +359,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -393,11 +387,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
