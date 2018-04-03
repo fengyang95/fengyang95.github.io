@@ -16,13 +16,13 @@
 <meta property="og:site_name" content="Fengyang">
 <meta property="og:description" content="因为毕设是做关于目标检测的项目，也看了一些目标检测的论文，由于项目对实时性的要求，最后选用了MobilenetV2+SSD作为基础结构，也仔细阅读了SSD的论文，现梳理如下。 亮点一步完成检测，同时进行边框回归和类别预测，相对于两步完成的网络在时间上会快很多。结合多个feature maps的特征进行预测。 基本结构基本思想在不同尺度的feature map上指定一系列default boxes。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://wwdguu.github.io/2018/03/27/ssd-detailed/ssd_detailed/default_boxes.jpg">
-<meta property="og:image" content="https://wwdguu.github.io/2018/03/27/ssd-detailed/ssd-detailed/ssd_architecture.jpg">
-<meta property="og:updated_time" content="2018-04-03T03:49:57.530Z">
+<meta property="og:image" content="https://wwdguu.github.io/2018/03/27/ssd-detailed/default_boxes.jpg">
+<meta property="og:image" content="https://wwdguu.github.io/2018/03/27/ssd-detailed/ssd_architecture.jpg">
+<meta property="og:updated_time" content="2018-04-03T03:54:02.133Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SSD-Single Shot MultiBox Detector">
 <meta name="twitter:description" content="因为毕设是做关于目标检测的项目，也看了一些目标检测的论文，由于项目对实时性的要求，最后选用了MobilenetV2+SSD作为基础结构，也仔细阅读了SSD的论文，现梳理如下。 亮点一步完成检测，同时进行边框回归和类别预测，相对于两步完成的网络在时间上会快很多。结合多个feature maps的特征进行预测。 基本结构基本思想在不同尺度的feature map上指定一系列default boxes。">
-<meta name="twitter:image" content="https://wwdguu.github.io/2018/03/27/ssd-detailed/ssd_detailed/default_boxes.jpg">
+<meta name="twitter:image" content="https://wwdguu.github.io/2018/03/27/ssd-detailed/default_boxes.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -190,8 +190,8 @@
 
         <p>因为毕设是做关于目标检测的项目，也看了一些目标检测的论文，由于项目对实时性的要求，最后选用了MobilenetV2+SSD作为基础结构，也仔细阅读了SSD的论文，现梳理如下。</p>
 <h2 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h2><p>一步完成检测，同时进行边框回归和类别预测，相对于两步完成的网络在时间上会快很多。结合多个feature maps的特征进行预测。</p>
-<h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p><img src="ssd_detailed/default_boxes.jpg" alt="feature map"><br>在不同尺度的feature map上指定一系列default boxes。具体来说就是，上图的feature map中，对于每个cell，首先生成k个default boxes，对于每个default box,预测其类别和位置，于是共有(4+cls)个参数。每层的k个default boxes的aspect ratio不同，而不同feature maps上的default boxes的scale不同，这样基本就能适配各种状态下的目标。最后将不同feature maps上的结果综合起来进行训练。这样对于一个输入的大小为mxm的feature map，最后的得到的default boxes个数为 m<em>m</em>k<em>(4+cls),为了达到这样的输出维度，用一个深度为k</em>(4+cls)的3<em>3，stride=1的卷积核即可得到，但是实际上是分为两个不同的卷积来实现，一个深度为4</em>k的loc层，一个深度为k*cls的conf层。</p>
-<h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h3><p><img src="ssd-detailed/ssd_architecture.jpg" alt="SSD网络结构"><br>SSD的网络结构中包括base部分的特征提取层，以及额外的extra layer用于生成不同尺度的feature map用于default boxes的生成。base部分理论上可以是任何用于classification的卷积网络。在原论文中，作者使用VGG-16作为base网络，feature maps总共有6层，前两层为base 网络中的两个卷积层，后4层feature maps来自extra layers。在6个feature maps上做卷积操作得到综合的输出送入loss层进行回归训练。</p>
+<h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p><img src="default_boxes.jpg" alt="feature map"><br>在不同尺度的feature map上指定一系列default boxes。具体来说就是，上图的feature map中，对于每个cell，首先生成k个default boxes，对于每个default box,预测其类别和位置，于是共有(4+cls)个参数。每层的k个default boxes的aspect ratio不同，而不同feature maps上的default boxes的scale不同，这样基本就能适配各种状态下的目标。最后将不同feature maps上的结果综合起来进行训练。这样对于一个输入的大小为mxm的feature map，最后的得到的default boxes个数为 m<em>m</em>k<em>(4+cls),为了达到这样的输出维度，用一个深度为k</em>(4+cls)的3<em>3，stride=1的卷积核即可得到，但是实际上是分为两个不同的卷积来实现，一个深度为4</em>k的loc层，一个深度为k*cls的conf层。</p>
+<h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h3><p><img src="ssd_architecture.jpg" alt="SSD网络结构"><br>SSD的网络结构中包括base部分的特征提取层，以及额外的extra layer用于生成不同尺度的feature map用于default boxes的生成。base部分理论上可以是任何用于classification的卷积网络。在原论文中，作者使用VGG-16作为base网络，feature maps总共有6层，前两层为base 网络中的两个卷积层，后4层feature maps来自extra layers。在6个feature maps上做卷积操作得到综合的输出送入loss层进行回归训练。</p>
 <h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><h3 id="prior-box的生成"><a href="#prior-box的生成" class="headerlink" title="prior box的生成"></a>prior box的生成</h3><p>实际上就是解决不同level的feature maps上的default boxes如何与原图上的default boxes相对应的问题，也就是根据default box的4个offset参数，如何找到其在原图上的对应坐标。这就是prior box的生成问题。<br>简单来说就是根据scale以及aspect ratio按照步长生成，步长就相当于feature map中一个像素对应的原图中的像素数，实际上就是原图大小和feature map的比值。论文中生成的坐标格式是[cx,cy,w,h]格式。</p>
 <h3 id="匹配策略"><a href="#匹配策略" class="headerlink" title="匹配策略"></a>匹配策略</h3><p>在确定default box和 groud truth的对应关系时，采用best jaccard overlap方法，对于jaccard overlap高于一个阈值(0.5)的匹配对，我们都认为它们匹配成功。然后利用这些匹配对计算loss，进行回归。</p>
 <h3 id="loss-function"><a href="#loss-function" class="headerlink" title="loss function"></a>loss function</h3><p>loss由loc loss和 conf loss两部分组成，分别表示定位损失和分类损失，具体计算公式在原文中讲的很具体。</p>
@@ -438,15 +438,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -454,11 +450,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">cuda</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -474,6 +474,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
@@ -482,15 +486,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
               </li>
             
             <div class="clearfix"></div>
