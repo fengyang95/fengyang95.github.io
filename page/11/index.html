@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-thinking-in-java-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-thinkingng-in-javavava-notes-interfaces-and-inner-classes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/22/thinking-in-java-notes/">Thinking in Java Notes -- Basic</a>
+      <a class="article-title" href="/2018/01/23/thinkingng-in-javavava-notes-interfaces-and-inner-classes/">Thinking in Java Notes -- Interfaces and Inner Classes</a>
     </h1>
   
 
         
-        <a href="/2018/01/22/thinking-in-java-notes/" class="archive-article-date">
-  	<time datetime="2018-01-22T12:48:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-22</time>
+        <a href="/2018/01/23/thinkingng-in-javavava-notes-interfaces-and-inner-classes/" class="archive-article-date">
+  	<time datetime="2018-01-22T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-23</time>
 </a>
         
       </header>
@@ -183,16 +183,22 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第1章-对象导论"><span class="toc-text">第1章 对象导论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第2章-一切都是对象"><span class="toc-text">第2章 一切都是对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第3章-操作符"><span class="toc-text">第3章 操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第4章-控制执行流程"><span class="toc-text">第4章 控制执行流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第5章-初始化与清理"><span class="toc-text">第5章 初始化与清理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第6章-访问权限控制"><span class="toc-text">第6章 访问权限控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第7章-复用类"><span class="toc-text">第7章 复用类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第8章-多态"><span class="toc-text">第8章 多态</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Interfaces"><span class="toc-text">Interfaces</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#抽象类和抽象方法"><span class="toc-text">抽象类和抽象方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口"><span class="toc-text">接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完全解耦"><span class="toc-text">完全解耦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用接口实现多重继承"><span class="toc-text">用接口实现多重继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过继承来扩展接口"><span class="toc-text">通过继承来扩展接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#适配接口"><span class="toc-text">适配接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口中的域"><span class="toc-text">接口中的域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套接口"><span class="toc-text">嵌套接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口与工厂"><span class="toc-text">接口与工厂</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Inner-Classess"><span class="toc-text">Inner Classess</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建内部类"><span class="toc-text">创建内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#链接到外部类"><span class="toc-text">链接到外部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-this与-new"><span class="toc-text">使用.this与.new</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内部类与向上转型"><span class="toc-text">内部类与向上转型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在方法和作用域内的内部类"><span class="toc-text">在方法和作用域内的内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#匿名内部类"><span class="toc-text">匿名内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套类"><span class="toc-text">嵌套类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么需要内部类"><span class="toc-text">为什么需要内部类?</span></a></li></ol></li></ol>
 </div>
 
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=29023561&auto=1&height=66"></iframe></p>
-<h2 id="第1章-对象导论"><a href="#第1章-对象导论" class="headerlink" title="第1章 对象导论"></a>第1章 对象导论</h2><h2 id="第2章-一切都是对象"><a href="#第2章-一切都是对象" class="headerlink" title="第2章 一切都是对象"></a>第2章 一切都是对象</h2><p>1、理解static关键词。当声明一个事物是static时，就意味着这个域或方法不会与包含它的那个类的任何对象实例关联在一起。</p>
-<h2 id="第3章-操作符"><a href="#第3章-操作符" class="headerlink" title="第3章 操作符"></a>第3章 操作符</h2><p>1、注意 == 操作符和equals()方法的区别。<br>2、移位操作符&lt;&lt;和&gt;&gt;，对于&lt;&lt;左移操作符，低位补0即可，对于&gt;&gt;右移操作符，采用“符号扩展”，符号为正，在高位插入0，符号为负则在高位插入1。Java中增加了一种有别于其它语言的“无符号”右移操作符&gt;&gt;&gt;，无论正负都在高位插入0。</p>
-<h2 id="第4章-控制执行流程"><a href="#第4章-控制执行流程" class="headerlink" title="第4章 控制执行流程"></a>第4章 控制执行流程</h2><h2 id="第5章-初始化与清理"><a href="#第5章-初始化与清理" class="headerlink" title="第5章 初始化与清理"></a>第5章 初始化与清理</h2><p>1、只能根据参数列表区分重载方法，而不能根据返回值的类型区分重载方法。<br>2、JVM垃圾回收机制。需要之后深入理解。<br>3、成员初始化。Java尽力保证，所有变量在使用前都能得到恰当的初始化。对于方法的局部变量，Java以编译时错误的形式来贯彻这种保证。如果类的数据成员是基本类型，那么可以不用初始化，其保证会有一个默认的初始值。在类里定义一个对象引用时，如果不将其初始化，此引用就会获得一个特殊值null。注意初始化时出现的“向前引用”的错误。<br>4、初始化顺序：类的内部，变量定义的先后顺序决定了初始化的顺序。<br>5、静态数据的初始化：无论创建多少个对象，静态数据都只占用一份存储区域。static关键字不能应用于局部变量，因此它只能作用于域。初始化的顺序是先静态对象（如果它们还没有因为前面的对象创建过程而被初始化），而后是“非静态对象”。<br>6、对象的创建过程大概如下：<br>假设有个名为Dog的类。<br>a、即便没有显式地使用static关键字，构造器实际上也是静态方法，因此，当首次创建类型为Dog的对象时(构造器可以看做static方法)，或者Dog类的静态方法/静态域首次被访问时，Java解释器必须查找类路径，以定位Dog.class文件。<br>b、然后载入Dog.class，有关静态初始化的所有动作都会执行。因此，静态初始化只在Class对象首次加载的时候进行一次。<br>c、当用new Dog() 创建对象的时候，首先将在堆上为Dog对象分配足够的存储空间。<br>d、这块存储空间会被清零，这就自动地将Dog对象中的所有基本类型数据都设置成了默认值，而引用则被设置成了null。<br>e、执行所有出现于字段定义处的初始化动作。<br>f、执行构造器。</p>
-<h2 id="第6章-访问权限控制"><a href="#第6章-访问权限控制" class="headerlink" title="第6章 访问权限控制"></a>第6章 访问权限控制</h2><p>1、关键字<br>   private<br>   protected：继承访问权限。<br>   public：接口访问权限。<br>   默认访问权限：包访问权限。</p>
-<h2 id="第7章-复用类"><a href="#第7章-复用类" class="headerlink" title="第7章 复用类"></a>第7章 复用类</h2><p>1、可以通过组合语法，继承语法，代理，结合使用组合和继承等方法实现类的复用。<br>2、@Override 的使用，当想要覆写某个方法时，可以选择添加这个注解，在不小心重载并非覆写了该方法时，编译器会生成错误信息。<br>3、在组合和继承之间做合适选择。一般来说，is-a关系用继承表达，has-a关系用组合表达。究竟改用组合还是用继承，一个比较清晰的判断方法就是看是否需要从新类向基类进行向上转型，如果必须向上转型，那么继承是必要的；如果不需要，则应该慎重考虑是否需要继承。<br>4、final关键字：包括final参数，final方法， final类的意义。</p>
-<h2 id="第8章-多态"><a href="#第8章-多态" class="headerlink" title="第8章 多态"></a>第8章 多态</h2><p>1、面向对象的语言的特征：数据抽象，继承和多态。<br>2、前期绑定和后期绑定：Java中除了static方法和final方法(private方法属于final方法)之外，其他所有的方法都是后期绑定。实际上将方法声明为final的一个重要原因之一是防止他人覆盖该方法，另一个更为重要的原因则是有效关闭动态绑定。<br>3、缺陷：试图覆盖私有方法。实际上试图在继承类中覆盖基类的私有方法是不对的，如果使用了@Override注解，那么编译会报错，而如果没有使用该注解，那么实际上我们试图要覆盖的那个方法是全新的方法，甚至因为private的权限，这也不是重载。事实上只有非private方法才能被覆盖。<br>4、复杂对象调用构造器按照下面的顺序：a、在其他任何事物发生之前，将分配给对象的存储空间初始化成二进制的零；b、调用基类构造器；c、按声明顺序调用成员的初始化方法；d、调用导出类构造器的主体。</p>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=407002091&auto=1&height=66"></iframe></p>
+<h1 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h1><h2 id="抽象类和抽象方法"><a href="#抽象类和抽象方法" class="headerlink" title="抽象类和抽象方法"></a>抽象类和抽象方法</h2><p>包含抽象方法的类叫做抽象类，如果一个类包含一个或多个抽象方法，该类必须被限定为抽象的。如果从一个抽象类继承，并想创建该新类的对象，那么就必须为基类中的所有抽象方法提供方法定义。</p>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>interface关键字使得抽象的概念更向前迈进一步。interface关键字产生一个完全抽象的类，其根本没有提供任何具体实现。接口可以包含域，但是这些域隐式地是static和final的。接口中定义的方法必须是public的，否则，其就只能得到默认的包访问权限。</p>
+<h2 id="完全解耦"><a href="#完全解耦" class="headerlink" title="完全解耦"></a>完全解耦</h2><p>将接口从具体实现中解耦使得接口可以应用于多种不同的具体实现，因此代码也就更具有可复用性。？ </p>
+<h2 id="用接口实现多重继承"><a href="#用接口实现多重继承" class="headerlink" title="用接口实现多重继承"></a>用接口实现多重继承</h2><p>使用接口的核心原因是：为了能够向上转型为多个基类型以及由此带来的灵活性。第二个原因与使用抽象基类相同：防止客户端程序员创建该类的对象，并确保这仅仅是建立一个接口。如何在接口和抽象类之间进行选择？如果要创建不带任何方法定义和成员变量的基类，那么就应该选择接口而不是抽象类。如果知道某事物应该成为一个基类，那么第一选择是使它成为一个接口。</p>
+<h2 id="通过继承来扩展接口"><a href="#通过继承来扩展接口" class="headerlink" title="通过继承来扩展接口"></a>通过继承来扩展接口</h2><p>通过继承可以容易地在接口中添加新的方法声明，还可以通过继承在新接口中组合数个接口。注意在打算组合的不同接口中使用相同的方法名通常会造成代码可读性的混乱，需要尽量避免这种情况。</p>
+<h2 id="适配接口"><a href="#适配接口" class="headerlink" title="适配接口"></a>适配接口</h2><p>接口最吸引人的原因之一是允许同一个接口有多个不同的具体实现。简单的情况中，它的体现形式通常是一个接受接口类型的方法，而该接口的实现和向该方法传递的对象则取决于方法的使用者。</p>
+<h2 id="接口中的域"><a href="#接口中的域" class="headerlink" title="接口中的域"></a>接口中的域</h2><p>接口中的任何域都自动是static和final的。</p>
+<h2 id="嵌套接口"><a href="#嵌套接口" class="headerlink" title="嵌套接口"></a>嵌套接口</h2><h2 id="接口与工厂"><a href="#接口与工厂" class="headerlink" title="接口与工厂"></a>接口与工厂</h2><p>接口是实现多重继承的途径，而生成遵循某个接口的对象的典型方式就是工厂方法设计模式。</p>
+<h1 id="Inner-Classess"><a href="#Inner-Classess" class="headerlink" title="Inner Classess"></a>Inner Classess</h1><p>将一个类的定义放在另一个类的定义内部，这就是内部类。</p>
+<h2 id="创建内部类"><a href="#创建内部类" class="headerlink" title="创建内部类"></a>创建内部类</h2><p>如果想从外部类的非静态方法之外的任意位置创建某个内部类的对象，那么必须像在main()方法中 那样，具体地指明这个对象的类型: OuterClassName.InnerClassName。</p>
+<h2 id="链接到外部类"><a href="#链接到外部类" class="headerlink" title="链接到外部类"></a>链接到外部类</h2><p>当生成一个内部类的对象时，此对象与制造它的外围对象之间就有了一种联系，所以它能访问其外围对象的所有成员，而不需要任何特殊条件。此外，内部类 还拥有其外围类的所有元素的访问权。</p>
+<h2 id="使用-this与-new"><a href="#使用-this与-new" class="headerlink" title="使用.this与.new"></a>使用.this与.new</h2><h2 id="内部类与向上转型"><a href="#内部类与向上转型" class="headerlink" title="内部类与向上转型"></a>内部类与向上转型</h2><h2 id="在方法和作用域内的内部类"><a href="#在方法和作用域内的内部类" class="headerlink" title="在方法和作用域内的内部类"></a>在方法和作用域内的内部类</h2><h2 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h2><h2 id="嵌套类"><a href="#嵌套类" class="headerlink" title="嵌套类"></a>嵌套类</h2><h2 id="为什么需要内部类"><a href="#为什么需要内部类" class="headerlink" title="为什么需要内部类?"></a>为什么需要内部类?</h2><p>…?<br>不太看得懂，剩下的以后再补充</p>
 
       
 
@@ -227,7 +233,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/22/thinking-in-java-notes/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/23/thinkingng-in-javavava-notes-interfaces-and-inner-classes/">展开全文 >></a>
         </p>
       
 
@@ -262,7 +268,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
     </nav>
   
 
@@ -358,11 +364,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -370,7 +380,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -390,7 +400,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -402,7 +412,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">

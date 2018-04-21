@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-ssd-detailed" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-cpp-smart-ptr" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/27/ssd-detailed/">SSD-Single Shot MultiBox Detector</a>
+      <a class="article-title" href="/2018/04/21/cpp-smart-ptr/">C++中的智能指针笔记</a>
     </h1>
   
 
         
-        <a href="/2018/03/27/ssd-detailed/" class="archive-article-date">
-  	<time datetime="2018-03-27T08:48:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
+        <a href="/2018/04/21/cpp-smart-ptr/" class="archive-article-date">
+  	<time datetime="2018-04-21T07:28:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-21</time>
 </a>
         
       </header>
@@ -183,17 +183,27 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#亮点"><span class="toc-text">亮点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本结构"><span class="toc-text">基本结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本思想"><span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络结构"><span class="toc-text">网络结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现细节"><span class="toc-text">实现细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#prior-box的生成"><span class="toc-text">prior box的生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#匹配策略"><span class="toc-text">匹配策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#loss-function"><span class="toc-text">loss function</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#智能指针"><span class="toc-text">智能指针</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#shared-ptr"><span class="toc-text">shared_ptr</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-ptr的声明和初始化"><span class="toc-text">shared_ptr的声明和初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#析构策略"><span class="toc-text">析构策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-ptr陷阱"><span class="toc-text">shared_ptr陷阱</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#weak-ptr"><span class="toc-text">weak_ptr</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#unique-ptr"><span class="toc-text">unique_ptr</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
-        <p>因为毕设是做关于目标检测的项目，也看了一些目标检测的论文，由于项目对实时性的要求，最后选用了MobilenetV2+SSD作为基础结构，也仔细阅读了SSD的论文，现梳理如下。</p>
-<h2 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h2><p>一步完成检测，同时进行边框回归和类别预测，相对于两步完成的网络在时间上会快很多。结合多个feature maps的特征进行预测。</p>
-<h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p><img src="default_boxes.jpg" alt="feature map"><br>在不同尺度的feature map上指定一系列default boxes。具体来说就是，上图的feature map中，对于每个cell，首先生成k个default boxes，对于每个default box,预测其类别和位置，于是共有(4+cls)个参数。每层的k个default boxes的aspect ratio不同，而不同feature maps上的default boxes的scale不同，这样基本就能适配各种状态下的目标。最后将不同feature maps上的结果综合起来进行训练。这样对于一个输入的大小为mxm的feature map，最后的得到的default boxes个数为 m<em>m</em>k<em>(4+cls),为了达到这样的输出维度，用一个深度为k</em>(4+cls)的3<em>3，stride=1的卷积核即可得到，但是实际上是分为两个不同的卷积来实现，一个深度为4</em>k的loc层，一个深度为k*cls的conf层。</p>
-<h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h3><p><img src="ssd_architecture.jpg" alt="SSD网络结构"><br>SSD的网络结构中包括base部分的特征提取层，以及额外的extra layer用于生成不同尺度的feature map用于default boxes的生成。base部分理论上可以是任何用于classification的卷积网络。在原论文中，作者使用VGG-16作为base网络，feature maps总共有6层，前两层为base 网络中的两个卷积层，后4层feature maps来自extra layers。在6个feature maps上做卷积操作得到综合的输出送入loss层进行回归训练。</p>
-<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><h3 id="prior-box的生成"><a href="#prior-box的生成" class="headerlink" title="prior box的生成"></a>prior box的生成</h3><p>实际上就是解决不同level的feature maps上的default boxes如何与原图上的default boxes相对应的问题，也就是根据default box的4个offset参数，如何找到其在原图上的对应坐标。这就是prior box的生成问题。<br>简单来说就是根据scale以及aspect ratio按照步长生成，步长就相当于feature map中一个像素对应的原图中的像素数，实际上就是原图大小和feature map的比值。论文中生成的坐标格式是[cx,cy,w,h]格式。</p>
-<h3 id="匹配策略"><a href="#匹配策略" class="headerlink" title="匹配策略"></a>匹配策略</h3><p>在确定default box和 groud truth的对应关系时，采用best jaccard overlap方法，对于jaccard overlap高于一个阈值(0.5)的匹配对，我们都认为它们匹配成功。然后利用这些匹配对计算loss，进行回归。</p>
-<h3 id="loss-function"><a href="#loss-function" class="headerlink" title="loss function"></a>loss function</h3><p>loss由loc loss和 conf loss两部分组成，分别表示定位损失和分类损失，具体计算公式在原文中讲的很具体。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://arxiv.org/abs/1512.02325" target="_blank" rel="external">SSD论文</a><br><a href="https://github.com/ShuangXieIrene/ssds.pytorch" target="_blank" rel="external">ssds.pytorch</a><br><a href="http://www.cnblogs.com/xuanyuyt/p/7222867.html" target="_blank" rel="external">SSD阅读笔记</a><br><a href="https://zhuanlan.zhihu.com/p/33544892" target="_blank" rel="external">目标检测|SSD原理与实现</a></p>
+        <p>最近在看opencv的文档时，对cv::Ptr类了解了一些，其与STL中的shared_ptr类似，是一种智能指针，于是又看了《C++标准库》中有关智能指针的章节和《C++ Primer》中的有关智能指针的章节，将智能指针所涉及的一些内容总结如下。</p>
+<h1 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h1><p>C++中比较棘手的一个问题就是内存的管理，指针在其中扮演了及其重要的作用，但是同时对指针的不当使用会造成很多问题。自C++11起，STL提供了两大类型的智能指针，使得对指针的操作更加安全。其中shared_ptr类实现了共享式拥有概念，而unique_ptr实现了独占式拥有概念。另外还有weak_ptr等辅助类。所有这些指针类都定义在头文件<memory>中。</memory></p>
+<h1 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h1><p>shared_ptr主要使用一种称为引用计数的方法来管理其所指向的内容。当该指针多指向一个内容时，引用计数加一，少指向一个内容时，引用计数值减1，当引用计数值减到0时，该内容会被自动删除。</p>
+<h2 id="shared-ptr的声明和初始化"><a href="#shared-ptr的声明和初始化" class="headerlink" title="shared_ptr的声明和初始化"></a>shared_ptr的声明和初始化</h2><p>1、<strong>使用构造函数初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div></pre></td></tr></table></figure></p>
+<p>2、<strong>新式初始化语法</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt&#123;<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>)&#125;;</div></pre></td></tr></table></figure></p>
+<p>3、<strong>使用make_shared()初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt=<span class="built_in">std</span>::make_shared&lt;<span class="keyword">int</span>&gt;(<span class="number">1</span>);</div></pre></td></tr></table></figure></p>
+<p>4、<strong>先声明shared pointer，然后使用reset()方法赋值</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt;</div><div class="line">pInt.reset(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div></pre></td></tr></table></figure></p>
+<p><strong>注意不能使用赋值符进行初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
+<p>最常用和可靠的初始化方法是使用make_shared()函数。</p>
+<h2 id="析构策略"><a href="#析构策略" class="headerlink" title="析构策略"></a>析构策略</h2><p>实际上，我们可以声明特化的deleter，可以通过传递一个lambda作为shared_ptr构造函数的第二实参。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>),[](<span class="keyword">int</span>* p)&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"delete "</span>&lt;&lt;*p&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">delete</span> p;</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
+<p><strong>注意</strong>：shared_ptr提供的default deleter 调用的是 delete,而不是delete [],<br>所以即便为array建立一个shared_ptr是可以的，但是却有致命错误，解决方法是<br>为其指定delete []作为析构函数。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>]);<span class="comment">//ERROR,能通过编译</span></div><div class="line"><span class="comment">//(《C++标准库》一书中这样写，但是实际测试没有出现问题？)</span></div><div class="line"></div><div class="line"><span class="comment">//解决方案</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>],[](<span class="keyword">int</span>* p)&#123;</div><div class="line">    <span class="keyword">delete</span>[] p;</div><div class="line">    &#125;)</div><div class="line"><span class="comment">//也可以这样</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>],<span class="built_in">std</span>::default_delete&lt;<span class="keyword">int</span>[]&gt;());</div></pre></td></tr></table></figure></p>
+<p><strong>如果析构时不仅仅需要删除内存，还需要 一些其它操作，那么必须指定deleter</strong></p>
+<h2 id="shared-ptr陷阱"><a href="#shared-ptr陷阱" class="headerlink" title="shared_ptr陷阱"></a>shared_ptr陷阱</h2><p><strong>1、cyclic reference问题</strong><br>两个对象使用shared_ptr互相指向对方时，使用shared_ptr无法释放相应的资源，因为<br>每个对象的use_count()至少为1。<br><strong>解决方法</strong>:1、使用普通指针，但是这样又得自行管理资源释放，比较麻烦也更容易出问题。<br>2、其中一方的指向使用weak_ptr，可以完美解决该问题。<br><strong>2、试图访问已被释放的数据</strong><br>也可通过使用weak_ptr解决。<br><strong>3、应该确保某对象只被一组shared_ptr拥有</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* p=<span class="keyword">new</span> <span class="keyword">int</span>;</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp1(p);</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp2(p);<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
+<p>当sp1和sp2丢失p的拥有权时，两者都会试图释放p的资源，即释放资源的操作会执行两次。解决方法是在创建对象和其相应资源的时候直接设立shared_ptr。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp1(<span class="keyword">new</span> <span class="keyword">int</span>);</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp2(sp1);</div></pre></td></tr></table></figure></p>
+<h1 id="weak-ptr"><a href="#weak-ptr" class="headerlink" title="weak_ptr"></a>weak_ptr</h1><p>weak_ptr是辅助shared_ptr的类，其用来共享但是不拥有对象。</p>
+<h1 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h1><p><strong>概念</strong><br>unique_ptr实现了独占式拥有概念，其可以确保一个对象和其相应的资源在同一时间只能被一个pointer拥有。unique_ptr是其所指向的对象的唯一拥有者。unique_ptr有着与普通指针相同的接口，不同的是：它不提供pointer算术比如++等操作，但是实际上这省去了一些麻烦。<br><strong>转移unique_ptr的拥有权</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* p=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up1(p);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up2(p);<span class="comment">//ERROR,up1和up2拥有相同对象了。</span></div><div class="line"></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up3(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up4(up3);<span class="comment">//ERROR, 不能对unique_ptr进行拷贝和赋值</span></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up5(<span class="built_in">std</span>::move(up3));<span class="comment">//OK 使用move转移所有权是可以的</span></div><div class="line"></div><div class="line"><span class="comment">//同理</span></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up6=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up7;</div><div class="line">up7=up6;<span class="comment">//ERROR</span></div><div class="line">up7=<span class="built_in">std</span>::move(up6);<span class="comment">//可以</span></div><div class="line"></div><div class="line">up7=<span class="literal">nullptr</span>;<span class="comment">//给unique_ptr赋值nullptr是可以的，和调用reset()方法相同</span></div></pre></td></tr></table></figure></p>
+<p><strong>源头和去处</strong><br>函数可以利用unique_ptr的转移所有权的功能将拥有权转给其他函数。<br><strong>unique_ptr当做当做class内的成员</strong><br>可以避免资源泄漏。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、Nicolai M. Josuttis<br> The C++ Standard Library - A Tutorial and Reference, 2nd Edition<br> Addison Wesley Longman, 2012</p>
 
       
 
@@ -207,7 +217,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cpp</a>
         		</li>
       		
 		</ul>
@@ -219,7 +229,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/paper//" class="article-tag-list-link color1">paper</a>
+        			<a href="/categories/cpp//" class="article-tag-list-link color4">cpp</a>
         		</li>
       		
 		</ul>
@@ -228,7 +238,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/27/ssd-detailed/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/04/21/cpp-smart-ptr/">展开全文 >></a>
         </p>
       
 
@@ -263,7 +273,7 @@
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -359,11 +369,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -371,7 +385,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -391,7 +405,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -403,7 +417,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
