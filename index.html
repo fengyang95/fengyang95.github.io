@@ -183,7 +183,7 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#lvalue-and-rvalue"><span class="toc-text">lvalue and rvalue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Effective-Modern-C-中相关条款笔记总结"><span class="toc-text">Effective Modern C++中相关条款笔记总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-23-Understanding-std-move-and-std-forward"><span class="toc-text">Item 23: Understanding std::move and std::forward</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-24：Distinguish-universal-references-from-rvalue-references"><span class="toc-text">Item 24：Distinguish universal references from rvalue references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><span class="toc-text">Item 25：Use std::move on rvalue references, std::forward on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-26-Avoid-overloading-on-universal-references"><span class="toc-text">Item 26: Avoid overloading on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><span class="toc-text">Item 27: Familiarize yourself with alternatives to overloading on universal references.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-28-Understand-reference-collapsing"><span class="toc-text">Item 28: Understand reference collapsing</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#lvalue-and-rvalue"><span class="toc-text">lvalue and rvalue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Effective-Modern-C-中相关条款笔记总结"><span class="toc-text">Effective Modern C++中相关条款笔记总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-23-Understanding-std-move-and-std-forward"><span class="toc-text">Item 23: Understanding std::move and std::forward</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-24：Distinguish-universal-references-from-rvalue-references"><span class="toc-text">Item 24：Distinguish universal references from rvalue references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><span class="toc-text">Item 25：Use std::move on rvalue references, std::forward on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-26-Avoid-overloading-on-universal-references"><span class="toc-text">Item 26: Avoid overloading on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><span class="toc-text">Item 27: Familiarize yourself with alternatives to overloading on universal references.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-28-Understand-reference-collapsing"><span class="toc-text">Item 28: Understand reference collapsing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><span class="toc-text">Item 29: Assume that move operations are not present, not cheap, and not used</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><span class="toc-text">Item 30: Familiarize yourself with perfect forwarding failure cases</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
         <h1 id="lvalue-and-rvalue"><a href="#lvalue-and-rvalue" class="headerlink" title="lvalue and rvalue"></a>lvalue and rvalue</h1><p> 在概念上,右值对应于从函数返回的临时对象，而左值对应于可以引用的对象，无论是通过名称还是通过跟随指针或左值引用。一种判断表达式是左值还是右值的方法是：如果能得到其地址，那么它是左值，否则其是右值。<br><strong>注意:</strong>一个表达式的类型和这个表达式本身是左值还是右值无关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//一个参数始终是lvalue，即便其类型是一个rvalue reference</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Widget(Widget&amp;&amp; rhs);<span class="comment">//rhs是一个左值，但是其有一个右值引用的类型。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -196,6 +196,8 @@
 <p><strong>2、在C++中引用的引用是违法的</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> x;</div><div class="line">...</div><div class="line"><span class="keyword">auto</span>&amp; &amp; rx=x;<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
 <p><strong>3、但是当lvalue传入一个以universal reference为类型的模板时</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</div><div class="line"></div><div class="line">Widget w;</div><div class="line">func(w);<span class="comment">//w是一个lvalue，那么T推导为Widget&amp;</span></div><div class="line"><span class="comment">//则模板应该被实例化为以下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; &amp;&amp; param)</span></span>;</div><div class="line"><span class="comment">//实际上这时一种叫做reference collapsing的机制，使得模板的最终实例化如下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; param)</span></span>;<span class="comment">//这与之前所说的以lvalue初始化universal </span></div><div class="line"><span class="comment">//reference，其结果为lvalue  reference一致。</span></div></pre></td></tr></table></figure></p>
 <p><strong>4、reference collapsing规则</strong><br>在允许reference collapsing的情况下，如果两个reference中，任一个是lvalue reference，则结果是lvalue reference，否则结果是rvalue reference。<br>实际上，std::forward就是根据这个机制实现的。<br><strong>5、深入理解universal reference</strong><br>实际上，universal reference不是一种新引用，它是rvalue reference在以下条件满足时的一种特殊情况：<br><strong>条件1</strong>类型推导区分左值和右值。类型T的左值推导为类型 T&amp;，类型T的右值推导为类型 T。<br><strong>条件2</strong>发生了reference collapsing。<br><strong>6、reference collapsing发生的情况</strong><br><strong>情况1</strong>模板实例化<br><strong>情况2</strong>auto类型生成<br><strong>情况3</strong>生成、使用typedef 和 使用别名声明<br><strong>情况4</strong>使用decltype</p>
+<h2 id="Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><a href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used" class="headerlink" title="Item 29: Assume that move operations are not present, not cheap, and not used"></a>Item 29: Assume that move operations are not present, not cheap, and not used</h2><p><strong>要点</strong><br><strong>1、在以下情况下，std::move不会带来任何好处。</strong><br><strong>No move operations</strong><br><strong>Move not faster</strong><br><strong>Move not usable</strong><br><strong>Source object is lvalue</strong><br><strong>2、最好假设move操作不存在，不高效，没用过。只有在类型明确或者支持move语义时不需要这个假设。</strong></p>
+<h2 id="Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><a href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases" class="headerlink" title="Item 30: Familiarize yourself with perfect forwarding failure cases"></a>Item 30: Familiarize yourself with perfect forwarding failure cases</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、Scott Meyers<br>Effective Modern C++ : 42 Specific Ways to Improve Your Use of C++11 and C++14</p>
 
       
 
@@ -373,11 +375,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -393,10 +399,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">cuda</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
@@ -405,11 +407,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
