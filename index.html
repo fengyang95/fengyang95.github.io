@@ -183,16 +183,21 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Feature-Scaling"><span class="toc-text">Feature Scaling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Internal-Convariate-Shift"><span class="toc-text">Internal Convariate Shift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Batch-Normalization-1"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要加gamma，beta参数？"><span class="toc-text">为什么要加gamma，beta参数？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#forward"><span class="toc-text">forward</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#training"><span class="toc-text">training</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#test"><span class="toc-text">test</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#backward"><span class="toc-text">backward</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#benefit"><span class="toc-text">benefit</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Layer-Normalization"><span class="toc-text">Layer Normalization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Group-Normalization"><span class="toc-text">Group Normalization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Local-Response-Normalization"><span class="toc-text">Local Response Normalization</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Feature-Scaling"><span class="toc-text">Feature Scaling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Internal-Convariate-Shift"><span class="toc-text">Internal Convariate Shift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Batch-Normalization-1"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要加gamma，beta参数"><span class="toc-text">为什么要加gamma，beta参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#forward"><span class="toc-text">forward</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#training"><span class="toc-text">training</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#test"><span class="toc-text">test</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#backward"><span class="toc-text">backward</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#benefit"><span class="toc-text">benefit</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Layer-Normalization"><span class="toc-text">Layer Normalization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Group-Normalization"><span class="toc-text">Group Normalization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Local-Response-Normalization"><span class="toc-text">Local Response Normalization</span></a></li></ol>
 </div>
 
         <p>总结深度学习中常用的Normalization方法，包括BatchNormalization,LayerNormalization,GroupNormalization以及LocalResponseNorm。</p>
 <h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><h2 id="Feature-Scaling"><a href="#Feature-Scaling" class="headerlink" title="Feature Scaling"></a>Feature Scaling</h2><p>是指对不同的feature做归一化，使得其有着相同的scaling。<br><img src="feature_scaling.jpg" alt="Feature Scaling"><br>从上图可以看出，输入的两个维度x1,x2相差比较大，如果想要得到比较好的学习效果，需要针对不同维度采用不同learning rate，但是操作起来困难。进行feature scaling可以解决这个问题。<br>如何做：<br><img src="how_to_scaling.jpg" alt="如何做scaling"></p>
-<h2 id="Internal-Convariate-Shift"><a href="#Internal-Convariate-Shift" class="headerlink" title="Internal Convariate Shift"></a>Internal Convariate Shift</h2><p><strong>We define Internal Covariate Shift as the change in the distribution of network activations due to the change in network parameters during training</strong><br>减少Internal Convariate Shift有助于训练。<br><img src="internal_convariate_shift.jpg" alt="Internal Convariate Shift"><br>对于deeplearning 网络来说，可以对每个layer做feature scaling。<br>然而如果只是上面提到的简单的feature scaling的话会带来一个问题：<br>在训练过程中，中间的每一层的参数都是在变化的，那么其每层的output也会随之改变，则mean和std也在不断变化。我们将难以简单计算出mean和std来进行feature scaling。Batch Normalization则可以用来解决这个问题。</p>
+<h2 id="Internal-Convariate-Shift"><a href="#Internal-Convariate-Shift" class="headerlink" title="Internal Convariate Shift"></a>Internal Convariate Shift</h2><p><strong>We define Internal Covariate Shift as the change in the distribution of network activations due to the change in network parameters during training</strong><br>减少Internal Convariate Shift有助于训练。<br><img src="internal_convariate_shift.jpg" alt="Internal Convariate Shift"><br>对于deeplearning 网络来说，可以对每个layer做feature scaling。<br>然而如果只是上面提到的简单的feature scaling的话会带来一个问题：<br>在训练过程中，中间的每一层的参数都是在变化的，那么其每层的output也会随之改变，则mean和std也在不断变化。我们将难以简单计算出mean和std来进行feature scaling。Batch Normalization则可以用来解决这个问题，因为其将normalization加入训练过程中。</p>
 <h2 id="Batch-Normalization-1"><a href="#Batch-Normalization-1" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h2><p><img src="bn.jpg" alt="Batch Normalization"></p>
-<h3 id="为什么要加gamma，beta参数？"><a href="#为什么要加gamma，beta参数？" class="headerlink" title="为什么要加gamma，beta参数？"></a>为什么要加gamma，beta参数？</h3><h3 id="forward"><a href="#forward" class="headerlink" title="forward"></a>forward</h3><h4 id="training"><a href="#training" class="headerlink" title="training"></a>training</h4><p><img src="training_bn.jpg" alt="训练"></p>
+<h3 id="为什么要加gamma，beta参数"><a href="#为什么要加gamma，beta参数" class="headerlink" title="为什么要加gamma，beta参数"></a>为什么要加gamma，beta参数</h3><p>gamma，beta参数的加入使得整个BN过程可训练，使得其与普通的预处理归一化操作区别开。??</p>
+<h3 id="forward"><a href="#forward" class="headerlink" title="forward"></a>forward</h3><p>针对每一个batch做归一化操作。</p>
+<h4 id="training"><a href="#training" class="headerlink" title="training"></a>training</h4><p><img src="training_bn.jpg" alt="训练"><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">sample_mean=np.mean(x,axis=<span class="number">0</span>)</div><div class="line">sample_var=np.var(x,axis=<span class="number">0</span>)</div><div class="line">x_hat=(x-sample_mean)/np.sqrt(sample_var+eps)</div><div class="line">out=gamma*x_hat+beta</div><div class="line"></div><div class="line"><span class="comment"># move average mean</span></div><div class="line">running_mean=momentum*running_mean+(<span class="number">1</span>-momentum)*sample_mean</div><div class="line"><span class="comment"># move average var</span></div><div class="line">running_var=momentum*running_var+(<span class="number">1</span>-momentum)*sample_mean</div></pre></td></tr></table></figure></p>
 <h4 id="test"><a href="#test" class="headerlink" title="test"></a>test</h4><p>存在一个问题：我们无法知道batch的信息，所以没法算mean和std。<br>解决方法：<br><strong>1</strong>ideal solution: Computing mean and std using the whole training dataset<br><strong>2</strong>practical solution: computing  the moving average of mean and std of the batches during training</p>
-<h3 id="backward"><a href="#backward" class="headerlink" title="backward"></a>backward</h3><h3 id="benefit"><a href="#benefit" class="headerlink" title="benefit"></a>benefit</h3><p><strong>1、BN通过减少Internal Convariate Shift使得我们可以使用更高的learning rate来让训练更快速。</strong><br><strong>2、BN对解决梯度爆炸和梯度消失有作用，特别是对tanh、sigmoid等激活函数。</strong><br>    原因：因为BN确保了数据都在0附近斜率比较大的地方，不会出现梯度爆炸和消失的问题。<br><strong>3、使得参数初始化对训练的影响不大</strong><br><img src="init.jpg" alt="参数初始化"><br><strong>4、BN也有regularization的作用，防止overfitting</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">temp=(x-running_mean)/np.sqrt(running_var+eps)</div><div class="line">out=gamma*temp+beta</div></pre></td></tr></table></figure>
+<h3 id="backward"><a href="#backward" class="headerlink" title="backward"></a>backward</h3><p><a href="http://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html" target="_blank" rel="external">Understanding the backward pass through Batch Normalization Layer</a></p>
+<h3 id="benefit"><a href="#benefit" class="headerlink" title="benefit"></a>benefit</h3><p><strong>1、BN通过减少Internal Convariate Shift使得我们可以使用更高的learning rate来让训练更快速。</strong><br><strong>2、BN对解决梯度爆炸和梯度消失有作用，特别是对tanh、sigmoid等激活函数。</strong><br>    原因：因为BN确保了数据都在0附近斜率比较大的地方，不会出现梯度爆炸和消失的问题。<br><strong>3、使得参数初始化对训练的影响不大</strong><br><img src="init.jpg" alt="参数初始化"><br><strong>4、BN也有regularization的作用，防止overfitting</strong></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1、<a href="https://www.quora.com/Why-does-batch-normalization-help" target="_blank" rel="external">Why-does-batch-normalization-help</a><br>2、<a href="http://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html" target="_blank" rel="external">Understanding the backward pass through Batch Normalization Layer</a><br>3、<a href="https://www.youtube.com/watch?v=BZh1ltr5Rkg&amp;t=21s" target="_blank" rel="external">李宏毅老师讲BN(图片都来自该视频截图)</a><br>4、<a href="http://pytorch.org/docs/master/nn.html#batchnorm2d" target="_blank" rel="external">pytorch doc</a><br>5、<a href="https://arxiv.org/abs/1502.03167" target="_blank" rel="external">BN论文</a></p>
 <h1 id="Layer-Normalization"><a href="#Layer-Normalization" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h1><h1 id="Group-Normalization"><a href="#Group-Normalization" class="headerlink" title="Group Normalization"></a>Group Normalization</h1><h1 id="Local-Response-Normalization"><a href="#Local-Response-Normalization" class="headerlink" title="Local Response Normalization"></a>Local Response Normalization</h1>
       
 
@@ -358,11 +363,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -378,11 +387,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -402,15 +407,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
