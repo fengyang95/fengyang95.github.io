@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-pytorch-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-paperlist" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/25/pytorch-notes/">Pytorch使用问题记录</a>
+      <a class="article-title" href="/2018/03/25/paperlist/">论文列表</a>
     </h1>
   
 
         
-        <a href="/2018/03/25/pytorch-notes/" class="archive-article-date">
-  	<time datetime="2018-03-25T06:40:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-25</time>
+        <a href="/2018/03/25/paperlist/" class="archive-article-date">
+  	<time datetime="2018-03-25T15:49:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-25</time>
 </a>
         
       </header>
@@ -183,12 +183,12 @@
       
         
 <div id="toc">
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Object-Detection"><span class="toc-text">Object Detection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Classfication"><span class="toc-text">Classfication</span></a></li></ol>
 </div>
 
-        <p>主要记录使用pytorch过程中的一些问题及解决方法<br>1、<strong>GPU训练网络后，在CPU中使用的问题</strong><br>1.1、使用load_static_dict API时需要根据是否使用GPU指定map参数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> self.num_gpu == <span class="number">0</span>:</div><div class="line">    map_location = <span class="keyword">lambda</span> storage, loc: storage</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    map_location = <span class="keyword">None</span></div></pre></td></tr></table></figure></p>
-<p>1.2、在我的一次实验中，多GPU训练后保存的pth模型和单GPU的有点不太一致，使得多GPU的模型不能在CPU上加载。解决方案是，先在多GPU训练，最后几个epoch使用单GPU训练，之后保存单GPU的训练模型。</p>
-
+        <p>主要列一些计算机视觉方面的论文。</p>
+<h2 id="Object-Detection"><a href="#Object-Detection" class="headerlink" title="Object Detection"></a>Object Detection</h2><p>目前主流方法都是基于深度学习的。<br><strong>One Stage</strong><br><a href="https://arxiv.org/abs/1512.02325" target="_blank" rel="external">SSD</a><br><a href="https://pjreddie.com/media/files/papers/yolo.pdf" target="_blank" rel="external">YOLO</a><br><a href="https://pjreddie.com/media/files/papers/YOLO9000.pdf" target="_blank" rel="external">YOLOv2</a><br><a href="https://pjreddie.com/media/files/papers/YOLOv3.pdf" target="_blank" rel="external">YOLOv3</a><br><strong>Two Stage</strong></p>
+<h2 id="Classfication"><a href="#Classfication" class="headerlink" title="Classfication"></a>Classfication</h2>
       
 
       
@@ -201,7 +201,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">pytorch</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
         		</li>
       		
 		</ul>
@@ -213,7 +213,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/pytorch//" class="article-tag-list-link color3">pytorch</a>
+        			<a href="/categories/cv//" class="article-tag-list-link color3">cv</a>
         		</li>
       		
 		</ul>
@@ -222,7 +222,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/25/pytorch-notes/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/03/25/paperlist/">展开全文 >></a>
         </p>
       
 
@@ -257,7 +257,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
     </nav>
   
 
@@ -361,10 +361,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
@@ -381,6 +377,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -393,7 +393,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color3">dl</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -402,6 +402,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">

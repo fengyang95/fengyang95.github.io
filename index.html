@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-cpp-lvalue-and-rvalue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-normalization-in-deeplearning" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/23/cpp-lvalue-and-rvalue/">C++中的左值和右值以及std::move, std::forward</a>
+      <a class="article-title" href="/2018/05/01/normalization-in-deeplearning/">深度学习中的Normalization方法</a>
     </h1>
   
 
         
-        <a href="/2018/04/23/cpp-lvalue-and-rvalue/" class="archive-article-date">
-  	<time datetime="2018-04-23T15:15:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-23</time>
+        <a href="/2018/05/01/normalization-in-deeplearning/" class="archive-article-date">
+  	<time datetime="2018-05-01T06:12:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
 </a>
         
       </header>
@@ -183,22 +183,17 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#lvalue-and-rvalue"><span class="toc-text">lvalue and rvalue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Effective-Modern-C-中相关条款笔记总结"><span class="toc-text">Effective Modern C++中相关条款笔记总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-23-Understanding-std-move-and-std-forward"><span class="toc-text">Item 23: Understanding std::move and std::forward</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-24：Distinguish-universal-references-from-rvalue-references"><span class="toc-text">Item 24：Distinguish universal references from rvalue references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><span class="toc-text">Item 25：Use std::move on rvalue references, std::forward on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-26-Avoid-overloading-on-universal-references"><span class="toc-text">Item 26: Avoid overloading on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><span class="toc-text">Item 27: Familiarize yourself with alternatives to overloading on universal references.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-28-Understand-reference-collapsing"><span class="toc-text">Item 28: Understand reference collapsing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><span class="toc-text">Item 29: Assume that move operations are not present, not cheap, and not used</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><span class="toc-text">Item 30: Familiarize yourself with perfect forwarding failure cases</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Feature-Scaling"><span class="toc-text">Feature Scaling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Internal-Convariate-Shift"><span class="toc-text">Internal Convariate Shift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Batch-Normalization-1"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要加gamma，beta参数？"><span class="toc-text">为什么要加gamma，beta参数？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#forward"><span class="toc-text">forward</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#training"><span class="toc-text">training</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#test"><span class="toc-text">test</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#backward"><span class="toc-text">backward</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#benefit"><span class="toc-text">benefit</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Layer-Normalization"><span class="toc-text">Layer Normalization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Group-Normalization"><span class="toc-text">Group Normalization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Local-Response-Normalization"><span class="toc-text">Local Response Normalization</span></a></li></ol>
 </div>
 
-        <h1 id="lvalue-and-rvalue"><a href="#lvalue-and-rvalue" class="headerlink" title="lvalue and rvalue"></a>lvalue and rvalue</h1><p> 在概念上,右值对应于从函数返回的临时对象，而左值对应于可以引用的对象，无论是通过名称还是通过跟随指针或左值引用。一种判断表达式是左值还是右值的方法是：如果能得到其地址，那么它是左值，否则其是右值。<br><strong>注意:</strong>一个表达式的类型和这个表达式本身是左值还是右值无关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//一个参数始终是lvalue，即便其类型是一个rvalue reference</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Widget(Widget&amp;&amp; rhs);<span class="comment">//rhs是一个左值，但是其有一个右值引用的类型。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="Effective-Modern-C-中相关条款笔记总结"><a href="#Effective-Modern-C-中相关条款笔记总结" class="headerlink" title="Effective Modern C++中相关条款笔记总结"></a>Effective Modern C++中相关条款笔记总结</h1><h2 id="Item-23-Understanding-std-move-and-std-forward"><a href="#Item-23-Understanding-std-move-and-std-forward" class="headerlink" title="Item 23: Understanding std::move and std::forward"></a>Item 23: Understanding std::move and std::forward</h2><p><strong>要点</strong><br><strong>1、std::move</strong><br>move semantic使得编译器将代价昂贵的copy操作替换为相对代价低的move。move semantics使得move-only类型的创建成为可能，比如std::unique_ptr,std::future,std::thread。<br>实际上std::move并没有移动任何东西。它做的其实是一个类型转换工作。就是将输入转型为rvalue。<br><strong>2、std::forward </strong><br>std::forward和std::move类似，比较大的区别就是std::forward是有条件的类型转换，<br>只有当参数是和rvalue绑定时将其转型为rvalue，否则不做转换。</p>
-<h2 id="Item-24：Distinguish-universal-references-from-rvalue-references"><a href="#Item-24：Distinguish-universal-references-from-rvalue-references" class="headerlink" title="Item 24：Distinguish universal references from rvalue references"></a>Item 24：Distinguish universal references from rvalue references</h2><p><strong>要点</strong><br><strong>1、判断原则</strong><br><strong>A、当函数的模板参数有着T&amp;&amp;的形式，并且有推导类型T，或者一个对象被声明为auto&amp;&amp;，那么它就是一个universal reference。</strong><br><strong>B、如果type的声明的格式并不完全是type&amp;&amp;，或者类型推断没有发生，那么type&amp;&amp;表示的就是rvalue reference。</strong><br><strong>C、对于universal reference，如果它被rvalue初始化，它就是rvalue，与之对应，如果被lvalue初始化，其就是lvalue。</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//实例</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(Widget&amp;&amp; param)</span></span>;<span class="comment">//B rvalue  reference  没有类型推断</span></div><div class="line">Widget&amp;&amp; var1=Widget();<span class="comment">//B rvalue reference 没有类型推断</span></div><div class="line"><span class="keyword">auto</span>&amp;&amp; var2=var1;<span class="comment">//A universal references var2有形式auto&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;&amp;&amp; param)</span></span>; <span class="comment">//B rvalue references param类型不完全是type&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>;<span class="comment">//universal references param有推导类型T，且形式是T&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">const</span> T&amp;&amp; param)</span></span>;<span class="comment">//universal reference 因</span></div><div class="line"><span class="comment">//为type的声明格式并不完全是type&amp;&amp;(多了const)</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">class</span> <span class="title">Allocator</span> = <span class="title">allocator</span>&lt;T&gt;&gt;</span></div><div class="line"><span class="class"><span class="title">class</span> <span class="title">vector</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">push_back</span><span class="params">(T&amp;&amp; x)</span><span class="comment">//rvalue reference </span></span></div><div class="line"><span class="function">    <span class="comment">//因为没有类型推断，当vector被初始化时，T的类型就被确定了。</span></span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>,<span class="title">class</span> <span class="title">Allocator</span>=<span class="title">allcator</span>&lt;T&gt;&gt;</span></div><div class="line"><span class="class"><span class="title">class</span> <span class="title">vector</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span>... <span class="title">Args</span>&gt;</span></div><div class="line"><span class="class">    <span class="title">void</span> <span class="title">emplace_back</span>(<span class="title">Args</span>&amp;&amp;... <span class="title">args</span>);</span><span class="comment">//universal </span></div><div class="line">    <span class="comment">//reference，存在类型推断，因为即</span></div><div class="line">    <span class="comment">//便T的类型在vector初始化时确定，但是Args的类型不能确定，需要类型推导。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><a href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references" class="headerlink" title="Item 25：Use std::move on rvalue references, std::forward on universal references"></a>Item 25：Use std::move on rvalue references, std::forward on universal references</h2><p><strong>要点</strong><br><strong>1、当将rvalue reference转发给其它函数时，其应该被无条件转型为rvalue，即用std::move，因为它总是被rvalues限制，而将universal referencies转发给其它函数时，应该有条件地转型，即使用std::forward,因为它可能是lvalues。</strong><br><strong>注意1</strong>为什么不在任何情况下都使用std::forward？尽管使用std::forward对于rvalue references也能产生正确的行为，但是这样源代码冗长也容易出错。<br><strong>注意2</strong>对universal references使用std::move会对lvalues造成意外的修改，更应该避免。<br><strong>2、当一个函数按值返回时，如果是返回一个与 universal reference或者rvalue reference绑定的对象，那么在返回时可以对其施加std::forward或者std::move操作，这样效率更高</strong><br><strong>注意:</strong>即便该对象不支持move操作也没有任何副作用，因为如果不支持的话会自动调用该对象的拷贝构造函数完成copy。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Matrix </div><div class="line"><span class="keyword">operator</span>+(Matrix&amp;&amp; lhs,<span class="keyword">const</span> Matrix&amp; rhs)&#123;</div><div class="line">    lhs+=rhs;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::move(lhs);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>3、不要将std::move或者std::forward应用到local  object</strong><br>原因详见P174，和编译器的返回值优化有关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">Widget <span class="title">makeWidget</span><span class="params">()</span></span>&#123;</div><div class="line">    Widget w;</div><div class="line">    ...</div><div class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::move(w);<span class="comment">//避免这样做</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Item-26-Avoid-overloading-on-universal-references"><a href="#Item-26-Avoid-overloading-on-universal-references" class="headerlink" title="Item 26: Avoid overloading on universal references"></a>Item 26: Avoid overloading on universal references</h2><p><strong>要点</strong>看原书比较清楚(没太看懂。)<br><strong>1、对通用引用进行重载往往导致其被调用的次数比预期要多很多。</strong><br><strong>2、完美转发的构造函数特别有问题，因为它们通常比拷贝构造函数更适合非常量lvalue，并且它们可以劫持派生类调用到其基类的拷贝和移动构造函数</strong></p>
-<h2 id="Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><a href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references" class="headerlink" title="Item 27: Familiarize yourself with alternatives to overloading on universal references."></a>Item 27: Familiarize yourself with alternatives to overloading on universal references.</h2><h2 id="Item-28-Understand-reference-collapsing"><a href="#Item-28-Understand-reference-collapsing" class="headerlink" title="Item 28: Understand reference collapsing"></a>Item 28: Understand reference collapsing</h2><p><strong>要点</strong><br><strong>1、</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment">根据传入param是lvalue或者rvalue，T的推导类型会有不同。param是lvalue，则T推导为lvalue reference，当param是rvalue，T推导为non-reference。</span></div><div class="line"><span class="comment">*/</span></div></pre></td></tr></table></figure></p>
-<p><strong>2、在C++中引用的引用是违法的</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> x;</div><div class="line">...</div><div class="line"><span class="keyword">auto</span>&amp; &amp; rx=x;<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
-<p><strong>3、但是当lvalue传入一个以universal reference为类型的模板时</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</div><div class="line"></div><div class="line">Widget w;</div><div class="line">func(w);<span class="comment">//w是一个lvalue，那么T推导为Widget&amp;</span></div><div class="line"><span class="comment">//则模板应该被实例化为以下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; &amp;&amp; param)</span></span>;</div><div class="line"><span class="comment">//实际上这时一种叫做reference collapsing的机制，使得模板的最终实例化如下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; param)</span></span>;<span class="comment">//这与之前所说的以lvalue初始化universal </span></div><div class="line"><span class="comment">//reference，其结果为lvalue  reference一致。</span></div></pre></td></tr></table></figure></p>
-<p><strong>4、reference collapsing规则</strong><br>在允许reference collapsing的情况下，如果两个reference中，任一个是lvalue reference，则结果是lvalue reference，否则结果是rvalue reference。<br>实际上，std::forward就是根据这个机制实现的。<br><strong>5、深入理解universal reference</strong><br>实际上，universal reference不是一种新引用，它是rvalue reference在以下条件满足时的一种特殊情况：<br><strong>条件1</strong>类型推导区分左值和右值。类型T的左值推导为类型 T&amp;，类型T的右值推导为类型 T。<br><strong>条件2</strong>发生了reference collapsing。<br><strong>6、reference collapsing发生的情况</strong><br><strong>情况1</strong>模板实例化<br><strong>情况2</strong>auto类型生成<br><strong>情况3</strong>生成、使用typedef 和 使用别名声明<br><strong>情况4</strong>使用decltype</p>
-<h2 id="Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><a href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used" class="headerlink" title="Item 29: Assume that move operations are not present, not cheap, and not used"></a>Item 29: Assume that move operations are not present, not cheap, and not used</h2><p><strong>要点</strong><br><strong>1、在以下情况下，std::move不会带来任何好处。</strong><br><strong>No move operations</strong><br><strong>Move not faster</strong><br><strong>Move not usable</strong><br><strong>Source object is lvalue</strong><br><strong>2、最好假设move操作不存在，不高效，没用过。只有在类型明确或者支持move语义时不需要这个假设。</strong></p>
-<h2 id="Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><a href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases" class="headerlink" title="Item 30: Familiarize yourself with perfect forwarding failure cases"></a>Item 30: Familiarize yourself with perfect forwarding failure cases</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、Scott Meyers<br>Effective Modern C++ : 42 Specific Ways to Improve Your Use of C++11 and C++14</p>
-
+        <p>总结深度学习中常用的Normalization方法，包括BatchNormalization,LayerNormalization,GroupNormalization以及LocalResponseNorm。</p>
+<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><h2 id="Feature-Scaling"><a href="#Feature-Scaling" class="headerlink" title="Feature Scaling"></a>Feature Scaling</h2><p>是指对不同的feature做归一化，使得其有着相同的scaling。<br><img src="feature_scaling.jpg" alt="Feature Scaling"><br>从上图可以看出，输入的两个维度x1,x2相差比较大，如果想要得到比较好的学习效果，需要针对不同维度采用不同learning rate，但是操作起来困难。进行feature scaling可以解决这个问题。<br>如何做：<br><img src="how_to_scaling.jpg" alt="如何做scaling"></p>
+<h2 id="Internal-Convariate-Shift"><a href="#Internal-Convariate-Shift" class="headerlink" title="Internal Convariate Shift"></a>Internal Convariate Shift</h2><p><strong>We define Internal Covariate Shift as the change in the distribution of network activations due to the change in network parameters during training</strong><br>减少Internal Convariate Shift有助于训练。<br><img src="internal_convariate_shift.jpg" alt="Internal Convariate Shift"><br>对于deeplearning 网络来说，可以对每个layer做feature scaling。<br>然而如果只是上面提到的简单的feature scaling的话会带来一个问题：<br>在训练过程中，中间的每一层的参数都是在变化的，那么其每层的output也会随之改变，则mean和std也在不断变化。我们将难以简单计算出mean和std来进行feature scaling。Batch Normalization则可以用来解决这个问题。</p>
+<h2 id="Batch-Normalization-1"><a href="#Batch-Normalization-1" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h2><p><img src="bn.jpg" alt="Batch Normalization"></p>
+<h3 id="为什么要加gamma，beta参数？"><a href="#为什么要加gamma，beta参数？" class="headerlink" title="为什么要加gamma，beta参数？"></a>为什么要加gamma，beta参数？</h3><h3 id="forward"><a href="#forward" class="headerlink" title="forward"></a>forward</h3><h4 id="training"><a href="#training" class="headerlink" title="training"></a>training</h4><p><img src="training_bn.jpg" alt="训练"></p>
+<h4 id="test"><a href="#test" class="headerlink" title="test"></a>test</h4><p>存在一个问题：我们无法知道batch的信息，所以没法算mean和std。<br>解决方法：<br><strong>1</strong>ideal solution: Computing mean and std using the whole training dataset<br><strong>2</strong>practical solution: computing  the moving average of mean and std of the batches during training</p>
+<h3 id="backward"><a href="#backward" class="headerlink" title="backward"></a>backward</h3><h3 id="benefit"><a href="#benefit" class="headerlink" title="benefit"></a>benefit</h3><p><strong>1、BN通过减少Internal Convariate Shift使得我们可以使用更高的learning rate来让训练更快速。</strong><br><strong>2、BN对解决梯度爆炸和梯度消失有作用，特别是对tanh、sigmoid等激活函数。</strong><br>    原因：因为BN确保了数据都在0附近斜率比较大的地方，不会出现梯度爆炸和消失的问题。<br><strong>3、使得参数初始化对训练的影响不大</strong><br><img src="init.jpg" alt="参数初始化"><br><strong>4、BN也有regularization的作用，防止overfitting</strong></p>
+<h1 id="Layer-Normalization"><a href="#Layer-Normalization" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h1><h1 id="Group-Normalization"><a href="#Group-Normalization" class="headerlink" title="Group Normalization"></a>Group Normalization</h1><h1 id="Local-Response-Normalization"><a href="#Local-Response-Normalization" class="headerlink" title="Local Response Normalization"></a>Local Response Normalization</h1>
       
 
       
@@ -211,7 +206,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cpp</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">dl</a>
         		</li>
       		
 		</ul>
@@ -223,7 +218,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/cpp//" class="article-tag-list-link color4">cpp</a>
+        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
         		</li>
       		
 		</ul>
@@ -232,7 +227,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/23/cpp-lvalue-and-rvalue/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/05/01/normalization-in-deeplearning/">展开全文 >></a>
         </p>
       
 
@@ -267,7 +262,7 @@
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -371,10 +366,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
@@ -391,6 +382,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -403,7 +398,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color3">dl</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -412,6 +407,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">

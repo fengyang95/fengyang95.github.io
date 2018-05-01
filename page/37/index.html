@@ -161,20 +161,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-linux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/08/linux/">Linux使用问题</a>
+      <a class="article-title" href="/2017/10/08/python/">Python使用问题</a>
     </h1>
   
 
         
-        <a href="/2017/10/08/linux/" class="archive-article-date">
-  	<time datetime="2017-10-08T02:28:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-08</time>
+        <a href="/2017/10/08/python/" class="archive-article-date">
+  	<time datetime="2017-10-08T02:28:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-08</time>
 </a>
         
       </header>
@@ -183,12 +183,23 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#linux常用命令"><span class="toc-text">linux常用命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#查看及修改文件权限"><span class="toc-text">查看及修改文件权限</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python3"><span class="toc-text">Python3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cPickle"><span class="toc-text">cPickle</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntu下为python3-5安装pip3-5"><span class="toc-text">ubuntu下为python3.5安装pip3.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><span class="toc-text">在linux下可以通过设置PYTHONPATH的方法指定python工程目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><span class="toc-text">UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><span class="toc-text">在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pycharm切换python版本"><span class="toc-text">pycharm切换python版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用cx-Freeze-打包python程序成exe文件"><span class="toc-text">使用cx_Freeze 打包python程序成exe文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#python3-中的一些编码问题一定要注意"><span class="toc-text">python3 中的一些编码问题一定要注意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#opencv读图片Premature-end-of-JPEG-file？"><span class="toc-text">opencv读图片Premature end of JPEG file？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pyconfig-h-can’t-find"><span class="toc-text">pyconfig.h can’t find</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#import-win32file-时出现-dll缺失，系统找不到指定文件问题"><span class="toc-text">import win32file 时出现  dll缺失，系统找不到指定文件问题</span></a></li></ol>
 </div>
 
-        <p>整理一些使用Linux中遇到的问题及解决方法。</p>
-<h1 id="linux常用命令"><a href="#linux常用命令" class="headerlink" title="linux常用命令"></a>linux常用命令</h1><p>1、ctrl+z可以将正在执行的前台命令放到后台并暂停。<br>2、fg将后台命令调到前台继续执行。<br>3、htop可以实现监控<br>4、查看硬盘剩余空间 #df -h #df -H<br>5、查看目录占用空间 #du -hs 目录名</p>
-<h1 id="查看及修改文件权限"><a href="#查看及修改文件权限" class="headerlink" title="查看及修改文件权限"></a>查看及修改文件权限</h1><p><a href="https://www.cnblogs.com/CgenJ/archive/2011/07/28/2119454.html" target="_blank" rel="external"></a></p>
+        <p>整理一些使用Python过程中遇到的问题和解决方法。</p>
+<h1 id="Python3"><a href="#Python3" class="headerlink" title="Python3"></a>Python3</h1><h2 id="cPickle"><a href="#cPickle" class="headerlink" title="cPickle"></a>cPickle</h2><p>python3中没有cPickle模块，和pickle合并了，所以在python3中使用pickle。在使用load的过程中，需要指定encoding,否则可能会出现问题。</p>
+<h1 id="ubuntu下为python3-5安装pip3-5"><a href="#ubuntu下为python3-5安装pip3-5" class="headerlink" title="ubuntu下为python3.5安装pip3.5"></a>ubuntu下为python3.5安装pip3.5</h1><p>1、下载setuptools,easy_install安装包<br>    wget <a href="https://bootstrap.pypa.io/ez_setup.py" target="_blank" rel="external">https://bootstrap.pypa.io/ez_setup.py</a><br>2、安装easy_install-3.5<br>    python3.5 ez_setup.py<br>3、安装pip3.5<br>    easy_install-3.5 pip<br>4、升级pip3.5版本<br>    pip3.5 install –upgrade pip<br>5、注意：遇到失败情况时可能是由于没有权限，可以尝试在命令前加sudo</p>
+<h1 id="在linux下可以通过设置PYTHONPATH的方法指定python工程目录"><a href="#在linux下可以通过设置PYTHONPATH的方法指定python工程目录" class="headerlink" title="在linux下可以通过设置PYTHONPATH的方法指定python工程目录"></a>在linux下可以通过设置PYTHONPATH的方法指定python工程目录</h1><p>命令如下：也可在 ~/.bashrc 中 添加以下命令达到永久指定的效果<br>    export PYTHONPATH=”${PYTHONPATH}:/my/other/path”<br>遇到不能为root添加PYTHONPATH的情况，用了一下方法解决：<br>    sudo visudo(which open the /etc/sudoers file in a safe way)<br>然后添加：<br>    Default env_keep+=”PYTHONPATH”<br>保存之后生效</p>
+<h1 id="UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte"><a href="#UnicodeDecodeError-‘utf-8’-codec-can’t-decode-byte-0xff-in-position-0-invalid-start-byte" class="headerlink" title="UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte"></a>UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xff in position 0: invalid start byte</h1><p>image_data = tf.gfile.FastGFile(filenames[i], ‘r’).read()<br>我使用的是python3,后来在python2下就没有出现这个问题。</p>
+<h1 id="在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。"><a href="#在windows下编译pyc文件时，运行setup-py文件提示找不到cl-exe文件。" class="headerlink" title="在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。"></a>在windows下编译pyc文件时，运行setup.py文件提示找不到cl.exe文件。</h1><p>解决方法是打开vs自带的Command Prompt工具运行setup.py文件</p>
+<h1 id="pycharm切换python版本"><a href="#pycharm切换python版本" class="headerlink" title="pycharm切换python版本"></a>pycharm切换python版本</h1><p>settings-&gt;project-&gt;project interpreter </p>
+<h1 id="使用cx-Freeze-打包python程序成exe文件"><a href="#使用cx-Freeze-打包python程序成exe文件" class="headerlink" title="使用cx_Freeze 打包python程序成exe文件"></a>使用cx_Freeze 打包python程序成exe文件</h1><p>期间遇到了一些坑，最后顺利解决。主要就是在要打包的脚本文件夹内编写以下脚本，并执行<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># setup.py</span></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">from</span> cx_Freeze <span class="keyword">import</span> setup, Executable</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">os.environ[<span class="string">'TCL_LIBRARY'</span>] = <span class="string">r'C:\Users\ThinkPad\AppData\Local\Programs\Python\Python36\tcl\tcl8.6'</span></div><div class="line">os.environ[<span class="string">'TK_LIBRARY'</span>] = <span class="string">r'C:\Users\ThinkPad\AppData\Local\Programs\Python\Python36\tcl\tk8.6'</span></div><div class="line"></div><div class="line">Base=<span class="keyword">None</span></div><div class="line">setup(name = <span class="string">'labelme'</span>,</div><div class="line">      version = <span class="string">'0.0.1'</span>,</div><div class="line">      executables = [Executable(<span class="string">'app.py'</span>,base=Base)],</div><div class="line">      options = &#123;<span class="string">'build_exe'</span>: &#123;<span class="string">'includes'</span>: [<span class="string">'atexit'</span>]&#125;&#125;)</div></pre></td></tr></table></figure></p>
+<p>然后 python setup.py build 运行此脚本即可在 build 找到打包好的程序。<br>注意python的根目录应该是包含此脚本的文件夹。之前因为不是这样导致打包的程序不能正确运行。<br>这样打包出来的程序运行起来会有黑框，如果不想要那个黑框，可以把Base=None改为<br>Base=’Win32GUI’</p>
+<h1 id="python3-中的一些编码问题一定要注意"><a href="#python3-中的一些编码问题一定要注意" class="headerlink" title="python3 中的一些编码问题一定要注意"></a>python3 中的一些编码问题一定要注意</h1><p>with open(filename, ‘w’) as f<br>with open(filename, ‘wb’) as f<br>b64encode(imageData.encode(‘utf-8’))<br>b64encode(imageData).encode(‘ascii’)</p>
+<h1 id="opencv读图片Premature-end-of-JPEG-file？"><a href="#opencv读图片Premature-end-of-JPEG-file？" class="headerlink" title="opencv读图片Premature end of JPEG file？"></a>opencv读图片Premature end of JPEG file？</h1><p>主要是由于图片不完整造成的，可以用以下脚本检验图片是否有效。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_pic</span><span class="params">(path)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        Image.open(path).load() </div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">print</span> <span class="string">'ERROR: %s'</span> % path</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure></p>
+<p><a href="https://www.zhihu.com/question/30372655/answer/157762216" target="_blank" rel="external">知乎回答</a></p>
+<h1 id="pyconfig-h-can’t-find"><a href="#pyconfig-h-can’t-find" class="headerlink" title="pyconfig.h can’t find"></a>pyconfig.h can’t find</h1><p>解决方法：sudo apt-get install python-dev (或者python3.5-dev等相应版本)</p>
+<h1 id="import-win32file-时出现-dll缺失，系统找不到指定文件问题"><a href="#import-win32file-时出现-dll缺失，系统找不到指定文件问题" class="headerlink" title="import win32file 时出现  dll缺失，系统找不到指定文件问题"></a>import win32file 时出现  dll缺失，系统找不到指定文件问题</h1><p>解决方法：site-package文件夹中pywin32_system32文件中的dll文件复制到C/windows/system32文件夹中。</p>
 
       
 
@@ -202,7 +213,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
         		</li>
       		
 		</ul>
@@ -214,7 +225,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
+        			<a href="/categories/python//" class="article-tag-list-link color2">python</a>
         		</li>
       		
 		</ul>
@@ -223,7 +234,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/08/linux/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/10/08/python/">展开全文 >></a>
         </p>
       
 
@@ -258,7 +269,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/36/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><a class="page-number" href="/page/39/">39</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/38/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/36/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><a class="page-number" href="/page/39/">39</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/38/">Next &raquo;</a>
     </nav>
   
 
@@ -362,10 +373,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
@@ -382,6 +389,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -394,7 +405,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color3">dl</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -403,6 +414,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
