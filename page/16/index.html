@@ -161,19 +161,19 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-tensorflow-programming-manage-your-experiments-in-tf" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-effective-java-methods-common-to-all-objects" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/">How to Manage Your Experiments in TensorFlow</a>
+      <a class="article-title" href="/2018/01/21/effective-java-methods-common-to-all-objects/">Effective Java -- Methods Common to All Objects</a>
     </h1>
   
 
         
-        <a href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/" class="archive-article-date">
+        <a href="/2018/01/21/effective-java-methods-common-to-all-objects/" class="archive-article-date">
   	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
 </a>
         
@@ -183,37 +183,15 @@
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#tf-train-Saver"><span class="toc-text">tf.train.Saver()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tf-summary"><span class="toc-text">tf.summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Control-Randomization"><span class="toc-text">Control Randomization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在操作级别设置随机种子。-所有的随机张量都允许你在初始化时传入种子值。"><span class="toc-text">在操作级别设置随机种子。 所有的随机张量都允许你在初始化时传入种子值。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在计算图级别用tf-Graph-seed设置随机种子"><span class="toc-text">在计算图级别用tf.Graph.seed设置随机种子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reading-Data-in-Tensorflow"><span class="toc-text">Reading Data in Tensorflow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#从队列读取数据。"><span class="toc-text">从队列读取数据。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Threads-和-Queues"><span class="toc-text">Threads 和  Queues</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Methods-Common-to-All-Objects"><span class="toc-text">Effective Java Items about Methods Common to All Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-10-Obey-the-general-contract-when-overriding-equals"><span class="toc-text">Item 10: Obey the general contract when overriding equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-11-Always-override-hashCode-when-you-override-equals"><span class="toc-text">Item 11: Always override hashCode when you override equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-12-Always-override-toString"><span class="toc-text">Item 12: Always override toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-13-Override-clone-judiciously"><span class="toc-text">Item 13: Override clone judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-14-Consider-implementing-Comparable"><span class="toc-text">Item 14: Consider implementing Comparable</span></a></li></ol></li></ol>
 </div>
 
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=31134197&auto=1&height=66"></iframe><br>主要介绍TensorFlow提供的一系列用来管理实验的优秀的工具。包括tf.train.Saver类，<br>TensorFlow的随机种子和NumPy的随机状态，并可视化我们的训练过程。</p>
-<h2 id="tf-train-Saver"><a href="#tf-train-Saver" class="headerlink" title="tf.train.Saver()"></a>tf.train.Saver()</h2><p>tf.train.Saver()类使得我们能够用二进制文件保存计算图的变量。这样使得我们可以在若干步训练过后保存参数并随时重新加载参数进行训练。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tf.train.Saver.save(sess, save_path, global_step=<span class="keyword">None</span>, lastest_filename=<span class="keyword">None</span>,</div><div class="line">                meta_graph_suffix=<span class="string">'meta'</span>, write_meta_graph=<span class="keyword">True</span>, write_state=<span class="keyword">True</span>)</div></pre></td></tr></table></figure></p>
-<p>例如我们想每训练1000步保存一次参数，我们可以这样做：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">saver = tf.train.Saver()</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> range(trianing_steps):</div><div class="line">        sess.run([optimizer])</div><div class="line">        <span class="keyword">if</span> (step + <span class="number">1</span>) % <span class="number">1000</span> == <span class="number">0</span>：</div><div class="line">            saver.save(sess, <span class="string">'checkpoint_directory/model_name'</span>,</div><div class="line">            global_step=model.global_step)</div></pre></td></tr></table></figure></p>
-<p>在TensorFlow术语中，保存图形变量的步骤称为检查点。由于我们将创建多个检查点，因此将模型所经历的训练步骤的数量附加到名为global_step的变量中会很有帮助。 在TensorFlow程序中看到这是一个非常常见的变量。 我们首先需要创建它，将其初始化为0，并将其设置为不可训练，因为我们不希望TensorFlow对其进行优化。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.global_step = tf.Variable(<span class="number">0</span>, dtype=tf.int32, trainable=<span class="keyword">False</span>, name=<span class="string">'global_step'</span>)</div></pre></td></tr></table></figure></p>
-<p>我们需要将global_step作为参数传递到optimizer中，使得它能够每训练一步加一。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.optimizer = tf.train.GradientDescentOptimizer(self.lr).minimize(self.loss, global_step=self.global_step)</div></pre></td></tr></table></figure></p>
-<p>为了在名为“checkpoints”的文件夹保存检查点，我们这样操作：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">saver.save(sess, <span class="string">'checkpoints/skip-gram'</span>, global_step=model.global_step)</div></pre></td></tr></table></figure></p>
-<p>于是整个word2vec的训练过程大概如下:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">self.global_step = tf.Variable(<span class="number">0</span>, dtype=tf.int32, trainable=<span class="keyword">False</span>, name=<span class="string">'global_step'</span>)</div><div class="line">self.optimizer = tf.train.GradientDescentOptimizer(self.lr).minimize(self.loss,global_step=self.global_step)</div><div class="line">saver = tf.train.Saver()</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variables_initializer())</div><div class="line">    average_loss = <span class="number">0.0</span></div><div class="line">    writer = tf.summary.FileWriter(<span class="string">'./improved_graph'</span>,sess.graph)</div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> range(num_train_steps):</div><div class="line">        batch = batch.gen_next()</div><div class="line">        loss_batch, _ = sess.run([model.loss,model.optimizer],</div><div class="line">            feed_dict=&#123;model.center_words: batch[<span class="number">0</span>],</div><div class="line">                      model.target_words: batch[<span class="number">1</span>]&#125;)</div><div class="line">        average_loss += loss_batch</div><div class="line">        <span class="keyword">if</span> (index + <span class="number">1</span>) % <span class="number">1000</span> == <span class="number">0</span>:</div><div class="line">            saver.save(sess, <span class="string">'checkpoints/skip-gram'</span>,global_step=model.global_step)</div></pre></td></tr></table></figure></p>
-<p>这时检查点文件都在文件夹checkpoints中。<br>如果想要恢复某个检查点，可以用以下语句：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">saver.restore(sess, <span class="string">'checkpoints/skip-gram-1000'</span>)</div></pre></td></tr></table></figure></p>
-<p>值得注意的是，我们只能恢复已经存在的checkpoints文件，所以在恢复时，需要先检查文件的有效性，可以这样做：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ckpt = tf.train.get_checkpoint_state(os.path.dirname(<span class="string">'checkpoints/checkpoint'</span>))</div><div class="line"><span class="keyword">if</span> ckpt <span class="keyword">and</span> ckpt.model_checkpoint_path:</div><div class="line">    saver.restore(sess, ckept.model_checkpoint_path)</div></pre></td></tr></table></figure></p>
-<p>默认情况下，saver.save()保存图中的所有变量，而且也是推荐这么做的。但是，但是也可以通过以下方法只保存部分变量的值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">v1 = tf.Variable(..., name=<span class="string">'v1'</span>)</div><div class="line">v2 = tf.Variable(..., name=<span class="string">'v2'</span>)</div><div class="line"></div><div class="line"><span class="comment"># pass the variables as a dict:</span></div><div class="line">saver = tf.train.Saver(&#123;<span class="string">'v1'</span>: v1, <span class="string">'v2'</span>: v2&#125;)</div><div class="line"></div><div class="line"><span class="comment"># pass them as a list</span></div><div class="line">saver =tf.train.Saver([v1,v2])</div><div class="line"></div><div class="line"><span class="comment"># passing a list is equivalent to passing a dict with the variable op names </span></div><div class="line">saver = tf.train.Saver(&#123;v.op.name: v <span class="keyword">for</span> v <span class="keyword">in</span> [v1, v2]&#125;)</div></pre></td></tr></table></figure></p>
-<p>注意：savers只是保存了变量的值，并没有保存整个计算图，所以我们需要自己创建计算图，然后载入变量。检查点文件指定了从变量到tensor的映射方式。人们通常不只是保存上一次迭代的参数，还保存迄今为止效果最好的参数，以便可以根据最佳参数评估模型。</p>
-<h2 id="tf-summary"><a href="#tf-summary" class="headerlink" title="tf.summary"></a>tf.summary</h2><p>我们可以使用Tensorboard可视化训练数据，包括loss, average loss, accuracy等。可以将它们可视化为点，直方图，甚至是图像。所以我们建立一个新的name scope来管理所有这类操作。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_create_summaries</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'summaries'</span>):</div><div class="line">        tf.summary.scalar(<span class="string">'loss'</span>, self.loss)</div><div class="line">        tf.summary.scalar(<span class="string">'accuracy'</span>, self.accuracy)</div><div class="line">        tf.summary.histogram(<span class="string">'histogram loss'</span>, self.loss)</div><div class="line">        <span class="comment"># because you have several summaries, you should merge them all</span></div><div class="line">        <span class="comment"># into one op to make it easier to manage</span></div><div class="line">        self.summary_op = tf.summary.merge_all()</div></pre></td></tr></table></figure></p>
-<p>然后用 sess.run()来执行。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">loss_batch, _, summary = sess.run([model.loss, model.optimizer, model.summary_op], feed_dict=feed_dict)</div></pre></td></tr></table></figure></p>
-<p>接着我们需要用用于可视化计算图的FileWriter对象来将这些summary写入文件。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">writer.add_summary(summary, global_step=step)</div></pre></td></tr></table></figure></p>
-<p>然后我们就可以得到一些可视化结果。<br>值得注意的是，如果我们将summary数据保存在graph文件夹的不同子文件夹，就可以对不同超参数的训练结果进行比较。<br>我们也可以使用tf.summary.image将结果可视化为图片。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.summary.image(name, tensor, max_output=<span class="number">3</span>, collections=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
-<h2 id="Control-Randomization"><a href="#Control-Randomization" class="headerlink" title="Control Randomization"></a>Control Randomization</h2><p>我们往往必须控制随机化过程才能为实验获得稳定的结果。NumPy以随机种子和随机状态获得随机数。但是TensorFlow不允许我们以numpy的方式获得随机状态，但它确实可以让我们通过以下两种方式获得稳定的随机结果：</p>
-<h3 id="在操作级别设置随机种子。-所有的随机张量都允许你在初始化时传入种子值。"><a href="#在操作级别设置随机种子。-所有的随机张量都允许你在初始化时传入种子值。" class="headerlink" title="在操作级别设置随机种子。 所有的随机张量都允许你在初始化时传入种子值。"></a>在操作级别设置随机种子。 所有的随机张量都允许你在初始化时传入种子值。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">my_var = tf.Variable(tf.trucated_normal((<span class="number">-1.0</span>,<span class="number">1.0</span>), stddev=<span class="number">0.1</span>, seed=<span class="number">0</span>))</div></pre></td></tr></table></figure>
-<p>注意每个新会话都会重新开始随机状态。例如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57492</span></div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; -5.97319</span></div></pre></td></tr></table></figure></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57493</span></div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57493</span></div></pre></td></tr></table></figure>
-<p>随着操作级别的随机种子，每个操作保持自己的种子。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line">d = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57493</span></div><div class="line">    print(sess.run(d)) <span class="comment"># &gt;&gt; 3.57493</span></div></pre></td></tr></table></figure></p>
-<h3 id="在计算图级别用tf-Graph-seed设置随机种子"><a href="#在计算图级别用tf-Graph-seed设置随机种子" class="headerlink" title="在计算图级别用tf.Graph.seed设置随机种子"></a>在计算图级别用tf.Graph.seed设置随机种子</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.set_random_seed(seed)</div></pre></td></tr></table></figure>
-<p>如果你不关心图中每个操作的随机化，而只是希望能够在另一个图上复制结果（以便其他人可以在你自己的图上复制你的结果），你可以使用tf.set_random_seed。设置当前的TensorFlow随机种子只影响当前的默认图形。<br>例如，有两个模型 a.py 和 b.py，它们有相同的代码。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line">tf.set_random_seed(<span class="number">2</span>)</div><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>)</div><div class="line">d = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>)</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c))</div><div class="line">    print(sess.run(d))</div></pre></td></tr></table></figure></p>
-<p>当没有设置图级别的随机种子时，两个代码文件会运行得到不同的结果。而如果设置了，则会得到相同的结果。</p>
-<h2 id="Reading-Data-in-Tensorflow"><a href="#Reading-Data-in-Tensorflow" class="headerlink" title="Reading Data in Tensorflow"></a>Reading Data in Tensorflow</h2><p>将数据加载到TensorFlow图中有两种主要的方法：一种是通过我们熟悉的feed_dict，另一种是通过读者使我们直接从文件中读取张量。当然，第三种方法是使用常量加载数据，但是这会造成图严重臃肿且无法运行。为了明白为什么我们需要比feed_dict更多的东西，我们需要看看feed_dict是如何工作的。Feed_dict将首先将数据从存储系统发送到客户端，然后从客户端发送到工作进程。这会导致数据变慢，特别是如果客户端与工作进程不在同一台机器上。TensorFlow有readers可以直接将数据加载到工作进程中。当我们不在分布式系统或者当我们的数据集很小的时候，这种改进将不会被注意到，但是它仍然值得研究。 TensorFlow有几个内置读卡器来满足您的阅读需求。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">tf.TextLineReader</div><div class="line"><span class="comment"># Outputs the lines of a file delimited by newlines</span></div><div class="line"><span class="comment"># E.g. text files, CSV files</span></div><div class="line">tf.FixedLengthRecordReader</div><div class="line"><span class="comment"># Outputs the entire file when all files have same fixed lengths</span></div><div class="line"><span class="comment"># E.g. each MNIST file has 28 x 28 pixels, CIFAR-10 32 x 32 x 3</span></div><div class="line">tf.WholeFileReader</div><div class="line"><span class="comment"># Outputs the entire file content</span></div><div class="line">tf.TFRecordReader</div><div class="line"><span class="comment"># Reads samples from TensorFlow's own binary format (TFRecord)</span></div><div class="line">tf.ReaderBase</div><div class="line"><span class="comment"># Allows you to create your own readers</span></div></pre></td></tr></table></figure></p>
-<h3 id="从队列读取数据。"><a href="#从队列读取数据。" class="headerlink" title="从队列读取数据。"></a>从队列读取数据。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">filename_queue = tf.train.string_input_producer([<span class="string">'file0.csv'</span>, <span class="string">'file1.csv'</span>])</div><div class="line">reader = tf.TextLineReader()</div><div class="line">key , value = reader.read(filename_queue)</div></pre></td></tr></table></figure>
-<h3 id="Threads-和-Queues"><a href="#Threads-和-Queues" class="headerlink" title="Threads 和  Queues"></a>Threads 和  Queues</h3><p>我们可以使用tf.Coordinator 和 tf.QueueRunner 来管理队列。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    <span class="comment"># start populating the filename queue</span></div><div class="line">    coord = tf.train.Coordinator()</div><div class="line">    threads = tf.train.start_queue_runners(coord=coord)</div></pre></td></tr></table></figure></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_05.pdf" target="_blank" rel="external">notes_05</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_05.pdf" target="_blank" rel="external">slides_05</a></p>
-
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=483671599&auto=1&height=66"></iframe></p>
+<h2 id="Effective-Java-Items-about-Methods-Common-to-All-Objects"><a href="#Effective-Java-Items-about-Methods-Common-to-All-Objects" class="headerlink" title="Effective Java Items about Methods Common to All Objects"></a>Effective Java Items about Methods Common to All Objects</h2><p>设计Object类的目的是为了扩展，它所有的非final方法(equals, hashCode, toString, clone, finalize)都有着明确的通用约定，它们都被设计成要被覆盖的。任何一个类在覆盖这些方法时都要遵守一些通用规定。</p>
+<h3 id="Item-10-Obey-the-general-contract-when-overriding-equals"><a href="#Item-10-Obey-the-general-contract-when-overriding-equals" class="headerlink" title="Item 10: Obey the general contract when overriding equals"></a>Item 10: Obey the general contract when overriding equals</h3><p>equals方法实现了等价关系，主要要满足以下条件：自反性，对称性，传递性，一致性，非空性。为了高效编写符合要求的equals方法，书中总结了以下方法：<br>1、使用==操作符检查参数是否是这个对象的引用。<br>2、使用instanceof操作符检查“参数是否为正确的类型”。<br>3、把参数转换成正确的类型。<br>4、对于该类中的每个“关键”域,检查参数中的域是否与该对象中对应的域相匹配。<br>5、编写好equals方法之后，再仔细检查是否满足之前的几个条件。<br>6、覆盖equals时要同时覆盖hashCode<br>7、不要企图让equals方法过于智能。<br>8、不要将equals声明中的Object对象替换为其他的类型。</p>
+<h3 id="Item-11-Always-override-hashCode-when-you-override-equals"><a href="#Item-11-Always-override-hashCode-when-you-override-equals" class="headerlink" title="Item 11: Always override hashCode when you override equals"></a>Item 11: Always override hashCode when you override equals</h3><p>每个覆盖了equals方法的类中，也必须同时覆盖hashCode方法。</p>
+<h3 id="Item-12-Always-override-toString"><a href="#Item-12-Always-override-toString" class="headerlink" title="Item 12: Always override toString"></a>Item 12: Always override toString</h3><p>遵守toString的约定并不像遵守equals和hashCode的约定那么重要，但是提供好的toString实现可以使得类使用起来更为舒适。</p>
+<h3 id="Item-13-Override-clone-judiciously"><a href="#Item-13-Override-clone-judiciously" class="headerlink" title="Item 13: Override clone judiciously"></a>Item 13: Override clone judiciously</h3><h3 id="Item-14-Consider-implementing-Comparable"><a href="#Item-14-Consider-implementing-Comparable" class="headerlink" title="Item 14: Consider implementing Comparable"></a>Item 14: Consider implementing Comparable</h3>
       
 
       
@@ -226,7 +204,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
@@ -238,7 +216,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
@@ -247,7 +225,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/21/effective-java-methods-common-to-all-objects/">展开全文 >></a>
         </p>
       
 
@@ -282,7 +260,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/15/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/17/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/15/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/17/">Next &raquo;</a>
     </nav>
   
 
@@ -378,19 +356,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -422,15 +396,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
