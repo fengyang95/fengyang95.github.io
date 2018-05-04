@@ -8,22 +8,23 @@
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
   <title>MobileNets论文笔记 | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="MobileNets论文笔记，包括MobileNetV1和MobileNetV2。 MobileNetV1MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。 实现">
+  <meta name="description" content="MobileNets论文笔记，包括MobileNetV1和MobileNetV2。 MobileNetV1MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。关于参">
 <meta name="keywords" content="paper">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MobileNets论文笔记">
 <meta property="og:url" content="https://wwdguu.github.io/2018/03/06/mobilenet-notes/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="MobileNets论文笔记，包括MobileNetV1和MobileNetV2。 MobileNetV1MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。 实现">
+<meta property="og:description" content="MobileNets论文笔记，包括MobileNetV1和MobileNetV2。 MobileNetV1MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。关于参">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wwdguu.github.io/2018/03/06/mobilenet-notes/dsc.png">
+<meta property="og:image" content="https://wwdguu.github.io/2018/03/06/mobilenet-notes/compute.jpg">
 <meta property="og:image" content="https://wwdguu.github.io/2018/03/06/mobilenet-notes/mobilenet_v1.JPG">
 <meta property="og:image" content="https://wwdguu.github.io/2018/03/06/mobilenet-notes/mobilenet_v2.JPG">
 <meta property="og:image" content="https://wwdguu.github.io/2018/03/06/mobilenet-notes/inverted_residual.JPG">
-<meta property="og:updated_time" content="2018-03-24T15:28:59.524Z">
+<meta property="og:updated_time" content="2018-05-04T12:23:42.134Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MobileNets论文笔记">
-<meta name="twitter:description" content="MobileNets论文笔记，包括MobileNetV1和MobileNetV2。 MobileNetV1MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。 实现">
+<meta name="twitter:description" content="MobileNets论文笔记，包括MobileNetV1和MobileNetV2。 MobileNetV1MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。关于参">
 <meta name="twitter:image" content="https://wwdguu.github.io/2018/03/06/mobilenet-notes/dsc.png">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
@@ -49,7 +50,8 @@
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
-<div class="overlay" style="background: #4d4d4d"></div>
+<div class="overlay" 
+style="background: #4d4d4d"></div>
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="" class="profilepic">
@@ -191,7 +193,7 @@
 </div>
 
         <p>MobileNets论文笔记，包括MobileNetV1和MobileNetV2。</p>
-<h1 id="MobileNetV1"><a href="#MobileNetV1" class="headerlink" title="MobileNetV1"></a>MobileNetV1</h1><p>MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。<br>其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。<br><img src="https://wwdguu.github.io/2018/03/06/mobilenet-notes/dsc.png" alt="Depthwise Separable Convolution"></p>
+<h1 id="MobileNetV1"><a href="#MobileNetV1" class="headerlink" title="MobileNetV1"></a>MobileNetV1</h1><p>MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。<br>其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。<br><img src="https://wwdguu.github.io/2018/03/06/mobilenet-notes/dsc.png" alt="Depthwise Separable Convolution"><br>关于参数减少计算：<br><img src="compute.jpg" alt="参数减少量计算"></p>
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p><strong>网络结构定义</strong><br><img src="mobilenet_v1.JPG" alt="MobilenetV1网络结构"><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># MobilenetV1 base </span></div><div class="line">Conv = namedtuple(<span class="string">'Conv'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>])</div><div class="line">DepthSepConv = namedtuple(<span class="string">'DepthSepConv'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>])</div><div class="line">MOBILENT_CONV_DEFS = [</div><div class="line">    Conv(stride=<span class="number">2</span>, depth=<span class="number">32</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">64</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">128</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">128</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">256</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">256</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">1024</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">1024</span>)</div><div class="line">]</div></pre></td></tr></table></figure></p>
 <h1 id="MobileNetV2"><a href="#MobileNetV2" class="headerlink" title="MobileNetV2"></a>MobileNetV2</h1><p>MobileNetV2在MobileNetV1的基础上做了一些改进，其实我更感兴趣的是作者提出SSDLite，将MobileNetV2用于目标检测，其精度和速度都超过了YOLOv2。</p>
 <h2 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h2><p><strong>网络结构</strong><br><img src="mobilenet_v2.JPG" alt="MobilenetV2结构"><br><strong>微结构单元</strong><br>注意stride=1时有残差结构，stride=2时无残差结构。<br><img src="inverted_residual.JPG" alt="Inverted Residual"><br><strong>结构定义</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">InvertedResidual = namedtuple(<span class="string">'InvertedResidual'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>, <span class="string">'num'</span>, <span class="string">'t'</span>])</div><div class="line">MOBILENET_V2_CONV_DEFS = [</div><div class="line">    Conv(stride=<span class="number">2</span>, depth=<span class="number">32</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">16</span>, num=<span class="number">1</span>, t=<span class="number">1</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">24</span>, num=<span class="number">2</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">32</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">64</span>, num=<span class="number">4</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">96</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">160</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">320</span>, num=<span class="number">1</span>, t=<span class="number">6</span>),</div><div class="line">]</div></pre></td></tr></table></figure></p>
@@ -447,11 +449,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -487,19 +489,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">dl</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color3">dl</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
               </li>
              
               <li class="article-tag-list-item">
