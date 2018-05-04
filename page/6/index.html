@@ -162,20 +162,20 @@ style="background: #4d4d4d"></div>
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-paperlist" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-effective-java-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/25/paperlist/">论文列表</a>
+      <a class="article-title" href="/2018/01/13/effective-java-notes/">一些Java编码规范条款</a>
     </h1>
   
 
         
-        <a href="/2018/03/25/paperlist/" class="archive-article-date">
-  	<time datetime="2018-03-25T15:49:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-25</time>
+        <a href="/2018/01/13/effective-java-notes/" class="archive-article-date">
+  	<time datetime="2018-01-13T02:22:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-13</time>
 </a>
         
       </header>
@@ -184,12 +184,422 @@ style="background: #4d4d4d"></div>
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Object-Detection"><span class="toc-text">Object Detection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Classfication"><span class="toc-text">Classfication</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#记录一些Java编码条款，方便查看"><span class="toc-text">记录一些Java编码条款，方便查看</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java（3rd-Edition）中的编码条款"><span class="toc-text">Effective Java（3rd Edition）中的编码条款</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-and-Destroying-Objects"><span class="toc-text">Create and Destroying Objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mothods-Common-to-All-Objects"><span class="toc-text">Mothods Common to All Objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Classes-and-Interfaces"><span class="toc-text">Classes and Interfaces</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generics"><span class="toc-text">Generics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Enums-and-Annotations"><span class="toc-text">Enums and Annotations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambdas-and-Streams"><span class="toc-text">Lambdas and Streams</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Methods"><span class="toc-text">Methods</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#General-Programming"><span class="toc-text">General Programming</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exceptions"><span class="toc-text">Exceptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Concurrency"><span class="toc-text">Concurrency</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Serialization"><span class="toc-text">Serialization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
 </div>
 
-        <p>主要列一些计算机视觉方面的论文。</p>
-<h2 id="Object-Detection"><a href="#Object-Detection" class="headerlink" title="Object Detection"></a>Object Detection</h2><p>目前主流方法都是基于深度学习的。<br><strong>One Stage</strong><br><a href="https://arxiv.org/abs/1512.02325" target="_blank" rel="external">SSD</a><br><a href="https://pjreddie.com/media/files/papers/yolo.pdf" target="_blank" rel="external">YOLO</a><br><a href="https://pjreddie.com/media/files/papers/YOLO9000.pdf" target="_blank" rel="external">YOLOv2</a><br><a href="https://pjreddie.com/media/files/papers/YOLOv3.pdf" target="_blank" rel="external">YOLOv3</a><br><strong>Two Stage</strong></p>
-<h2 id="Classfication"><a href="#Classfication" class="headerlink" title="Classfication"></a>Classfication</h2>
+        <h1 id="记录一些Java编码条款，方便查看"><a href="#记录一些Java编码条款，方便查看" class="headerlink" title="记录一些Java编码条款，方便查看"></a>记录一些Java编码条款，方便查看</h1><h2 id="Effective-Java（3rd-Edition）中的编码条款"><a href="#Effective-Java（3rd-Edition）中的编码条款" class="headerlink" title="Effective Java（3rd Edition）中的编码条款"></a>Effective Java（3rd Edition）中的编码条款</h2><h3 id="Create-and-Destroying-Objects"><a href="#Create-and-Destroying-Objects" class="headerlink" title="Create and Destroying Objects"></a>Create and Destroying Objects</h3><p><a href="">Item1: Consider static factory methods instead of constructors</a><br><a href="">Item2: Consider a builder when faced with many constructors</a><br><a href="">Item3: Enforce the singleton property with a private constructor or an enum type</a><br><a href="">Item4: Enforce noninstantiability with a private constructor</a><br><a href="">Item5: Prefer dependency injection to hardwiring resources</a><br><a href="">Item6: Avoid creating unnecessary objects</a><br><a href="">Item7: Eliminate absolete object references</a><br><a href="">Item8: Avoid finalizers and cleaners</a><br><a href="">Item9: Prefer try-with-resources to try-finally</a></p>
+<h3 id="Mothods-Common-to-All-Objects"><a href="#Mothods-Common-to-All-Objects" class="headerlink" title="Mothods Common to All Objects"></a>Mothods Common to All Objects</h3><p><a href="">Item10: Obey the general construct when overriding equals</a><br><a href="">Item11: Always override hashCode when you override equals</a><br><a href="">Item12: Always override toString</a><br><a href="">Item13: Override clone judiciously</a><br><a href="">Item14: Consider implementing Comparable</a></p>
+<h3 id="Classes-and-Interfaces"><a href="#Classes-and-Interfaces" class="headerlink" title="Classes and Interfaces"></a>Classes and Interfaces</h3><p><a href="">Item15: Minimize the accessibility of classes and members</a><br><a href="">Item16: In public classes, use accessor methods, not public fields</a><br><a href="">Item17: Minimize mutability</a><br><a href="">Item18: Favor composition over inheritance</a><br><a href="">Item19: Design and document for inheritance or else prohibit it</a><br><a href="">Item20: Prefer interfaces to abstract classes</a><br><a href="">Item21: Design interfaces for posterity</a><br><a href="">Item22: Use interfaces only to define types</a><br><a href="">Item23: Prefer class hierarchies to tagged classes</a><br><a href="">Item24: Favor static member classes over nonstatic</a><br><a href="">Item25: Limit source fields to a single top-level class</a></p>
+<h3 id="Generics"><a href="#Generics" class="headerlink" title="Generics"></a>Generics</h3><p><a href="">Item26: Don’t use raw types</a><br><a href="">Item27: Eliminate unchecked warnings</a><br><a href="">Item28: Prefer lists to arrays</a><br><a href="">Item29: Favor generic types</a><br><a href="">Item30: Favor generic methods</a><br><a href="">Item31: Use bounded wildcards to increase API flexibility</a><br><a href="">Item32: Combine generics and varargs judiciously</a><br><a href="">Item33: Consider typesafe heterogeneous containers</a></p>
+<h3 id="Enums-and-Annotations"><a href="#Enums-and-Annotations" class="headerlink" title="Enums and Annotations"></a>Enums and Annotations</h3><p><a href="">Item34: Use enums instead of int constants</a><br><a href="">Item35: Use instance fields instead of ordinals</a><br><a href="">Item36: Use EnumSet instead of bit fields</a><br><a href="">Item37: Use EnumMap instead of ordinal indexing</a><br><a href="">Item38: Emulate extensible enums with interfaces</a><br><a href="">Item39: Prefer annotations to naming patterns</a><br><a href="">Item40: Consistently use the Override annotation</a><br><a href="">Item41: Use marker interfaces to define types</a></p>
+<h3 id="Lambdas-and-Streams"><a href="#Lambdas-and-Streams" class="headerlink" title="Lambdas and Streams"></a>Lambdas and Streams</h3><p><a href="">Item42: Prefer lambdas to anonymous classes</a><br><a href="">Item43: Prefer method reference to lambdas</a><br><a href="">Item44: Favor the use of standard functional interfaces</a><br><a href="">Item45: Use streams judiciously</a><br><a href="">Item46: Prefer side-effect-free functions in streams</a><br><a href="">Item47: Prefer Collections to Stream as a return type</a><br><a href="">Item48: Use caution when making streams parallel</a></p>
+<h3 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h3><p><a href="">Item49: Check parameters for validity</a><br><a href="">Item50: Make defensive copies when needed</a><br><a href="">Item51: Design method signatures carefully</a><br><a href="">Item52: Use overloading judiciously</a><br><a href="">Item53: Use varargs</a><br><a href="">Item54: Return empty collections or arrays, not nulls</a><br><a href="">Item55: Return optionals judiciously</a><br><a href="">Item56: Write doc comments for all exposed API elements</a></p>
+<h3 id="General-Programming"><a href="#General-Programming" class="headerlink" title="General Programming"></a>General Programming</h3><p><a href="">Item57: Minimize the scope of local variables</a><br><a href="">Item58: Prefer for-each loops to traditional for loops</a><br><a href="">Item59: Know and use the libraries</a><br><a href="">Item60: Avoid float and double if exact answers are required</a><br><a href="">Item61: Prefer primitive types to boxed primitives</a><br><a href="">Item62: Avoid strings where other types are more appropriate</a><br><a href="">Item63: Beware the performance of string concatenation</a><br><a href="">Item64: Refer to objects by their interfaces</a><br><a href="">Item65: Prefer interfaces to reflection</a><br><a href="">Item66: Use native methods judiciously</a><br><a href="">Item67: Optimize judiciously</a><br><a href="">Item68: Adhere to generally accepted naming conventions</a></p>
+<h3 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h3><p><a href="">Item69: Use exceptions only for exceptional conditions</a><br><a href="">Item70: Use checked exceptions for recoverable conditions and runtime exceptions for programming errors</a><br><a href="">Item71: Avoid unnecessary use of checked exceptions</a><br><a href="">Item72: Favor the use of standard exceptions</a><br><a href="">Item73: Throw exceptions appropriate to the abstraction</a><br><a href="">Item74: Document all exceptions thrown by each method</a><br><a href="">Item75: Include failure-capture information in detail messages</a><br><a href="">Item76: Strive for failure atomicity</a><br><a href="">Item77: Don’t ignore exceptions</a></p>
+<h3 id="Concurrency"><a href="#Concurrency" class="headerlink" title="Concurrency"></a>Concurrency</h3><p><a href="">Item78: Synchronize access to shared mutable data</a><br><a href="">Item79: Avoid excessive synchronization</a><br><a href="">Item80: Prefer executors, tasks, and streams to threads</a><br><a href="">Item81: Prefer concurrency utilities to wait and notify</a><br><a href="">Item82: Document thread safety</a><br><a href="">Item83: Use lazy initialization judiciously</a><br><a href="">Item84: Don’t depend on the thread scheduler</a></p>
+<h3 id="Serialization"><a href="#Serialization" class="headerlink" title="Serialization"></a>Serialization</h3><p><a href="">Item85: Prefer alternatives to Java serialization</a><br><a href="">Item86: Implement Serializable with great caution</a><br><a href="">Item87: Consider using a custom serialized form</a><br><a href="">Item88: Write readObject methods defensively</a><br><a href="">Item89: For instance control, prefer enum types to readResolve</a><br><a href="">Item90: Consider serialization proxies instead of serialized instances</a></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><pre><code>Effective Java, Third Edition
+</code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/13/effective-java-notes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-java-settings" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/10/java-settings/">java-settings</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/10/java-settings/" class="archive-article-date">
+  	<time datetime="2018-01-10T02:09:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#配置Java项目时的一些方法"><span class="toc-text">配置Java项目时的一些方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#maven指定JDK版本"><span class="toc-text">maven指定JDK版本</span></a></li></ol></li></ol>
+</div>
+
+        <h1 id="配置Java项目时的一些方法"><a href="#配置Java项目时的一些方法" class="headerlink" title="配置Java项目时的一些方法"></a>配置Java项目时的一些方法</h1><h2 id="maven指定JDK版本"><a href="#maven指定JDK版本" class="headerlink" title="maven指定JDK版本"></a>maven指定JDK版本</h2><p>在pom.xml中如下配置<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/10/java-settings/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-java-programming-language-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/09/java-programming-language-notes/">Java语言程序设计-第10版notes</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/09/java-programming-language-notes/" class="archive-article-date">
+  	<time datetime="2018-01-09T12:25:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java语言程序设计第10版notes"><span class="toc-text">Java语言程序设计第10版notes</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#第1章-计算机、程序和Java概述"><span class="toc-text">第1章 计算机、程序和Java概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第2章-基本程序设计"><span class="toc-text">第2章 基本程序设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-1"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第3章-选择"><span class="toc-text">第3章 选择</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-2"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第4章-数学函数、字符和字符串"><span class="toc-text">第4章 数学函数、字符和字符串</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-3"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第6章-方法"><span class="toc-text">第6章 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-4"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第7章-一维数组"><span class="toc-text">第7章 一维数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-5"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第9章-对象和类"><span class="toc-text">第9章 对象和类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-6"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第10章-面向对象思考"><span class="toc-text">第10章 面向对象思考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-7"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第11章-继承和多态"><span class="toc-text">第11章 继承和多态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-8"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第12章-异常处理和文本IO"><span class="toc-text">第12章 异常处理和文本IO</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-9"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第13章-抽象类和接口"><span class="toc-text">第13章 抽象类和接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-10"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第19章-泛型"><span class="toc-text">第19章 泛型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-11"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第30章-多线程和并行程序设计"><span class="toc-text">第30章 多线程和并行程序设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-12"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第31章-网络"><span class="toc-text">第31章 网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部分章节小结-13"><span class="toc-text">部分章节小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=434052443&auto=1&height=66"></iframe></p>
+<h1 id="Java语言程序设计第10版notes"><a href="#Java语言程序设计第10版notes" class="headerlink" title="Java语言程序设计第10版notes"></a>Java语言程序设计第10版notes</h1><h2 id="第1章-计算机、程序和Java概述"><a href="#第1章-计算机、程序和Java概述" class="headerlink" title="第1章 计算机、程序和Java概述"></a>第1章 计算机、程序和Java概述</h2><h3 id="部分章节小结"><a href="#部分章节小结" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、编程错误可以分为三类：语法错误、运行时错误和逻辑错误。编译器报告的错误称为语法错误或者编译错误；运行时错误指引起程序非正常结束的错误；而当一个程序没有按照预期的方式执行时，产生逻辑错误 。</p>
+<h2 id="第2章-基本程序设计"><a href="#第2章-基本程序设计" class="headerlink" title="第2章 基本程序设计"></a>第2章 基本程序设计</h2><h3 id="部分章节小结-1"><a href="#部分章节小结-1" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、拓宽类型不需要显式转换，缩窄类型必须显式完成。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//拓宽类型转换</span></div><div class="line"><span class="keyword">int</span> i=<span class="number">9</span>;</div><div class="line"><span class="keyword">double</span> d=i;</div><div class="line"><span class="comment">//缩窄类型转换</span></div><div class="line"><span class="keyword">double</span> d=<span class="number">9.0</span>;</div><div class="line"><span class="keyword">int</span> i=(<span class="keyword">int</span>)d;</div></pre></td></tr></table></figure></p>
+<p>2、计算机科学中，1970年1月1日午夜零点为UNIX时间戳。</p>
+<h2 id="第3章-选择"><a href="#第3章-选择" class="headerlink" title="第3章 选择"></a>第3章 选择</h2><h3 id="部分章节小结-2"><a href="#部分章节小结-2" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、除开赋值操作符的所有二元操作符都是左结合的，赋值操作符是右结合的。(此处的结合指的是结合律)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//以下两个表达等价</span></div><div class="line">a-b+c-d</div><div class="line">((a-b)+c)-d</div><div class="line"><span class="comment">//以下两个表达等价</span></div><div class="line">a=b+=c=<span class="number">5</span></div><div class="line">a=(b+=(c=<span class="number">5</span>))</div></pre></td></tr></table></figure></p>
+<h2 id="第4章-数学函数、字符和字符串"><a href="#第4章-数学函数、字符和字符串" class="headerlink" title="第4章 数学函数、字符和字符串"></a>第4章 数学函数、字符和字符串</h2><h3 id="部分章节小结-3"><a href="#部分章节小结-3" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、字符 ‘ ‘ 、\t、 \f、 \r 和 \n 都称为空白字符。<br>2、字符可以基于它们的Unicode码使用关系操作符进行比较。</p>
+<h2 id="第6章-方法"><a href="#第6章-方法" class="headerlink" title="第6章 方法"></a>第6章 方法</h2><h3 id="部分章节小结-4"><a href="#部分章节小结-4" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、程序模块化和可重用性是软件工程的中心目标之一。<br>2、方法可以重载，这意味着两个方法可以拥有相同的方法名，只要它们的参数列表不同即可。<br>3、方法抽象是把方法的应用和实现分离，用户可以在不知道方法是如何实现的情况下使用方法。方法的实现细节封装在方法内，对调用该方法的用户隐藏。这称为信息隐藏或封装。<br>4、方法抽象将程序模块化为整齐、层次分明的形式。将程序写成简洁的方法构成的集合会比其他方式更容易编写、调试、维护和修改。这种编写风格也会提高方法的可重用性。<br>5、当实现一个大型程序时，可以使用自顶向下或者自底向上的编码方法。不要一次性编写完整个程序。这种方式似乎浪费了更多的编码时间(因为要反复编译和运行这个程序)，但实际上，它会节省时间并使得调试更为容易。</p>
+<h2 id="第7章-一维数组"><a href="#第7章-一维数组" class="headerlink" title="第7章 一维数组"></a>第7章 一维数组</h2><h3 id="部分章节小结-5"><a href="#部分章节小结-5" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、创建数组时推荐使用 elementType[] arrayRefVar风格<br>2、不同于基本数据类型变量的声明，声明数组变量并不会给数组分配任何空间。数组变量不是基本数据类型变量。数组变量包含的是对数组的引用。<br>3、将数组参数传递给方法时，实际上传递的是数组的引用；更准确地说，被调用的方法可以修改调用者的原始数组的元素。<br>4、数组初始化语法：<br>        elementType[] arrayRefVar={value0,value1,…,valuek};</p>
+<h2 id="第9章-对象和类"><a href="#第9章-对象和类" class="headerlink" title="第9章 对象和类"></a>第9章 对象和类</h2><h3 id="部分章节小结-6"><a href="#部分章节小结-6" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、类是一种数据类型。可以用它声明对象引用变量。对象引用变量中似乎存放了一个对象，但是事实上，它包含的只是对该对象的引用。严格来说，对象引用变量和对象是不同的，但是大多数情况下，它们的区别是可以忽略的。<br>2、所有传递给方法的参数都是值传递的，对于基本类型的参数，传递的是实际值；而如果参数是引用数据类型，则传递的是对象的引用。</p>
+<h2 id="第10章-面向对象思考"><a href="#第10章-面向对象思考" class="headerlink" title="第10章 面向对象思考"></a>第10章 面向对象思考</h2><h3 id="部分章节小结-7"><a href="#部分章节小结-7" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、面向过程范式重在设计方法。面向对象范式将数据和方法耦合在对象中。使用面向对象范式的软件设计重在对象和对象的操作。面向对象方法结合了面向过程范式的功能以及将数据和操作集成在对象中的特点。<br>2、许多Java方法要求使用对象作为参数。Java提供了一个便捷的方法，将基本数据类型合并或包装到一个对象中。<br>3、Java可以根据上下文自动地将基本类型值转换到对应的包装对象，反之亦然。</p>
+<h2 id="第11章-继承和多态"><a href="#第11章-继承和多态" class="headerlink" title="第11章 继承和多态"></a>第11章 继承和多态</h2><h3 id="部分章节小结-8"><a href="#部分章节小结-8" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、构造方法可以调用重载的构造方法或者它的父类的构造方法。这种调用必须是构造方法的第一条语句。如果没有显示地调用它们中的任何一个，编译器就会把super()作为构造方法的第一条语句，它调用的是父类的无参构造方法。<br>2、实例方法只有在可访问时才能重写。这样，私有方法是不能重写的，因为它是不能在类本身之外访问的。如果子类中定义的方法在父类中是私有的，那么这两个方法是完全没有关系的。<br>3、Java中的每个类都继承自java.lang.Object类。<br>4、如果一个方法的参数类型是父类,可以向该方法的参数传递任何子类的对象。这称为多态。<br>5、因为子类的实例总是它的父类的实例。所以，总是可以将一个子类的实例转化成一个父类的变量。当把父类实例转换成它的子类变量时，必须使用转换记号(子类名)进行显式转换，向编译器表明你的意图。<br>6、当从引用变量调用实例方法时，该变量的实际类型在运行时决定使用该方法的哪个实现。这称为动态绑定。</p>
+<h2 id="第12章-异常处理和文本IO"><a href="#第12章-异常处理和文本IO" class="headerlink" title="第12章 异常处理和文本IO"></a>第12章 异常处理和文本IO</h2><h3 id="部分章节小结-9"><a href="#部分章节小结-9" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、Java异常是扩展自java.lang.Throwable的类的实例。Java本身提供大量预定义的异常类，当然也可以通过扩展Exception类来定义自己的异常类。<br>2、异常发生在一个方法的执行过程中。RuntimeException和Error都是免检异常，所有其他的异常都是必检的。<br>3、声明异常的关键字是throws,而抛出异常的关键字是throw。<br>4、如果调用声明了必检异常的方法，必须将该方法调用放在try语句中。在方法执行过程中出现异常时，catch块会捕获并处理异常。<br>5、如果一个异常没有被当前方法捕获，则该异常被传给调用者。这个过程不断重复直到异常被捕获或者传递给main方法。<br>6、在catch块中，异常的指定顺序是非常重要的。如果在指定一个类的异常对象之前，指定了这个异常类的父类的异常对象，就会导致一个编译错误。<br>7、当方法中发生异常时，如果异常没有被捕获，方法将会立刻退出。如果想在方法退出前执行一些任务，可以在方法中捕获这个异常，然后再重新抛给它的调用者。<br>8、任何情况下都会执行finally块中的代码，不管try块中是否出现了异常，或者出现后是否捕获了该异常。</p>
+<h2 id="第13章-抽象类和接口"><a href="#第13章-抽象类和接口" class="headerlink" title="第13章 抽象类和接口"></a>第13章 抽象类和接口</h2><h3 id="部分章节小结-10"><a href="#部分章节小结-10" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、抽象类和常规类一样，都有数据和方法，但是不能用new操作符创建抽象类的实例。<br>2、非抽象类中不能包含抽象方法。如果抽象类的子类中没有实现所有被继承的父类抽象方法，就必须将该子类也定义为抽象类。<br>3、包含抽象方法的类必须是抽象类。但是抽象类可以不包含抽象的方法。<br>4、即使父类是具体的，子类也可以是抽象的。<br>5、接口是一种与类相似的结构，只包含常量和抽象方法。接口在许多方面与抽象类很相近，但抽象类除了包含常量和抽象方法外，还可以包含变量和具体方法。<br>6、在 Java 中，接口被认为是一种特殊的类。就像常规类一样，每个接口都被编译为独立的字节码文件。<br>7、接口java.lang.Comparable定义了compareTo方法。Java类库中的许多类都实现了 Comparable。<br>8、接口 java.lang.Cloneable 是一个标记接口。实现Cloneable接口的类的对象是可克隆的。<br>9、个类仅能继承一个父类，但一个类却可以实现一个或多个接口。<br>10、一个接口可以继承一个或多个接口。</p>
+<h2 id="第19章-泛型"><a href="#第19章-泛型" class="headerlink" title="第19章 泛型"></a>第19章 泛型</h2><h3 id="部分章节小结-11"><a href="#部分章节小结-11" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、泛型具有参数化类型的能力。可以定义使用泛型类型的类或方法，编译器会用具体类型来替代泛型类型。<br>2、泛型的主要优势是能够在编译时而不是运行时检测错误。<br>3、泛型类或者方法允许指定这个类或者方法可以带有的对象类型。如果试图使用带有不兼容对象的类或者方法，编译器会检测出这个错误。<br>4、定义在类、接口或者静态方法中的泛型称为形式泛型类型，随后可以用一个实际具体类型来替换它。替换泛型类型的过程称为泛型实例化。<br>5、不使用类型参数的泛型类称为原始类型，例如ArrayList。使用原始类型是为了向后兼容Java较早的版本。<br>6、通配泛型类型有三种形式：?、? extends T 和 ? super T,这里的T代表一个泛型类型。第一种形式?称为非受限通配，它和 ? extends Object是一样的。第二种形式 ? extends T 称为受限通配，代表T 或者T的一个子类型。第三种类型 ? super T 称为下限通配，表示T或者T的一个父类型。<br>7、使用称为类型消除的方法来实现泛型。编译器使用泛型类型信息来编译代码，但是随后消除它。因此，泛型信息在运行时是不可用的。这个方法能够使泛型代码向后兼容使用原始类型的遗留代码。<br>8、不能使用泛型类型参数来创建实例。<br>9、不能使用泛型类型参数来创建数组。<br>10、不能再静态环境中使用类的泛型类型参数。<br>11、在异常类中不能使用泛型类型参数。</p>
+<h2 id="第30章-多线程和并行程序设计"><a href="#第30章-多线程和并行程序设计" class="headerlink" title="第30章 多线程和并行程序设计"></a>第30章 多线程和并行程序设计</h2><h3 id="部分章节小结-12"><a href="#部分章节小结-12" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、每个任务都是Runnable接口的实例。线程就是一个便于任务执行的对象。可以通过实现Runnable接口来定义任务类，通过使用Thread构造方法包住一个任务来创建线程。<br>2、一个线程对象被创建后，可以使用start()方法启动线程，可以使用sleep(long)方法将线程转入休眠状态，以便其它线程获得运行的机会。<br>3、线程对象从来不会直接调用run方法。到了执行某个线程的时候，Java虚拟机调用run方法。类必须覆盖run方法，告诉系统线程运行时将会做什么。<br>4、为了避免线程破坏共享资源，可以使用同步的方法或块。同步方法在执行前需要获得一个锁。当同步方法是实例方法时，锁是 在调用方法的对象上；当同步方法是静态(类)方法时，锁是在方法所在的类上。<br>5、在执行方法中某个代码块时，可以使用同步语句获得任何对象上的锁，而不仅是this对象上的锁。这个代码称为同步块。<br>6、可以使用显式锁和条件，以及对象的内置监视器来便于进程之间的通信。<br>7、Java集合框架提供的阻塞队列(ArrayBlockingQueue,LinkedBlockingQueue,PriorityBlockingQueue)自动地同步对队列的访问。<br>8、可以使用信号量来限制访问共享资源的并行任务数量。<br>9、如果两个或更多的线程获取多个对象上的锁时，每个线程都有一个对象上的锁并等待另一个对象上的锁，这时就有可能发生死锁现象。使用资源排序技术可以避免死锁。<br>10、JDK7的Fork/Join框架被设计用于开发并行程序。可以定义一个继承自RecursiveAction或者RecursiveTask的任务类，在ForkJoinPool中并行执行任务类，并在所有任务执行完后得到整体的解答。</p>
+<h2 id="第31章-网络"><a href="#第31章-网络" class="headerlink" title="第31章 网络"></a>第31章 网络</h2><h3 id="部分章节小结-13"><a href="#部分章节小结-13" class="headerlink" title="部分章节小结"></a>部分章节小结</h3><p>1、Java支持流套接字和数据报套接字。流套接字用TCP(传输控制协议)来进行数据传输，而数据报套接字用UDP(用户数据报协议)。由于TCP协议检测丢失的传输并且重新提交它们，所以，传输是无损和可靠的。相反地，UDP不能保证传输是无损的。<br>2、要创建一个服务器，必须先使用语句new ServerSocket(port)获取一个服务器套接字。在创建服务器套接字后，可以启动服务器，使用服务器套接字上的accept()方法监听连接请求。客户端使用new Socket(serverName,port)来创建一个客户端套接字，用于向服务器发送连接请求。<br>3、当服务器与客户端的连接建立后，流套接字通信与输入输出流通信非常相似。可以通过套接字上的getInputStream() 方法获得一个输入流，通过getOutputStream()方法获得一个输出流。<br>4、一个服务器经常同时与多个客户端协同工作。通过为每个连接创建一个线程，可以利用线程同时处理服务器的多个客户端。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>Java语言程序设计（基础篇 原书第10版）<br>Java语言程序设计（进阶篇 原书第10版）<br><img src="javadev.png" alt=""></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/09/java-programming-language-notes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-SQL" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/07/SQL/">SQL使用</a>
+    </h1>
+  
+
+        
+        <a href="/2017/12/07/SQL/" class="archive-article-date">
+  	<time datetime="2017-12-07T13:43:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows下MySQL配置"><span class="toc-text">Windows下MySQL配置</span></a></li></ol>
+</div>
+
+        <h2 id="Windows下MySQL配置"><a href="#Windows下MySQL配置" class="headerlink" title="Windows下MySQL配置"></a>Windows下MySQL配置</h2><p><a href="http://blog.csdn.net/wengengeng/article/details/52013650" target="_blank" rel="external">MySQL配置</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">sql</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/sql//" class="article-tag-list-link color4">sql</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/12/07/SQL/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-yolo_details" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/yolo_details/">YOLO Object Detection</a>
+    </h1>
+  
+
+        
+        <a href="/2017/12/01/yolo_details/" class="archive-article-date">
+  	<time datetime="2017-11-30T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#YOLO"><span class="toc-text">YOLO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#论文链接"><span class="toc-text">论文链接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLO-1"><span class="toc-text">YOLO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLO9000-YOLOv2"><span class="toc-text">YOLO9000(YOLOv2)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Better"><span class="toc-text">Better</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传统YOLO缺陷"><span class="toc-text">传统YOLO缺陷</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#YOLOv2相对YOLO的改进"><span class="toc-text">YOLOv2相对YOLO的改进</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#High-Resolution-Classifier"><span class="toc-text">High Resolution Classifier</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Convolutional-With-Anchor-Boxes"><span class="toc-text">Convolutional With Anchor Boxes</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#和YOLO相比的性能"><span class="toc-text">和YOLO相比的性能</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Dimension-Clusters"><span class="toc-text">Dimension Clusters</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Direct-Location-Prediction"><span class="toc-text">Direct Location Prediction</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Fine-Grained-Features"><span class="toc-text">Fine-Grained Features</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Multi-Scale-Training"><span class="toc-text">Multi-Scale Training</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Further-Experiments"><span class="toc-text">Further Experiments</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Faster"><span class="toc-text">Faster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stronger"><span class="toc-text">Stronger</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YOLOv3"><span class="toc-text">YOLOv3</span></a></li></ol></li></ol>
+</div>
+
+        <h1 id="YOLO"><a href="#YOLO" class="headerlink" title="YOLO"></a>YOLO</h1><h2 id="论文链接"><a href="#论文链接" class="headerlink" title="论文链接"></a>论文链接</h2><p><a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8100173" target="_blank" rel="external">YOLO9000:Better, Faster, Stronger</a><br><a href="https://arxiv.org/pdf/1709.05943.pdf" target="_blank" rel="external">Fast YOLO: A Fast You Only Look Once System for Real-time Embedded Object Detection in Video</a><br><a href="https://pjreddie.com/media/files/papers/yolo.pdf" target="_blank" rel="external">You Only Look Once:Unified, Real-Time Object Detection</a><br><a href="https://pjreddie.com/media/files/papers/YOLOv3.pdf" target="_blank" rel="external">YOLOv3</a></p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><h2 id="YOLO-1"><a href="#YOLO-1" class="headerlink" title="YOLO"></a>YOLO</h2><p><a href="https://zhuanlan.zhihu.com/p/25045711" target="_blank" rel="external">YOLO论文解读</a></p>
+<h2 id="YOLO9000-YOLOv2"><a href="#YOLO9000-YOLOv2" class="headerlink" title="YOLO9000(YOLOv2)"></a>YOLO9000(YOLOv2)</h2><p><a href="https://zhuanlan.zhihu.com/p/25052190" target="_blank" rel="external">YOLO9000论文解读</a></p>
+<h3 id="Better"><a href="#Better" class="headerlink" title="Better"></a>Better</h3><h4 id="传统YOLO缺陷"><a href="#传统YOLO缺陷" class="headerlink" title="传统YOLO缺陷"></a>传统YOLO缺陷</h4><p>Significant number of localization errors compared to Fast-RCNN<br>Low recall compared to region proposal-based mothods</p>
+<h4 id="YOLOv2相对YOLO的改进"><a href="#YOLOv2相对YOLO的改进" class="headerlink" title="YOLOv2相对YOLO的改进"></a>YOLOv2相对YOLO的改进</h4><h5 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h5><p>adding  batch normalization on all of the convolutional layers in YOLO<br>2% improvement in mAP<br>then we can remove dropout without overfitting</p>
+<h5 id="High-Resolution-Classifier"><a href="#High-Resolution-Classifier" class="headerlink" title="High Resolution Classifier"></a>High Resolution Classifier</h5><p>increase of almost 4% mAP</p>
+<h5 id="Convolutional-With-Anchor-Boxes"><a href="#Convolutional-With-Anchor-Boxes" class="headerlink" title="Convolutional With Anchor Boxes"></a>Convolutional With Anchor Boxes</h5><p>remove fully connected layers from YOLO and use anchor boxes to predict bounding boxes.<br>eliminate one pooling layer to make the output of the network’s convolutional layers higher resolution.<br>shrink the network to operate on 416x416 input images instead of 448x448。这样使得输出的feature map大小为13x13,代替原来的14x14使得中心只有一个。</p>
+<h6 id="和YOLO相比的性能"><a href="#和YOLO相比的性能" class="headerlink" title="和YOLO相比的性能"></a>和YOLO相比的性能</h6><p>mAP: 69.5-&gt;69.2<br>recall: 81%-&gt;88%</p>
+<h5 id="Dimension-Clusters"><a href="#Dimension-Clusters" class="headerlink" title="Dimension Clusters"></a>Dimension Clusters</h5><p>使用k-means自动挑选box的尺寸代替原来YOLO方案的手动挑选尺寸。</p>
+<h5 id="Direct-Location-Prediction"><a href="#Direct-Location-Prediction" class="headerlink" title="Direct Location Prediction"></a>Direct Location Prediction</h5><p>YOLO使用anchor boxes的过程中会遇到模型不稳定的问题。通过改变预测box位置的方法改进。<br>Using dimension clusters along with directly predicting the bounding box center location improves YOLO by almost 5% over the version with anchor boxes.</p>
+<h5 id="Fine-Grained-Features"><a href="#Fine-Grained-Features" class="headerlink" title="Fine-Grained Features"></a>Fine-Grained Features</h5><p>This gives a modest 1% performance increase.</p>
+<h5 id="Multi-Scale-Training"><a href="#Multi-Scale-Training" class="headerlink" title="Multi-Scale Training"></a>Multi-Scale Training</h5><p>由于模型只有卷积层和池化层，我们可以随意调整大小。 Every 10 batches our network randomly chooses new image dimensions。</p>
+<h5 id="Further-Experiments"><a href="#Further-Experiments" class="headerlink" title="Further Experiments"></a>Further Experiments</h5><p><img src="compare.png" alt="The path from YOLO to YOLOv2"></p>
+<h3 id="Faster"><a href="#Faster" class="headerlink" title="Faster"></a>Faster</h3><h3 id="Stronger"><a href="#Stronger" class="headerlink" title="Stronger"></a>Stronger</h3><h2 id="YOLOv3"><a href="#YOLOv3" class="headerlink" title="YOLOv3"></a>YOLOv3</h2>
       
 
       
@@ -223,7 +633,7 @@ style="background: #4d4d4d"></div>
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/25/paperlist/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/12/01/yolo_details/">展开全文 >></a>
         </p>
       
 
@@ -258,7 +668,7 @@ style="background: #4d4d4d"></div>
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
     </nav>
   
 
@@ -354,11 +764,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -366,11 +776,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -382,15 +792,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">paper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -402,15 +812,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">dl</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
             
             <div class="clearfix"></div>

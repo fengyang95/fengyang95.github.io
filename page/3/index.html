@@ -162,20 +162,20 @@ style="background: #4d4d4d"></div>
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-cpp-lvalue-and-rvalue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-mobilenet-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/23/cpp-lvalue-and-rvalue/">C++中的左值和右值以及std::move, std::forward</a>
+      <a class="article-title" href="/2018/03/06/mobilenet-notes/">MobileNets论文笔记</a>
     </h1>
   
 
         
-        <a href="/2018/04/23/cpp-lvalue-and-rvalue/" class="archive-article-date">
-  	<time datetime="2018-04-23T15:15:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-23</time>
+        <a href="/2018/03/06/mobilenet-notes/" class="archive-article-date">
+  	<time datetime="2018-03-06T13:08:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-06</time>
 </a>
         
       </header>
@@ -184,21 +184,15 @@ style="background: #4d4d4d"></div>
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#lvalue-and-rvalue"><span class="toc-text">lvalue and rvalue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Effective-Modern-C-中相关条款笔记总结"><span class="toc-text">Effective Modern C++中相关条款笔记总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-23-Understanding-std-move-and-std-forward"><span class="toc-text">Item 23: Understanding std::move and std::forward</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-24：Distinguish-universal-references-from-rvalue-references"><span class="toc-text">Item 24：Distinguish universal references from rvalue references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><span class="toc-text">Item 25：Use std::move on rvalue references, std::forward on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-26-Avoid-overloading-on-universal-references"><span class="toc-text">Item 26: Avoid overloading on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><span class="toc-text">Item 27: Familiarize yourself with alternatives to overloading on universal references.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-28-Understand-reference-collapsing"><span class="toc-text">Item 28: Understand reference collapsing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><span class="toc-text">Item 29: Assume that move operations are not present, not cheap, and not used</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><span class="toc-text">Item 30: Familiarize yourself with perfect forwarding failure cases</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MobileNetV1"><span class="toc-text">MobileNetV1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MobileNetV2"><span class="toc-text">MobileNetV2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现-1"><span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
-        <h1 id="lvalue-and-rvalue"><a href="#lvalue-and-rvalue" class="headerlink" title="lvalue and rvalue"></a>lvalue and rvalue</h1><p> 在概念上,右值对应于从函数返回的临时对象，而左值对应于可以引用的对象，无论是通过名称还是通过跟随指针或左值引用。一种判断表达式是左值还是右值的方法是：如果能得到其地址，那么它是左值，否则其是右值。<br><strong>注意:</strong>一个表达式的类型和这个表达式本身是左值还是右值无关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//一个参数始终是lvalue，即便其类型是一个rvalue reference</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Widget(Widget&amp;&amp; rhs);<span class="comment">//rhs是一个左值，但是其有一个右值引用的类型。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="Effective-Modern-C-中相关条款笔记总结"><a href="#Effective-Modern-C-中相关条款笔记总结" class="headerlink" title="Effective Modern C++中相关条款笔记总结"></a>Effective Modern C++中相关条款笔记总结</h1><h2 id="Item-23-Understanding-std-move-and-std-forward"><a href="#Item-23-Understanding-std-move-and-std-forward" class="headerlink" title="Item 23: Understanding std::move and std::forward"></a>Item 23: Understanding std::move and std::forward</h2><p><strong>要点</strong><br><strong>1、std::move</strong><br>move semantic使得编译器将代价昂贵的copy操作替换为相对代价低的move。move semantics使得move-only类型的创建成为可能，比如std::unique_ptr,std::future,std::thread。<br>实际上std::move并没有移动任何东西。它做的其实是一个类型转换工作。就是将输入转型为rvalue。<br><strong>2、std::forward </strong><br>std::forward和std::move类似，比较大的区别就是std::forward是有条件的类型转换，<br>只有当参数是和rvalue绑定时将其转型为rvalue，否则不做转换。</p>
-<h2 id="Item-24：Distinguish-universal-references-from-rvalue-references"><a href="#Item-24：Distinguish-universal-references-from-rvalue-references" class="headerlink" title="Item 24：Distinguish universal references from rvalue references"></a>Item 24：Distinguish universal references from rvalue references</h2><p><strong>要点</strong><br><strong>1、判断原则</strong><br><strong>A、当函数的模板参数有着T&amp;&amp;的形式，并且有推导类型T，或者一个对象被声明为auto&amp;&amp;，那么它就是一个universal reference。</strong><br><strong>B、如果type的声明的格式并不完全是type&amp;&amp;，或者类型推断没有发生，那么type&amp;&amp;表示的就是rvalue reference。</strong><br><strong>C、对于universal reference，如果它被rvalue初始化，它就是rvalue，与之对应，如果被lvalue初始化，其就是lvalue。</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//实例</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(Widget&amp;&amp; param)</span></span>;<span class="comment">//B rvalue  reference  没有类型推断</span></div><div class="line">Widget&amp;&amp; var1=Widget();<span class="comment">//B rvalue reference 没有类型推断</span></div><div class="line"><span class="keyword">auto</span>&amp;&amp; var2=var1;<span class="comment">//A universal references var2有形式auto&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;&amp;&amp; param)</span></span>; <span class="comment">//B rvalue references param类型不完全是type&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>;<span class="comment">//universal references param有推导类型T，且形式是T&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">const</span> T&amp;&amp; param)</span></span>;<span class="comment">//universal reference 因</span></div><div class="line"><span class="comment">//为type的声明格式并不完全是type&amp;&amp;(多了const)</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">class</span> <span class="title">Allocator</span> = <span class="title">allocator</span>&lt;T&gt;&gt;</span></div><div class="line"><span class="class"><span class="title">class</span> <span class="title">vector</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">push_back</span><span class="params">(T&amp;&amp; x)</span><span class="comment">//rvalue reference </span></span></div><div class="line"><span class="function">    <span class="comment">//因为没有类型推断，当vector被初始化时，T的类型就被确定了。</span></span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>,<span class="title">class</span> <span class="title">Allocator</span>=<span class="title">allcator</span>&lt;T&gt;&gt;</span></div><div class="line"><span class="class"><span class="title">class</span> <span class="title">vector</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span>... <span class="title">Args</span>&gt;</span></div><div class="line"><span class="class">    <span class="title">void</span> <span class="title">emplace_back</span>(<span class="title">Args</span>&amp;&amp;... <span class="title">args</span>);</span><span class="comment">//universal </span></div><div class="line">    <span class="comment">//reference，存在类型推断，因为即</span></div><div class="line">    <span class="comment">//便T的类型在vector初始化时确定，但是Args的类型不能确定，需要类型推导。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><a href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references" class="headerlink" title="Item 25：Use std::move on rvalue references, std::forward on universal references"></a>Item 25：Use std::move on rvalue references, std::forward on universal references</h2><p><strong>要点</strong><br><strong>1、当将rvalue reference转发给其它函数时，其应该被无条件转型为rvalue，即用std::move，因为它总是被rvalues限制，而将universal referencies转发给其它函数时，应该有条件地转型，即使用std::forward,因为它可能是lvalues。</strong><br><strong>注意1</strong>为什么不在任何情况下都使用std::forward？尽管使用std::forward对于rvalue references也能产生正确的行为，但是这样源代码冗长也容易出错。<br><strong>注意2</strong>对universal references使用std::move会对lvalues造成意外的修改，更应该避免。<br><strong>2、当一个函数按值返回时，如果是返回一个与 universal reference或者rvalue reference绑定的对象，那么在返回时可以对其施加std::forward或者std::move操作，这样效率更高</strong><br><strong>注意:</strong>即便该对象不支持move操作也没有任何副作用，因为如果不支持的话会自动调用该对象的拷贝构造函数完成copy。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Matrix </div><div class="line"><span class="keyword">operator</span>+(Matrix&amp;&amp; lhs,<span class="keyword">const</span> Matrix&amp; rhs)&#123;</div><div class="line">    lhs+=rhs;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::move(lhs);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>3、不要将std::move或者std::forward应用到local  object</strong><br>原因详见P174，和编译器的返回值优化有关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">Widget <span class="title">makeWidget</span><span class="params">()</span></span>&#123;</div><div class="line">    Widget w;</div><div class="line">    ...</div><div class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::move(w);<span class="comment">//避免这样做</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Item-26-Avoid-overloading-on-universal-references"><a href="#Item-26-Avoid-overloading-on-universal-references" class="headerlink" title="Item 26: Avoid overloading on universal references"></a>Item 26: Avoid overloading on universal references</h2><p><strong>要点</strong>看原书比较清楚(没太看懂。)<br><strong>1、对通用引用进行重载往往导致其被调用的次数比预期要多很多。</strong><br><strong>2、完美转发的构造函数特别有问题，因为它们通常比拷贝构造函数更适合非常量lvalue，并且它们可以劫持派生类调用到其基类的拷贝和移动构造函数</strong></p>
-<h2 id="Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><a href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references" class="headerlink" title="Item 27: Familiarize yourself with alternatives to overloading on universal references."></a>Item 27: Familiarize yourself with alternatives to overloading on universal references.</h2><h2 id="Item-28-Understand-reference-collapsing"><a href="#Item-28-Understand-reference-collapsing" class="headerlink" title="Item 28: Understand reference collapsing"></a>Item 28: Understand reference collapsing</h2><p><strong>要点</strong><br><strong>1、</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment">根据传入param是lvalue或者rvalue，T的推导类型会有不同。param是lvalue，则T推导为lvalue reference，当param是rvalue，T推导为non-reference。</span></div><div class="line"><span class="comment">*/</span></div></pre></td></tr></table></figure></p>
-<p><strong>2、在C++中引用的引用是违法的</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> x;</div><div class="line">...</div><div class="line"><span class="keyword">auto</span>&amp; &amp; rx=x;<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
-<p><strong>3、但是当lvalue传入一个以universal reference为类型的模板时</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</div><div class="line"></div><div class="line">Widget w;</div><div class="line">func(w);<span class="comment">//w是一个lvalue，那么T推导为Widget&amp;</span></div><div class="line"><span class="comment">//则模板应该被实例化为以下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; &amp;&amp; param)</span></span>;</div><div class="line"><span class="comment">//实际上这时一种叫做reference collapsing的机制，使得模板的最终实例化如下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; param)</span></span>;<span class="comment">//这与之前所说的以lvalue初始化universal </span></div><div class="line"><span class="comment">//reference，其结果为lvalue  reference一致。</span></div></pre></td></tr></table></figure></p>
-<p><strong>4、reference collapsing规则</strong><br>在允许reference collapsing的情况下，如果两个reference中，任一个是lvalue reference，则结果是lvalue reference，否则结果是rvalue reference。<br>实际上，std::forward就是根据这个机制实现的。<br><strong>5、深入理解universal reference</strong><br>实际上，universal reference不是一种新引用，它是rvalue reference在以下条件满足时的一种特殊情况：<br><strong>条件1</strong>类型推导区分左值和右值。类型T的左值推导为类型 T&amp;，类型T的右值推导为类型 T。<br><strong>条件2</strong>发生了reference collapsing。<br><strong>6、reference collapsing发生的情况</strong><br><strong>情况1</strong>模板实例化<br><strong>情况2</strong>auto类型生成<br><strong>情况3</strong>生成、使用typedef 和 使用别名声明<br><strong>情况4</strong>使用decltype</p>
-<h2 id="Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><a href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used" class="headerlink" title="Item 29: Assume that move operations are not present, not cheap, and not used"></a>Item 29: Assume that move operations are not present, not cheap, and not used</h2><p><strong>要点</strong><br><strong>1、在以下情况下，std::move不会带来任何好处。</strong><br><strong>No move operations</strong><br><strong>Move not faster</strong><br><strong>Move not usable</strong><br><strong>Source object is lvalue</strong><br><strong>2、最好假设move操作不存在，不高效，没用过。只有在类型明确或者支持move语义时不需要这个假设。</strong></p>
-<h2 id="Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><a href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases" class="headerlink" title="Item 30: Familiarize yourself with perfect forwarding failure cases"></a>Item 30: Familiarize yourself with perfect forwarding failure cases</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、Scott Meyers<br>Effective Modern C++ : 42 Specific Ways to Improve Your Use of C++11 and C++14</p>
+        <p>MobileNets论文笔记，包括MobileNetV1和MobileNetV2。</p>
+<h1 id="MobileNetV1"><a href="#MobileNetV1" class="headerlink" title="MobileNetV1"></a>MobileNetV1</h1><p>MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。<br>其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。<br><img src="https://wwdguu.github.io/2018/03/06/mobilenet-notes/dsc.png" alt="Depthwise Separable Convolution"><br>关于参数减少计算：<br><img src="compute.jpg" alt="参数减少量计算"></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p><strong>网络结构定义</strong><br><img src="mobilenet_v1.JPG" alt="MobilenetV1网络结构"><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># MobilenetV1 base </span></div><div class="line">Conv = namedtuple(<span class="string">'Conv'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>])</div><div class="line">DepthSepConv = namedtuple(<span class="string">'DepthSepConv'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>])</div><div class="line">MOBILENT_CONV_DEFS = [</div><div class="line">    Conv(stride=<span class="number">2</span>, depth=<span class="number">32</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">64</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">128</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">128</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">256</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">256</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">1024</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">1024</span>)</div><div class="line">]</div></pre></td></tr></table></figure></p>
+<h1 id="MobileNetV2"><a href="#MobileNetV2" class="headerlink" title="MobileNetV2"></a>MobileNetV2</h1><p>MobileNetV2在MobileNetV1的基础上做了一些改进，其实我更感兴趣的是作者提出SSDLite，将MobileNetV2用于目标检测，其精度和速度都超过了YOLOv2。</p>
+<h2 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h2><p><strong>网络结构</strong><br><img src="mobilenet_v2.JPG" alt="MobilenetV2结构"><br><strong>微结构单元</strong><br>注意stride=1时有残差结构，stride=2时无残差结构。<br><img src="inverted_residual.JPG" alt="Inverted Residual"><br><strong>结构定义</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">InvertedResidual = namedtuple(<span class="string">'InvertedResidual'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>, <span class="string">'num'</span>, <span class="string">'t'</span>])</div><div class="line">MOBILENET_V2_CONV_DEFS = [</div><div class="line">    Conv(stride=<span class="number">2</span>, depth=<span class="number">32</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">16</span>, num=<span class="number">1</span>, t=<span class="number">1</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">24</span>, num=<span class="number">2</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">32</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">64</span>, num=<span class="number">4</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">96</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">160</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">320</span>, num=<span class="number">1</span>, t=<span class="number">6</span>),</div><div class="line">]</div></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://arxiv.org/abs/1704.04861" target="_blank" rel="external">MobileNetV1 paper</a><br><a href="https://arxiv.org/abs/1801.04381" target="_blank" rel="external">MobileNetV2 paper</a><br><a href="http://cuijiahua.com/blog/2018/02/dl_6.html" target="_blank" rel="external">MobileNets详解</a><br><a href="https://github.com/ShuangXieIrene/ssds.pytorch/blob/master/lib/modeling/nets/mobilenet.py" target="_blank" rel="external">Mobilenet pytorch实现</a><br><a href="https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.py" target="_blank" rel="external">tensorflow mobilenet_v1</a><br><a href="https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v2.py" target="_blank" rel="external">tensorflow mobilenet_v2</a></p>
 
       
 
@@ -212,7 +206,7 @@ style="background: #4d4d4d"></div>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cpp</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">paper</a>
         		</li>
       		
 		</ul>
@@ -224,7 +218,7 @@ style="background: #4d4d4d"></div>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/cpp//" class="article-tag-list-link color4">cpp</a>
+        			<a href="/categories/paper//" class="article-tag-list-link color1">paper</a>
         		</li>
       		
 		</ul>
@@ -233,7 +227,422 @@ style="background: #4d4d4d"></div>
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/23/cpp-lvalue-and-rvalue/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/03/06/mobilenet-notes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-tensorflow-programming-eager-execution" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/29/tensorflow-programming-eager-execution/">Tensorflow Programming -- Eager Execution</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/29/tensorflow-programming-eager-execution/" class="archive-article-date">
+  	<time datetime="2018-01-28T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Eager-Execution"><span class="toc-text">Eager Execution</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#计算图的优点"><span class="toc-text">计算图的优点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#优化的"><span class="toc-text">优化的</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#自动缓冲区重用"><span class="toc-text">自动缓冲区重用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#不断折叠"><span class="toc-text">不断折叠</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#操作间并行性"><span class="toc-text">操作间并行性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#计算和内存之间的自动权衡"><span class="toc-text">计算和内存之间的自动权衡</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可部署"><span class="toc-text">可部署</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#图就是模型的中间表示"><span class="toc-text">图就是模型的中间表示</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可重写"><span class="toc-text">可重写</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#尝试自动设备放置或-量化"><span class="toc-text">尝试自动设备放置或 量化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算图的缺点"><span class="toc-text">计算图的缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#难以调试"><span class="toc-text">难以调试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#计算图构建之后会报告错误"><span class="toc-text">计算图构建之后会报告错误</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#执行不能用pdb或者打印语句来调试"><span class="toc-text">执行不能用pdb或者打印语句来调试</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Un-Pythonic"><span class="toc-text">Un-Pythonic</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#编写一个Tensorflow程序是元编程的练习"><span class="toc-text">编写一个Tensorflow程序是元编程的练习</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#控制流-如-tf-while-loop-与Python不同"><span class="toc-text">控制流(如  tf.while_loop)与Python不同</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#不能轻松地将计算图构建与自定义数据结构混合"><span class="toc-text">不能轻松地将计算图构建与自定义数据结构混合</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eager-Execution-1"><span class="toc-text">Eager Execution</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Eager-Execution的优点"><span class="toc-text">Eager Execution的优点</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#与Python调试工具兼容"><span class="toc-text">与Python调试工具兼容</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#提供即时的错误报告"><span class="toc-text">提供即时的错误报告</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#允许使用Python数据结构"><span class="toc-text">允许使用Python数据结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启用Pythonic控制流程"><span class="toc-text">启用Pythonic控制流程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Eager-Execution可以简化代码"><span class="toc-text">Eager Execution可以简化代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Tensors和NumPy数组的行为相似"><span class="toc-text">Tensors和NumPy数组的行为相似</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#梯度"><span class="toc-text">梯度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linear-Regression-in-Eager"><span class="toc-text">Linear Regression in Eager</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-Collection-of-Operations"><span class="toc-text">A Collection of Operations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#什么情况下使用eager-execution"><span class="toc-text">什么情况下使用eager execution?</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#作为研究人员希望一个灵活的框架"><span class="toc-text">作为研究人员希望一个灵活的框架</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#需要开发一个新的模型"><span class="toc-text">需要开发一个新的模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#刚接触TensorFlow"><span class="toc-text">刚接触TensorFlow</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=406730941&auto=1&height=66"></iframe></p>
+<h2 id="Eager-Execution"><a href="#Eager-Execution" class="headerlink" title="Eager Execution"></a>Eager Execution</h2><p>目前使用TensorFlow时，需要编写一个Python程序，首先构建一个表示计算的图，然后调用Session.run()将这个计算图交给C++运行库执行，从这个意义上说，Tensorflow提供了一个声明式编程模型，其计算图的构建和实际的执行是分离的。</p>
+<h3 id="计算图的优点"><a href="#计算图的优点" class="headerlink" title="计算图的优点"></a>计算图的优点</h3><p>TensorFlow从某种意义上说是一种编程语言和一种用于机器学习模型的编译器，其将机器学习模型作为输入，编码成一个名为Graph的低级表示，然后将其重写为优化的可执行形式，沿途使用类似编译器的优化。这种模式有许多好处：<br>1、优化可以减少训练模型或运行推理的挂钟时间和内存占用时间<br>2、计算图作为平台不可知的中间表示，简化了部署。<br>3、重写图形的能力使得我们可以尝试像自动设备放置和重量量化这样的策略。 </p>
+<h4 id="优化的"><a href="#优化的" class="headerlink" title="优化的"></a>优化的</h4><h5 id="自动缓冲区重用"><a href="#自动缓冲区重用" class="headerlink" title="自动缓冲区重用"></a>自动缓冲区重用</h5><h5 id="不断折叠"><a href="#不断折叠" class="headerlink" title="不断折叠"></a>不断折叠</h5><h5 id="操作间并行性"><a href="#操作间并行性" class="headerlink" title="操作间并行性"></a>操作间并行性</h5><h5 id="计算和内存之间的自动权衡"><a href="#计算和内存之间的自动权衡" class="headerlink" title="计算和内存之间的自动权衡"></a>计算和内存之间的自动权衡</h5><h4 id="可部署"><a href="#可部署" class="headerlink" title="可部署"></a>可部署</h4><h5 id="图就是模型的中间表示"><a href="#图就是模型的中间表示" class="headerlink" title="图就是模型的中间表示"></a>图就是模型的中间表示</h5><h4 id="可重写"><a href="#可重写" class="headerlink" title="可重写"></a>可重写</h4><h5 id="尝试自动设备放置或-量化"><a href="#尝试自动设备放置或-量化" class="headerlink" title="尝试自动设备放置或 量化"></a>尝试自动设备放置或 量化</h5><h3 id="计算图的缺点"><a href="#计算图的缺点" class="headerlink" title="计算图的缺点"></a>计算图的缺点</h3><p>尽管计算图的表示方法有很多优点，但是其缺点也不小。声明式范例导致难以调试的程序，因为在构建计算图之后会报告错误。而且由于计算图执行是由Session管理的，所以不能够使用pdb甚至是打印语句来调试模型。构建图形就像使用汇编语言进行编码-原则上我们可以使用计算图来实现我们所需要的任何机器学习模型，但是这样做可能比较困难。编写一个TensorFlow程序是元编程的一个练习: 使用Python用TensorFlow图形语言编写程序。因此，我们不能使用本地Python控制流结构，而必须依赖它们在TensorFlow中的等价物。而且，不能轻易地将图形构造与自定义数据混合在一起，我们可能想要使用Python类来表示结构化数据，但是无法传递类，无法沿着图的边缘流动。总结下来就是如下缺点：</p>
+<h4 id="难以调试"><a href="#难以调试" class="headerlink" title="难以调试"></a>难以调试</h4><h5 id="计算图构建之后会报告错误"><a href="#计算图构建之后会报告错误" class="headerlink" title="计算图构建之后会报告错误"></a>计算图构建之后会报告错误</h5><h5 id="执行不能用pdb或者打印语句来调试"><a href="#执行不能用pdb或者打印语句来调试" class="headerlink" title="执行不能用pdb或者打印语句来调试"></a>执行不能用pdb或者打印语句来调试</h5><h4 id="Un-Pythonic"><a href="#Un-Pythonic" class="headerlink" title="Un-Pythonic"></a>Un-Pythonic</h4><h5 id="编写一个Tensorflow程序是元编程的练习"><a href="#编写一个Tensorflow程序是元编程的练习" class="headerlink" title="编写一个Tensorflow程序是元编程的练习"></a>编写一个Tensorflow程序是元编程的练习</h5><h5 id="控制流-如-tf-while-loop-与Python不同"><a href="#控制流-如-tf-while-loop-与Python不同" class="headerlink" title="控制流(如  tf.while_loop)与Python不同"></a>控制流(如  tf.while_loop)与Python不同</h5><h5 id="不能轻松地将计算图构建与自定义数据结构混合"><a href="#不能轻松地将计算图构建与自定义数据结构混合" class="headerlink" title="不能轻松地将计算图构建与自定义数据结构混合"></a>不能轻松地将计算图构建与自定义数据结构混合</h5><h3 id="Eager-Execution-1"><a href="#Eager-Execution-1" class="headerlink" title="Eager Execution"></a>Eager Execution</h3><p>我们可以直接从Python执行TensorFlow操作吗？实际上，我们不能将任何给定的计算图打破到它的组件操作并直接从Python中调用它们。<br>Eager Execution是用于计算的类Numpy库，支持GPU加速和自动分化，以及灵活的机器学习研究和实验平台。<br>使用Eager的例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$python</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf <span class="comment"># version &gt;= 1.50</span></div><div class="line"><span class="keyword">import</span> tensorflow.contrib.eager <span class="keyword">as</span> tfe</div><div class="line">tfe.enable_eager_execution()</div></pre></td></tr></table></figure></p>
+<h4 id="Eager-Execution的优点"><a href="#Eager-Execution的优点" class="headerlink" title="Eager Execution的优点"></a>Eager Execution的优点</h4><h5 id="与Python调试工具兼容"><a href="#与Python调试工具兼容" class="headerlink" title="与Python调试工具兼容"></a>与Python调试工具兼容</h5><h5 id="提供即时的错误报告"><a href="#提供即时的错误报告" class="headerlink" title="提供即时的错误报告"></a>提供即时的错误报告</h5><h5 id="允许使用Python数据结构"><a href="#允许使用Python数据结构" class="headerlink" title="允许使用Python数据结构"></a>允许使用Python数据结构</h5><p>例如用于结构化输入。</p>
+<h5 id="启用Pythonic控制流程"><a href="#启用Pythonic控制流程" class="headerlink" title="启用Pythonic控制流程"></a>启用Pythonic控制流程</h5><h4 id="Eager-Execution可以简化代码"><a href="#Eager-Execution可以简化代码" class="headerlink" title="Eager Execution可以简化代码"></a>Eager Execution可以简化代码</h4><p>我们不再需要担心以下这些问题:<br>1、placeholders<br>下面是一个程序，它将一个矩阵与自身相乘。我们首先用一个占位符定义一个计算图，并将矩阵提供给平方。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">x = tf.placeholder(tf.float32, shape=[<span class="number">1</span>,<span class="number">1</span>])</div><div class="line">m = tf.matmul(x, x)</div><div class="line"></div><div class="line">print(m)</div><div class="line"><span class="comment"># Tensor("MatMul:0",shape=(1, 1),dtype=float32)</span></div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    m_out = sess.run(m, feed_dict=&#123;x:[[<span class="number">2.0</span>]]&#125;)</div><div class="line">print(m_out)</div><div class="line"><span class="comment"># [[4.0]]</span></div></pre></td></tr></table></figure></p>
+<p>而如果使用了Eager Execution，下面三行代码提供了相同的效果。没有Session，没有placeholder和matmul操作，立即得出运算结果。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">2.</span>]] <span class="comment"># No need for placeholders!</span></div><div class="line">m = tf.matmul(x,x)</div><div class="line">print(m) <span class="comment"># No sessions!</span></div><div class="line"><span class="comment"># tf.Tensor([[4.]], shape=(1,1), dtype=float32)</span></div></pre></td></tr></table></figure></p>
+<p>2、sessions<br>3、control dependencies<br>4、”lazy loading”<br>Eager Execution还有利于避免元编程的一些缺点。例如，以下的代码就是在程序中间快速破解分析Tensor X的代码。循环的每一次迭代都是将操作添加到计算图的内存中表示。在这种情况下，每次调用session.run()都会执行random_uniform操作，所以这里的代码片段并没有打印Tensor的一致快照。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x = tf.random_uniform([<span class="number">2</span>, <span class="number">2</span>])</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(x.shape[<span class="number">0</span>]):</div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(x.shape[<span class="number">1</span>]):</div><div class="line">            print(sess.run(x[i,j]))</div></pre></td></tr></table></figure></p>
+<p>而当在Eager Execution的情况下，没有一个计算图的概念或者一个操作的重复执行，所以最明显的做法是很好的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = tf.random_uniform([<span class="number">2</span>,<span class="number">2</span>])</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(x.shape[<span class="number">0</span>]):</div><div class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(x.shape[<span class="number">1</span>]):</div><div class="line">        print(x[i,j])</div></pre></td></tr></table></figure></p>
+<p>5、{name, variable, op} scopes</p>
+<h4 id="Tensors和NumPy数组的行为相似"><a href="#Tensors和NumPy数组的行为相似" class="headerlink" title="Tensors和NumPy数组的行为相似"></a>Tensors和NumPy数组的行为相似</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">x = tf.constant([<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>])</div><div class="line"><span class="comment"># Tensors are backed by Numpy arrays</span></div><div class="line"><span class="keyword">assert</span> type(x.numpy()) == np.ndarray</div><div class="line">squared = np.square(x) <span class="comment"># Tensors are compatible with Numpy functions</span></div><div class="line"><span class="comment"># Tensors are iterable </span></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> x:</div><div class="line">    print(i)</div></pre></td></tr></table></figure>
+<h4 id="梯度"><a href="#梯度" class="headerlink" title="梯度"></a>梯度</h4><p>自动梯度求解已经加入到eager execution中。当启用eager execution时，执行的操作将在一个”tape”中进行追踪，以回放计算梯度。如果熟悉autograd包的话，这个API非常相似。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">square</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">return</span> x**<span class="number">2</span></div><div class="line"></div><div class="line">grad = tfe.gradients_function(square)</div><div class="line"></div><div class="line">print(square(<span class="number">3.</span>)) <span class="comment"># tf.Tensor(9., shape=(), dtype=float32)</span></div><div class="line">print(grad(<span class="number">3.</span>)) <span class="comment"># tf.Tensor(6., shape=(), dtype=float32)</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">x = tfe.Variable(<span class="number">2.0</span>)</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">loss</span><span class="params">(y)</span>:</span></div><div class="line">    <span class="keyword">return</span> (y - x ** <span class="number">2</span>) ** <span class="number">2</span></div><div class="line">grad = tfe.implicit_gradients(loss)</div><div class="line"></div><div class="line">print(loss(<span class="number">7.</span>)) <span class="comment"># tf.Tensor(9., shape=(), dtype=float32)</span></div><div class="line">print(grad(<span class="number">7.</span>)) <span class="comment"># [(&lt;tf.Tensor: -24.0, shape=(), dtype=float32&gt;, </span></div><div class="line">                <span class="comment">#    &lt;tf.Variable 'Variable:0' shape=()                </span></div><div class="line">                <span class="comment">#     dtype=float32, numpy=2.0&gt;)]</span></div></pre></td></tr></table></figure>
+<p>即便eager execution没被允许，计算梯度的API依然有效。<br>tfe.gradients_function()<br>tfe.value_and_gradients_function()<br>tfe.implicit_gradients()<br>tfe.implicit_value_and_gradients()<br>详情可参考：<br><a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/eager/python/g3doc/guide.md" target="_blank" rel="external">eager execution document</a></p>
+<h2 id="Linear-Regression-in-Eager"><a href="#Linear-Regression-in-Eager" class="headerlink" title="Linear Regression in Eager"></a>Linear Regression in Eager</h2><h3 id="A-Collection-of-Operations"><a href="#A-Collection-of-Operations" class="headerlink" title="A Collection of Operations"></a>A Collection of Operations</h3><p>TensorFlow = Operation Kernels + Execution<br>Graph construction: 使用Session来执行操作的组合<br>Eager execution: 用Python执行操作的组合。<br>观察TensorFlow的一种方式是作为一系列操作：数学，线性代数，图像处理，Tensorboard可视化的总结生成等以及执行构成它们的计算的手段。Session提供了一种方法来执行这些操作，在执行的时候，Python是执行组合的方法，但是底层的操作保持不变，结果，API表面的大部分也保持不变。<br>不管eager execution是否被允许，大多数TensorFlow API都可以工作，但是当eager exectution允许时，有一些特殊情况需要注意：<br>1、在eager execution模式下最好使用tfe.Variable<br>2、管理好自己的变量存储，变量集合是不被允许的。<br>3、使用 tf.contrib.summary<br>4、使用tfe.Iterator 进行数据迭代<br>5、最好使用面向对象的层(比如 tf.layers.Dense)<br>6、使用tfe.py_func 代替 tf.py_func</p>
+<h3 id="什么情况下使用eager-execution"><a href="#什么情况下使用eager-execution" class="headerlink" title="什么情况下使用eager execution?"></a>什么情况下使用eager execution?</h3><h4 id="作为研究人员希望一个灵活的框架"><a href="#作为研究人员希望一个灵活的框架" class="headerlink" title="作为研究人员希望一个灵活的框架"></a>作为研究人员希望一个灵活的框架</h4><p>python控制流和数据结构使得实验成为可能</p>
+<h4 id="需要开发一个新的模型"><a href="#需要开发一个新的模型" class="headerlink" title="需要开发一个新的模型"></a>需要开发一个新的模型</h4><p>即时的错误报告简化了调试</p>
+<h4 id="刚接触TensorFlow"><a href="#刚接触TensorFlow" class="headerlink" title="刚接触TensorFlow"></a>刚接触TensorFlow</h4><p>eager execution使得我们方便在Python REPL中学习TF API。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/04%20Eager%20Execution%20%2B%20word2vec.pdf" target="_blank" rel="external">04_eager_execution slides</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/04_Lecture%20note_%20Eager%20execution%20and%20interface.pdf" target="_blank" rel="external">04_eager_execution notes</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/29/tensorflow-programming-eager-execution/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-effective-java-classes-and-interfaces" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/23/effective-java-classes-and-interfaces/">Effective Java -- Classes and Interfaces</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/23/effective-java-classes-and-interfaces/" class="archive-article-date">
+  	<time datetime="2018-01-23T06:36:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Classes-and-Interfaces"><span class="toc-text">Effective Java Items about Classes and Interfaces</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-15-Minimize-the-accessibility-of-classes-and-members"><span class="toc-text">Item 15: Minimize the accessibility of classes and members</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-16-In-public-classes-use-accessor-methods-not-public-fields"><span class="toc-text">Item 16: In public classes, use accessor methods, not public fields</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-17-Minimize-mutability"><span class="toc-text">Item 17: Minimize mutability</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-18-Favor-composition-over-inheritance"><span class="toc-text">Item 18: Favor composition over inheritance</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-19-Design-and-document-for-inheritance-or-else-prohibit-it"><span class="toc-text">Item 19: Design and document for inheritance or else prohibit it</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-20-Prefer-interfaces-to-abstract-classes"><span class="toc-text">Item 20: Prefer interfaces to abstract classes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-21-Design-interfaces-for-posterity"><span class="toc-text">Item 21: Design interfaces for posterity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-22-Use-interfaces-only-to-define-types"><span class="toc-text">Item 22: Use interfaces only to define types</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-23-Prefer-class-hierarchies-to-tagged-classes"><span class="toc-text">Item 23: Prefer class hierarchies to tagged classes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-24-Favor-static-member-classes-over-nonstatic"><span class="toc-text">Item 24: Favor static member classes over nonstatic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-25-Limit-source-files-to-a-single-top-level-class"><span class="toc-text">Item 25: Limit source files to a single top-level class</span></a></li></ol></li></ol>
+</div>
+
+        <h2 id="Effective-Java-Items-about-Classes-and-Interfaces"><a href="#Effective-Java-Items-about-Classes-and-Interfaces" class="headerlink" title="Effective Java Items about Classes and Interfaces"></a>Effective Java Items about Classes and Interfaces</h2><p>类和接口是Java的核心，其也是Java的基本抽象单元。Java提供了许多强大的基本元素，供程序员用来设计类和接口。以下一些指导原则可以帮助我们更好地利用这些元素设计出更加有用、健壮和灵活的类和接口。</p>
+<h3 id="Item-15-Minimize-the-accessibility-of-classes-and-members"><a href="#Item-15-Minimize-the-accessibility-of-classes-and-members" class="headerlink" title="Item 15: Minimize the accessibility of classes and members"></a>Item 15: Minimize the accessibility of classes and members</h3><p>使类和成员的可访问性最小化。我们始终应该尽可能地降低可访问性。你在仔细地设计了一个最小的公有API之后，应该防止把任何散乱的类、接口和成员变成API的一部分。除了公有静态final域的特殊情形之外，公有类都不应该包含公有域。并且要确保公有静态final所引用的对象都是不可变得。</p>
+<h3 id="Item-16-In-public-classes-use-accessor-methods-not-public-fields"><a href="#Item-16-In-public-classes-use-accessor-methods-not-public-fields" class="headerlink" title="Item 16: In public classes, use accessor methods, not public fields"></a>Item 16: In public classes, use accessor methods, not public fields</h3><p>在公有类中使用访问方法而非公有域。公有类永远都不应该暴露可变的域，虽然还是有问题，但是让公有类暴露不可变的域其危害比较小。但是，有时候会需要用包级私有的或者私有的嵌套来暴露域，无论这个类是可变的还是不可变的。</p>
+<h3 id="Item-17-Minimize-mutability"><a href="#Item-17-Minimize-mutability" class="headerlink" title="Item 17: Minimize mutability"></a>Item 17: Minimize mutability</h3><p>使可变性最小化。不可变的类比可变类更加易于设计、实现和使用。它们不容易出错，且更加安全。为了使类成为不可变，要遵循以下五条规则:<br>1、不要提供任何会修改对象状态的方法。<br>2、保证类不会被扩展。一般做法是使这个类成为final的。<br>3、使所有的域都是final的。<br>4、使所有的域都成为私有的。<br>5、确保对于任何可变组件的互斥访问。</p>
+<p>不可变对象本质上是线程安全的，它们不要求同步。不可变类可以被自由地共享。永远也不需要对不可变类进行保护性拷贝。不仅可以共享不可变对象，甚至也可以共享它们的内部信息。不可变对象为其他对象提供了大量的构件，无论是可变的还是不可变的。不可变类真正唯一的缺点是，对于每个不同的值都需要一个单独的对象。<br>为了确保不可变类不被子类化。除了使得类成为final的方法之外，还可以让类的所有构造器都变成私有的或者包级私有的，并添加公有的静态工厂来代替公有的构造器。</p>
+<h3 id="Item-18-Favor-composition-over-inheritance"><a href="#Item-18-Favor-composition-over-inheritance" class="headerlink" title="Item 18: Favor composition over inheritance"></a>Item 18: Favor composition over inheritance</h3><p>复合优先于继承。继承的功能非常强大，但是也存在诸多问题，因为它违背了封装原则。只有当子类和超类之间确实存在子类型关系时，使用继承才是恰当的。即便如此，如果子类和超类处在不同的包中，并且超类并不是为了继承而设计的，那么继承将会导致脆弱性。为了避免这种脆弱性，可以用复合和转发机制来代替继承，尤其是当存在适当的接口可以实现包装类的时候。包装类不仅比子类更加健壮，而且功能也更加强大。    </p>
+<h3 id="Item-19-Design-and-document-for-inheritance-or-else-prohibit-it"><a href="#Item-19-Design-and-document-for-inheritance-or-else-prohibit-it" class="headerlink" title="Item 19: Design and document for inheritance or else prohibit it"></a>Item 19: Design and document for inheritance or else prohibit it</h3><p>要么为继承而设计，并提供说明文档，要么就禁止继承。</p>
+<h3 id="Item-20-Prefer-interfaces-to-abstract-classes"><a href="#Item-20-Prefer-interfaces-to-abstract-classes" class="headerlink" title="Item 20: Prefer interfaces to abstract classes"></a>Item 20: Prefer interfaces to abstract classes</h3><h3 id="Item-21-Design-interfaces-for-posterity"><a href="#Item-21-Design-interfaces-for-posterity" class="headerlink" title="Item 21: Design interfaces for posterity"></a>Item 21: Design interfaces for posterity</h3><h3 id="Item-22-Use-interfaces-only-to-define-types"><a href="#Item-22-Use-interfaces-only-to-define-types" class="headerlink" title="Item 22: Use interfaces only to define types"></a>Item 22: Use interfaces only to define types</h3><h3 id="Item-23-Prefer-class-hierarchies-to-tagged-classes"><a href="#Item-23-Prefer-class-hierarchies-to-tagged-classes" class="headerlink" title="Item 23: Prefer class hierarchies to tagged classes"></a>Item 23: Prefer class hierarchies to tagged classes</h3><h3 id="Item-24-Favor-static-member-classes-over-nonstatic"><a href="#Item-24-Favor-static-member-classes-over-nonstatic" class="headerlink" title="Item 24: Favor static member classes over nonstatic"></a>Item 24: Favor static member classes over nonstatic</h3><h3 id="Item-25-Limit-source-files-to-a-single-top-level-class"><a href="#Item-25-Limit-source-files-to-a-single-top-level-class" class="headerlink" title="Item 25: Limit source files to a single top-level class"></a>Item 25: Limit source files to a single top-level class</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/23/effective-java-classes-and-interfaces/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-thinkingng-in-javavava-notes-interfaces-and-inner-classes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/23/thinkingng-in-javavava-notes-interfaces-and-inner-classes/">Thinking in Java Notes -- Interfaces and Inner Classes</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/23/thinkingng-in-javavava-notes-interfaces-and-inner-classes/" class="archive-article-date">
+  	<time datetime="2018-01-22T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Interfaces"><span class="toc-text">Interfaces</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#抽象类和抽象方法"><span class="toc-text">抽象类和抽象方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口"><span class="toc-text">接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完全解耦"><span class="toc-text">完全解耦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用接口实现多重继承"><span class="toc-text">用接口实现多重继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过继承来扩展接口"><span class="toc-text">通过继承来扩展接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#适配接口"><span class="toc-text">适配接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口中的域"><span class="toc-text">接口中的域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套接口"><span class="toc-text">嵌套接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口与工厂"><span class="toc-text">接口与工厂</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Inner-Classess"><span class="toc-text">Inner Classess</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建内部类"><span class="toc-text">创建内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#链接到外部类"><span class="toc-text">链接到外部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-this与-new"><span class="toc-text">使用.this与.new</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内部类与向上转型"><span class="toc-text">内部类与向上转型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在方法和作用域内的内部类"><span class="toc-text">在方法和作用域内的内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#匿名内部类"><span class="toc-text">匿名内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套类"><span class="toc-text">嵌套类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么需要内部类"><span class="toc-text">为什么需要内部类?</span></a></li></ol></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=407002091&auto=1&height=66"></iframe></p>
+<h1 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h1><h2 id="抽象类和抽象方法"><a href="#抽象类和抽象方法" class="headerlink" title="抽象类和抽象方法"></a>抽象类和抽象方法</h2><p>包含抽象方法的类叫做抽象类，如果一个类包含一个或多个抽象方法，该类必须被限定为抽象的。如果从一个抽象类继承，并想创建该新类的对象，那么就必须为基类中的所有抽象方法提供方法定义。</p>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>interface关键字使得抽象的概念更向前迈进一步。interface关键字产生一个完全抽象的类，其根本没有提供任何具体实现。接口可以包含域，但是这些域隐式地是static和final的。接口中定义的方法必须是public的，否则，其就只能得到默认的包访问权限。</p>
+<h2 id="完全解耦"><a href="#完全解耦" class="headerlink" title="完全解耦"></a>完全解耦</h2><p>将接口从具体实现中解耦使得接口可以应用于多种不同的具体实现，因此代码也就更具有可复用性。？ </p>
+<h2 id="用接口实现多重继承"><a href="#用接口实现多重继承" class="headerlink" title="用接口实现多重继承"></a>用接口实现多重继承</h2><p>使用接口的核心原因是：为了能够向上转型为多个基类型以及由此带来的灵活性。第二个原因与使用抽象基类相同：防止客户端程序员创建该类的对象，并确保这仅仅是建立一个接口。如何在接口和抽象类之间进行选择？如果要创建不带任何方法定义和成员变量的基类，那么就应该选择接口而不是抽象类。如果知道某事物应该成为一个基类，那么第一选择是使它成为一个接口。</p>
+<h2 id="通过继承来扩展接口"><a href="#通过继承来扩展接口" class="headerlink" title="通过继承来扩展接口"></a>通过继承来扩展接口</h2><p>通过继承可以容易地在接口中添加新的方法声明，还可以通过继承在新接口中组合数个接口。注意在打算组合的不同接口中使用相同的方法名通常会造成代码可读性的混乱，需要尽量避免这种情况。</p>
+<h2 id="适配接口"><a href="#适配接口" class="headerlink" title="适配接口"></a>适配接口</h2><p>接口最吸引人的原因之一是允许同一个接口有多个不同的具体实现。简单的情况中，它的体现形式通常是一个接受接口类型的方法，而该接口的实现和向该方法传递的对象则取决于方法的使用者。</p>
+<h2 id="接口中的域"><a href="#接口中的域" class="headerlink" title="接口中的域"></a>接口中的域</h2><p>接口中的任何域都自动是static和final的。</p>
+<h2 id="嵌套接口"><a href="#嵌套接口" class="headerlink" title="嵌套接口"></a>嵌套接口</h2><h2 id="接口与工厂"><a href="#接口与工厂" class="headerlink" title="接口与工厂"></a>接口与工厂</h2><p>接口是实现多重继承的途径，而生成遵循某个接口的对象的典型方式就是工厂方法设计模式。</p>
+<h1 id="Inner-Classess"><a href="#Inner-Classess" class="headerlink" title="Inner Classess"></a>Inner Classess</h1><p>将一个类的定义放在另一个类的定义内部，这就是内部类。</p>
+<h2 id="创建内部类"><a href="#创建内部类" class="headerlink" title="创建内部类"></a>创建内部类</h2><p>如果想从外部类的非静态方法之外的任意位置创建某个内部类的对象，那么必须像在main()方法中 那样，具体地指明这个对象的类型: OuterClassName.InnerClassName。</p>
+<h2 id="链接到外部类"><a href="#链接到外部类" class="headerlink" title="链接到外部类"></a>链接到外部类</h2><p>当生成一个内部类的对象时，此对象与制造它的外围对象之间就有了一种联系，所以它能访问其外围对象的所有成员，而不需要任何特殊条件。此外，内部类 还拥有其外围类的所有元素的访问权。</p>
+<h2 id="使用-this与-new"><a href="#使用-this与-new" class="headerlink" title="使用.this与.new"></a>使用.this与.new</h2><h2 id="内部类与向上转型"><a href="#内部类与向上转型" class="headerlink" title="内部类与向上转型"></a>内部类与向上转型</h2><h2 id="在方法和作用域内的内部类"><a href="#在方法和作用域内的内部类" class="headerlink" title="在方法和作用域内的内部类"></a>在方法和作用域内的内部类</h2><h2 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h2><h2 id="嵌套类"><a href="#嵌套类" class="headerlink" title="嵌套类"></a>嵌套类</h2><h2 id="为什么需要内部类"><a href="#为什么需要内部类" class="headerlink" title="为什么需要内部类?"></a>为什么需要内部类?</h2><p>…?<br>不太看得懂，剩下的以后再补充</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/23/thinkingng-in-javavava-notes-interfaces-and-inner-classes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-thinking-in-java-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/22/thinking-in-java-notes/">Thinking in Java Notes -- Basic</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/22/thinking-in-java-notes/" class="archive-article-date">
+  	<time datetime="2018-01-22T12:48:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第1章-对象导论"><span class="toc-text">第1章 对象导论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第2章-一切都是对象"><span class="toc-text">第2章 一切都是对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第3章-操作符"><span class="toc-text">第3章 操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第4章-控制执行流程"><span class="toc-text">第4章 控制执行流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第5章-初始化与清理"><span class="toc-text">第5章 初始化与清理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第6章-访问权限控制"><span class="toc-text">第6章 访问权限控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第7章-复用类"><span class="toc-text">第7章 复用类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第8章-多态"><span class="toc-text">第8章 多态</span></a></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=29023561&auto=1&height=66"></iframe></p>
+<h2 id="第1章-对象导论"><a href="#第1章-对象导论" class="headerlink" title="第1章 对象导论"></a>第1章 对象导论</h2><h2 id="第2章-一切都是对象"><a href="#第2章-一切都是对象" class="headerlink" title="第2章 一切都是对象"></a>第2章 一切都是对象</h2><p>1、理解static关键词。当声明一个事物是static时，就意味着这个域或方法不会与包含它的那个类的任何对象实例关联在一起。</p>
+<h2 id="第3章-操作符"><a href="#第3章-操作符" class="headerlink" title="第3章 操作符"></a>第3章 操作符</h2><p>1、注意 == 操作符和equals()方法的区别。<br>2、移位操作符&lt;&lt;和&gt;&gt;，对于&lt;&lt;左移操作符，低位补0即可，对于&gt;&gt;右移操作符，采用“符号扩展”，符号为正，在高位插入0，符号为负则在高位插入1。Java中增加了一种有别于其它语言的“无符号”右移操作符&gt;&gt;&gt;，无论正负都在高位插入0。</p>
+<h2 id="第4章-控制执行流程"><a href="#第4章-控制执行流程" class="headerlink" title="第4章 控制执行流程"></a>第4章 控制执行流程</h2><h2 id="第5章-初始化与清理"><a href="#第5章-初始化与清理" class="headerlink" title="第5章 初始化与清理"></a>第5章 初始化与清理</h2><p>1、只能根据参数列表区分重载方法，而不能根据返回值的类型区分重载方法。<br>2、JVM垃圾回收机制。需要之后深入理解。<br>3、成员初始化。Java尽力保证，所有变量在使用前都能得到恰当的初始化。对于方法的局部变量，Java以编译时错误的形式来贯彻这种保证。如果类的数据成员是基本类型，那么可以不用初始化，其保证会有一个默认的初始值。在类里定义一个对象引用时，如果不将其初始化，此引用就会获得一个特殊值null。注意初始化时出现的“向前引用”的错误。<br>4、初始化顺序：类的内部，变量定义的先后顺序决定了初始化的顺序。<br>5、静态数据的初始化：无论创建多少个对象，静态数据都只占用一份存储区域。static关键字不能应用于局部变量，因此它只能作用于域。初始化的顺序是先静态对象（如果它们还没有因为前面的对象创建过程而被初始化），而后是“非静态对象”。<br>6、对象的创建过程大概如下：<br>假设有个名为Dog的类。<br>a、即便没有显式地使用static关键字，构造器实际上也是静态方法，因此，当首次创建类型为Dog的对象时(构造器可以看做static方法)，或者Dog类的静态方法/静态域首次被访问时，Java解释器必须查找类路径，以定位Dog.class文件。<br>b、然后载入Dog.class，有关静态初始化的所有动作都会执行。因此，静态初始化只在Class对象首次加载的时候进行一次。<br>c、当用new Dog() 创建对象的时候，首先将在堆上为Dog对象分配足够的存储空间。<br>d、这块存储空间会被清零，这就自动地将Dog对象中的所有基本类型数据都设置成了默认值，而引用则被设置成了null。<br>e、执行所有出现于字段定义处的初始化动作。<br>f、执行构造器。</p>
+<h2 id="第6章-访问权限控制"><a href="#第6章-访问权限控制" class="headerlink" title="第6章 访问权限控制"></a>第6章 访问权限控制</h2><p>1、关键字<br>   private<br>   protected：继承访问权限。<br>   public：接口访问权限。<br>   默认访问权限：包访问权限。</p>
+<h2 id="第7章-复用类"><a href="#第7章-复用类" class="headerlink" title="第7章 复用类"></a>第7章 复用类</h2><p>1、可以通过组合语法，继承语法，代理，结合使用组合和继承等方法实现类的复用。<br>2、@Override 的使用，当想要覆写某个方法时，可以选择添加这个注解，在不小心重载并非覆写了该方法时，编译器会生成错误信息。<br>3、在组合和继承之间做合适选择。一般来说，is-a关系用继承表达，has-a关系用组合表达。究竟改用组合还是用继承，一个比较清晰的判断方法就是看是否需要从新类向基类进行向上转型，如果必须向上转型，那么继承是必要的；如果不需要，则应该慎重考虑是否需要继承。<br>4、final关键字：包括final参数，final方法， final类的意义。</p>
+<h2 id="第8章-多态"><a href="#第8章-多态" class="headerlink" title="第8章 多态"></a>第8章 多态</h2><p>1、面向对象的语言的特征：数据抽象，继承和多态。<br>2、前期绑定和后期绑定：Java中除了static方法和final方法(private方法属于final方法)之外，其他所有的方法都是后期绑定。实际上将方法声明为final的一个重要原因之一是防止他人覆盖该方法，另一个更为重要的原因则是有效关闭动态绑定。<br>3、缺陷：试图覆盖私有方法。实际上试图在继承类中覆盖基类的私有方法是不对的，如果使用了@Override注解，那么编译会报错，而如果没有使用该注解，那么实际上我们试图要覆盖的那个方法是全新的方法，甚至因为private的权限，这也不是重载。事实上只有非private方法才能被覆盖。<br>4、复杂对象调用构造器按照下面的顺序：a、在其他任何事物发生之前，将分配给对象的存储空间初始化成二进制的零；b、调用基类构造器；c、按声明顺序调用成员的初始化方法；d、调用导出类构造器的主体。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/22/thinking-in-java-notes/">展开全文 >></a>
         </p>
       
 
@@ -268,7 +677,7 @@ style="background: #4d4d4d"></div>
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 
@@ -364,11 +773,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -376,11 +785,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -392,15 +801,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">paper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -412,15 +821,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">dl</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
             
             <div class="clearfix"></div>

@@ -162,20 +162,20 @@ style="background: #4d4d4d"></div>
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-cpp-smart-ptr" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-paper-and-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/21/cpp-smart-ptr/">C++中的智能指针笔记</a>
+      <a class="article-title" href="/2018/01/21/paper-and-notes/">资料和文章备份</a>
     </h1>
   
 
         
-        <a href="/2018/04/21/cpp-smart-ptr/" class="archive-article-date">
-  	<time datetime="2018-04-21T07:28:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-21</time>
+        <a href="/2018/01/21/paper-and-notes/" class="archive-article-date">
+  	<time datetime="2018-01-21T05:14:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
 </a>
         
       </header>
@@ -184,42 +184,231 @@ style="background: #4d4d4d"></div>
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#STL中智能指针"><span class="toc-text">STL中智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-ptr"><span class="toc-text">shared_ptr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr的声明和初始化"><span class="toc-text">shared_ptr的声明和初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#析构策略"><span class="toc-text">析构策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr陷阱"><span class="toc-text">shared_ptr陷阱</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#weak-ptr"><span class="toc-text">weak_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unique-ptr"><span class="toc-text">unique_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Modern-C-中的有关条款"><span class="toc-text">Effective Modern C++ 中的有关条款</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#opencv-中的cv-Ptr"><span class="toc-text">opencv 中的cv::Ptr</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cs20si-2017-notes-and-slides"><span class="toc-text">cs20si 2017 notes and slides</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、Overview-Of-Tensorflow"><span class="toc-text">1、Overview Of Tensorflow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、Operations"><span class="toc-text">2、Operations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、Linear-and-Logistic-Regression"><span class="toc-text">3、Linear and Logistic Regression</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、Structure-Your-Tensorflow-Model"><span class="toc-text">4、Structure Your Tensorflow Model</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、Manage-Experiments-and-Process-Data"><span class="toc-text">5、Manage Experiments and Process Data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Computer-Vision"><span class="toc-text">Computer Vision</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-Detection"><span class="toc-text">Object Detection</span></a></li></ol></li></ol>
 </div>
 
-        <p>最近在看opencv的文档时，对cv::Ptr类了解了一些，其与STL中的shared_ptr类似，是一种智能指针，于是又看了《C++标准库》中有关智能指针的章节和《Effective Modern C++》中的有关智能指针的章节，将智能指针所涉及的一些内容总结如下。</p>
-<h1 id="STL中智能指针"><a href="#STL中智能指针" class="headerlink" title="STL中智能指针"></a>STL中智能指针</h1><p>C++中比较棘手的一个问题就是内存的管理，指针在其中扮演了及其重要的作用，但是同时对指针的不当使用会造成很多问题。自C++11起，STL提供了两大类型的智能指针，使得对指针的操作更加安全。其中shared_ptr类实现了共享式拥有概念，而unique_ptr实现了独占式拥有概念。另外还有weak_ptr等辅助类。所有这些指针类都定义在头文件 &lt; memory&gt;中。</p>
-<h2 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h2><p>shared_ptr主要使用一种称为引用计数的方法来管理其所指向的内容。当该指针多指向一个内容时，引用计数加一，少指向一个内容时，引用计数值减1，当引用计数值减到0时，该内容会被自动删除。</p>
-<h3 id="shared-ptr的声明和初始化"><a href="#shared-ptr的声明和初始化" class="headerlink" title="shared_ptr的声明和初始化"></a>shared_ptr的声明和初始化</h3><p>1、<strong>使用构造函数初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div></pre></td></tr></table></figure></p>
-<p>2、<strong>新式初始化语法</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt&#123;<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>)&#125;;</div></pre></td></tr></table></figure></p>
-<p>3、<strong>使用make_shared()初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt=<span class="built_in">std</span>::make_shared&lt;<span class="keyword">int</span>&gt;(<span class="number">1</span>);</div></pre></td></tr></table></figure></p>
-<p>4、<strong>先声明shared pointer，然后使用reset()方法赋值</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt;</div><div class="line">pInt.reset(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div></pre></td></tr></table></figure></p>
-<p><strong>注意不能使用赋值符进行初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
-<p>最常用和可靠的初始化方法是使用make_shared()函数。</p>
-<h3 id="析构策略"><a href="#析构策略" class="headerlink" title="析构策略"></a>析构策略</h3><p>实际上，我们可以声明特化的deleter，可以通过传递一个lambda作为shared_ptr构造函数的第二实参。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>),[](<span class="keyword">int</span>* p)&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"delete "</span>&lt;&lt;*p&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">delete</span> p;</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
-<p><strong>注意</strong>：shared_ptr提供的default deleter 调用的是 delete,而不是delete []，所以即便为array建立一个shared_ptr是可以的，但是却有致命错误，解决方法是为其指定delete []作为析构函数，最好不要这样使用shared_ptr。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>]);<span class="comment">//ERROR,能通过编译</span></div><div class="line"><span class="comment">//(《C++标准库》一书中这样写，但是实际测试没有出现问题？)</span></div><div class="line"></div><div class="line"><span class="comment">//解决方案</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>],[](<span class="keyword">int</span>* p)&#123;</div><div class="line">    <span class="keyword">delete</span>[] p;</div><div class="line">    &#125;)</div><div class="line"><span class="comment">//也可以这样</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>],<span class="built_in">std</span>::default_delete&lt;<span class="keyword">int</span>[]&gt;());</div></pre></td></tr></table></figure></p>
-<p><strong>如果析构时不仅仅需要删除内存，还需要 一些其它操作，那么必须指定deleter</strong></p>
-<h3 id="shared-ptr陷阱"><a href="#shared-ptr陷阱" class="headerlink" title="shared_ptr陷阱"></a>shared_ptr陷阱</h3><p><strong>1、cyclic reference问题</strong><br>两个对象使用shared_ptr互相指向对方时，使用shared_ptr无法释放相应的资源，因为每个对象的use_count()至少为1。<br><strong>解决方法</strong>:1、使用普通指针，但是这样又得自行管理资源释放，比较麻烦也更容易出问题。2、其中一方的指向使用weak_ptr，可以完美解决该问题。<br><strong>2、试图访问已被释放的数据</strong><br>也可通过使用weak_ptr解决。<br><strong>3、应该确保某对象只被一组shared_ptr拥有</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* p=<span class="keyword">new</span> <span class="keyword">int</span>;</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp1(p);</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp2(p);<span class="comment">//ERROR 但是可以编译通过 具体在后面有解释</span></div></pre></td></tr></table></figure></p>
-<p>当sp1和sp2丢失p的拥有权时，两者都会试图释放p的资源，即释放资源的操作会执行两次。解决方法是在创建对象和其相应资源的时候直接设立shared_ptr。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp1(<span class="keyword">new</span> <span class="keyword">int</span>);</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp2(sp1);</div></pre></td></tr></table></figure></p>
-<h2 id="weak-ptr"><a href="#weak-ptr" class="headerlink" title="weak_ptr"></a>weak_ptr</h2><p>weak_ptr是辅助shared_ptr的类，其用来共享但是不拥有对象。</p>
-<h2 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h2><p><strong>概念</strong><br>unique_ptr实现了独占式拥有概念，其可以确保一个对象和其相应的资源在同一时间只能被一个pointer拥有。unique_ptr是其所指向的对象的唯一拥有者。unique_ptr有着与普通指针相同的接口，不同的是：它不提供pointer算术比如++等操作，但是实际上这省去了一些麻烦。<br><strong>转移unique_ptr的拥有权</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* p=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up1(p);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up2(p);<span class="comment">//ERROR,up1和up2拥有相同对象了。</span></div><div class="line"></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up3(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up4(up3);<span class="comment">//ERROR, 不能对unique_ptr进行拷贝和赋值</span></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up5(<span class="built_in">std</span>::move(up3));<span class="comment">//OK 使用move转移所有权是可以的</span></div><div class="line"></div><div class="line"><span class="comment">//同理</span></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up6=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up7;</div><div class="line">up7=up6;<span class="comment">//ERROR</span></div><div class="line">up7=<span class="built_in">std</span>::move(up6);<span class="comment">//可以</span></div><div class="line"></div><div class="line">up7=<span class="literal">nullptr</span>;<span class="comment">//给unique_ptr赋值nullptr是可以的，和调用reset()方法相同</span></div></pre></td></tr></table></figure></p>
-<p><strong>源头和去处</strong><br>函数可以利用unique_ptr的转移所有权的功能将拥有权转给其他函数。<br><strong>unique_ptr当做当做class内的成员</strong><br>可以避免资源泄漏。</p>
-<h2 id="Effective-Modern-C-中的有关条款"><a href="#Effective-Modern-C-中的有关条款" class="headerlink" title="Effective Modern C++ 中的有关条款"></a>Effective Modern C++ 中的有关条款</h2><p>《Effective Modern C++》一书中有几个关于smart pointer的条款。<br><strong>Item 18: Use std::unique_ptr for exclusive-ownership resource management</strong><br>要点：详见原书 P118<br>1、std::unique_ptr是一种足够小，很快并且只支持move的智能指针，其用来管理独占式资源。默认情况下，std::unique_ptr的大小和raw pointer  是一样的，而且对于大多数包括解引用在内的操作，其都和raw pointer一致。<br>2、默认情况下，其使用delete作为deleter。但是当deleter采用自定义时，std::unique_ptr的大小会变大，其具体大小取决于函数对象的状态。使用lambda表达式作为deleter是比较好的一种选择。<br>3、std::unique_ptr不能进行复制，否则就违反了其只能拥有一个对象的规则。<br>4、std::unique_ptr有两种形式: std::unique_ptr<t>,std::unique_ptr<t[]>。这两种形式所能进行的操作略有不同，对于单对象形式，其没有索引操作，对于数组形式，其没有 解引用操作。<br>5、从std::unique_ptr转型为std::shared_ptr很方便，在不知道指针的具体用途时最好先用unique_ptr，待需要时再转型为shared_ptr。<br><strong>题外话</strong>要想正确调用继承类的析构函数，基类的析构函数必须是虚函数。</t[]></t></p>
-<p><strong>Item 19: Use std::shared_ptr for shared_ownership resource management</strong><br>要点：详见原书 P125<br>1、<strong>关于引用计数</strong><br>通常，构造函数增加引用计数；析构函数减少引用计数；复制赋值操作减少左边所指对象的引用计数，增加右边所指对象的引用计数。<br>2、<strong>引用计数会影响性能</strong><br>主要由以下原因造成：首先，shared_ptr的大小是原始指针的2倍，因为其有1个指针指向所引的对象，1个指针指向引用计数；然后，用于引用计数的内存要动态分配；对于引用计数的增加和减少操作必须是原子性的，这是为了保证其在多线程情况下的安全性。<br>3、<strong>shared_ptr和unique_ptr的区别和联系</strong><br>A、都支持自定义deleter，但是实现有所不同，对于unique_ptr，deleter的类型是智能指针类型的一部分，而对于shared_ptr,deleter的类型不是其一部分。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> loggingDel =[](Type* pc)&#123;</div><div class="line">    makeLogEntry(pt);</div><div class="line">    <span class="keyword">delete</span> pt;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;Type, <span class="keyword">decltype</span>(loggingDel)&gt; upt(<span class="keyword">new</span> Type,loggingDel);</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt(<span class="keyword">new</span> Type,loggingDel);</div></pre></td></tr></table></figure></p>
-<p>所以，对于不同类型的deleter的两个shared_ptr，只要它们的对象类型相同，其就可以相互赋值；而对于unique_ptr则不能，因为deleter也是其类型的一部分，这意味着这两个unique_ptr的类型不同，不能相互转移所有权。<br>B、对于shared_ptr，自定义deleter并不改变shared_ptr的大小，但是对于unique_ptr是有影响的。<br>C、shared_ptr不支持数组类型。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">shared_ptr</span>&lt;T[]&gt; sp;<span class="comment">//不能编译</span></div></pre></td></tr></table></figure></p>
-<p><strong>4、shared_ptr的实现原理</strong><br>其使用control block管理引用计数及其他(包括自定义deleter)数据。<br><img src="shared_ptr.JPG" alt="shared_ptr原理"><br>我们希望某个对象的control block是在初次有指针指该对象时创建。然而当创建shared_ptr指向某一对象时，我们事先并不能知道是否已有其它shared_ptr指向该对象。于是使用以下规则来进行control block的创建：<br><strong>std::make_shared总是创建一个control block</strong><br><strong>当shared_ptr是由unique<em>ptr转型创建时要建立control block</em></strong><br><strong>当用raw pointer构造shared_ptr时要创建control block</strong></p>
-<p>考虑如下语句<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> pt = <span class="keyword">new</span> Type;</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt1(pt,loggingDel);</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt2(pt,loggingDel);</div></pre></td></tr></table></figure></p>
-<p>按照之前的control block创建规则，对于pt指针指向的对象，将会创建2个control block，于是离开作用域时，会尝试对*pt进行两次内存释放操作，这样第二次操作将会造成未定义行为。这是我们不愿意看到的。<br>从以上例子我们可以得到这样的经验：<br><strong>避免向shared_ptr的构造函数传递raw pointer</strong><br>可以采用以下方法<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//对于自定义deleter的情况</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt1(<span class="keyword">new</span> Type,loggingDel);</div><div class="line"><span class="comment">//无自定义deleter时还可使用make_shared</span></div><div class="line"><span class="built_in">std</span>::make_shared&lt;Type&gt;(t);</div></pre></td></tr></table></figure></p>
-<p><strong>5、可使用std::enable_shared_from_this将this指针转型成shared_ptr</strong></p>
-<p><strong>Item 20: Use std::weak_ptr for std::shared_ptr like pointers that can dangle</strong><br>要点：具体看原书P134<br><strong>std::weak_ptr不会影响引用计数值</strong><br>std::weak_ptr的行为和shared_ptr相似，但是其不会影响所指对象的引用计数值，也不能被解引用，其是shared_ptr的辅助。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> spt=<span class="built_in">std</span>::make_shared&lt;Type&gt;();<span class="comment">//ref count=1</span></div><div class="line"><span class="built_in">std</span>::weak_ptr&lt;Type&gt; wpt(spt);<span class="comment">// ref count remains 1</span></div><div class="line">spt=<span class="literal">nullptr</span>;<span class="comment">//ref count=0 and wpt now dangles</span></div><div class="line"><span class="keyword">if</span>(wpt.expired())&#123;&#125; <span class="comment">//test if wpt doesn't point to an object</span></div></pre></td></tr></table></figure></p>
-<p>一个问题就是：在判断weak_ptr仍然指着一个特定对象时，如何访问该对象？这里有几个棘手的问题需要解决：weak_ptr并没有解引用操作，而且即便有解引用操作，在判断是否expired和解引用的语句之间，可能有另一个线程使得最后一个指向该对象的指针失效，使得该对象被destroy，这样解引用操作将会导致未定义行为，即我们无法保证线程安全性。<br>我们需要的是一个原子性的操作检查weak_ptr是否expired，如果没有，那么访问该指针所指对象，这可以通过从weak_ptr构造一个shared_ptr实现。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//第一种形式</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt1=wpt.lock();<span class="comment">//if wpt's expired,spt1 is nullptr</span></div><div class="line"></div><div class="line"><span class="comment">//第二种形式</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt2(wpt);<span class="comment">//if wpt's expired, throw std::bad_weak_ptr</span></div></pre></td></tr></table></figure></p>
-<p><strong>2、weak_ptr的应用场景</strong><br>A、管理缓存时，需要知道cache什么时候会dangle，这样的场景就需要weak_ptr辅助。(P136)<br>B、解决shared_ptr的环形引用问题。<br><strong>3、weak_ptr和shared_ptr</strong><br>从效率的角度讲，weak_ptr的效率和shared_ptr是一样的。其存储和shared_ptr是一样的 ，其大小和shared_ptr也是一样的，它也要使用control block管理对象。<strong>注意</strong>：weak_ptr不是不管理引用计数，而是不拥有对象共享关系，所以不会影响所指对象的引用计数，但是其会管理另外的不同功能的引用计数。</p>
-<p><strong>Item 21: Prefer std::make_unique and std::make_shared to direct use of new</strong><br>要点：具体看原书P139<br><strong>1、使用make函数的优点</strong><br>make_shared是C++11的标准，make_unique是C++14的标准。<br><strong>A、使得代码和编译的目标代码更精简</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">auto upt1(std::make_unique&lt;Type&gt;());</div><div class="line"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;Type&gt; upt2(<span class="keyword">new</span> Type);</div><div class="line"></div><div class="line">auto spt1(std::make_shared&lt;Type&gt;());</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt2(<span class="keyword">new</span> Type);</div></pre></td></tr></table></figure></p>
-<p><strong>B、使用make函数使得异常安全(exception safety)</strong><br><strong>C、make_shared和allocate_shared函数使得编译器生成更小更快的代码(相比使用new创建)</strong></p>
-<p>原则是优先使用make函数创建只能指针，但是也有make函数不能使用的情况。<br><strong>A</strong>、比如要自定义deleter时，就只能使用new作为参数创建，而不能使用make函数。<br><strong>B</strong>、一些所指对象的初始化细节使得不能使用make函数创建智能指针。<br><strong>C</strong>、一些自定义了new和delete的对象不方便用make函数创建智能指针。<br><strong>D</strong>、对于比较大的对象，不要使用make函数创建智能指针。</p>
-<p><strong>Item 22: When using the Pimpl  Idiom, define special member functions in the implementation file</strong><br>要点：<br><strong>1、Pimpl Idiom通过类客户和类实现之间减少编译依赖来减少构建时间</strong><br><strong>2、对于std::unique_ptr pImpl指针，需要在类头文件中声明特殊成员函数，在实现文件中实现。即便是默认函数实现，也需要声明和定义。</strong><br><strong>3、对于 shared_ptr则没有以上这种限制。主要原因还是在于unique_ptr和shared_ptr中deleter是否是类型的一部分的一个区别。</strong></p>
-<h1 id="opencv-中的cv-Ptr"><a href="#opencv-中的cv-Ptr" class="headerlink" title="opencv 中的cv::Ptr"></a>opencv 中的cv::Ptr</h1><p>其行为和std::shared_ptr类似。用法也基本相同。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、Nicolai M. Josuttis<br> The C++ Standard Library - A Tutorial and Reference, 2nd Edition<br> Addison Wesley Longman, 2012<br>2、Scott Meyers<br>Effective Modern C++ : 42 Specific Ways to Improve Your Use of C++11 and C++14<br>3、<a href="http://en.cppreference.com/w/cpp/memory/shared_ptr" target="_blank" rel="external">std::shared_ptr</a><br>4、<a href="http://en.cppreference.com/w/cpp/memory/weak_ptr" target="_blank" rel="external">std::weak_ptr</a><br>5、<a href="http://en.cppreference.com/w/cpp/memory/unique_ptr" target="_blank" rel="external">std::unique_ptr</a><br>6、<a href="https://docs.opencv.org/3.4.1/d0/de7/structcv_1_1Ptr.html" target="_blank" rel="external">cv::Ptr</a></p>
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1141564&auto=1&height=66"></iframe><br>一些资料的备份。</p>
+<h2 id="cs20si-2017-notes-and-slides"><a href="#cs20si-2017-notes-and-slides" class="headerlink" title="cs20si 2017 notes and slides"></a>cs20si 2017 notes and slides</h2><h3 id="1、Overview-Of-Tensorflow"><a href="#1、Overview-Of-Tensorflow" class="headerlink" title="1、Overview Of Tensorflow"></a>1、Overview Of Tensorflow</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_01.pdf" target="_blank" rel="external">notes_01</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_01.pdf" target="_blank" rel="external">slides_01</a></p>
+<h3 id="2、Operations"><a href="#2、Operations" class="headerlink" title="2、Operations"></a>2、Operations</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_02.pdf" target="_blank" rel="external">notes_02</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_02.pdf" target="_blank" rel="external">slides_02</a></p>
+<h3 id="3、Linear-and-Logistic-Regression"><a href="#3、Linear-and-Logistic-Regression" class="headerlink" title="3、Linear and Logistic Regression"></a>3、Linear and Logistic Regression</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_03.pdf" target="_blank" rel="external">notes_03</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_03.pdf" target="_blank" rel="external">slides_03</a></p>
+<h3 id="4、Structure-Your-Tensorflow-Model"><a href="#4、Structure-Your-Tensorflow-Model" class="headerlink" title="4、Structure Your Tensorflow Model"></a>4、Structure Your Tensorflow Model</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_04.pdf" target="_blank" rel="external">notes_04</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_04.pdf" target="_blank" rel="external">slides_04</a></p>
+<h3 id="5、Manage-Experiments-and-Process-Data"><a href="#5、Manage-Experiments-and-Process-Data" class="headerlink" title="5、Manage Experiments and Process Data"></a>5、Manage Experiments and Process Data</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_05.pdf" target="_blank" rel="external">notes_05</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_05.pdf" target="_blank" rel="external">slides_05</a></p>
+<h2 id="Computer-Vision"><a href="#Computer-Vision" class="headerlink" title="Computer Vision"></a>Computer Vision</h2><h3 id="Object-Detection"><a href="#Object-Detection" class="headerlink" title="Object Detection"></a>Object Detection</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">link</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/link//" class="article-tag-list-link color5">link</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/21/paper-and-notes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-effective-java-methods-common-to-all-objects" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/21/effective-java-methods-common-to-all-objects/">Effective Java -- Methods Common to All Objects</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/21/effective-java-methods-common-to-all-objects/" class="archive-article-date">
+  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Methods-Common-to-All-Objects"><span class="toc-text">Effective Java Items about Methods Common to All Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-10-Obey-the-general-contract-when-overriding-equals"><span class="toc-text">Item 10: Obey the general contract when overriding equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-11-Always-override-hashCode-when-you-override-equals"><span class="toc-text">Item 11: Always override hashCode when you override equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-12-Always-override-toString"><span class="toc-text">Item 12: Always override toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-13-Override-clone-judiciously"><span class="toc-text">Item 13: Override clone judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-14-Consider-implementing-Comparable"><span class="toc-text">Item 14: Consider implementing Comparable</span></a></li></ol></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=483671599&auto=1&height=66"></iframe></p>
+<h2 id="Effective-Java-Items-about-Methods-Common-to-All-Objects"><a href="#Effective-Java-Items-about-Methods-Common-to-All-Objects" class="headerlink" title="Effective Java Items about Methods Common to All Objects"></a>Effective Java Items about Methods Common to All Objects</h2><p>设计Object类的目的是为了扩展，它所有的非final方法(equals, hashCode, toString, clone, finalize)都有着明确的通用约定，它们都被设计成要被覆盖的。任何一个类在覆盖这些方法时都要遵守一些通用规定。</p>
+<h3 id="Item-10-Obey-the-general-contract-when-overriding-equals"><a href="#Item-10-Obey-the-general-contract-when-overriding-equals" class="headerlink" title="Item 10: Obey the general contract when overriding equals"></a>Item 10: Obey the general contract when overriding equals</h3><p>equals方法实现了等价关系，主要要满足以下条件：自反性，对称性，传递性，一致性，非空性。为了高效编写符合要求的equals方法，书中总结了以下方法：<br>1、使用==操作符检查参数是否是这个对象的引用。<br>2、使用instanceof操作符检查“参数是否为正确的类型”。<br>3、把参数转换成正确的类型。<br>4、对于该类中的每个“关键”域,检查参数中的域是否与该对象中对应的域相匹配。<br>5、编写好equals方法之后，再仔细检查是否满足之前的几个条件。<br>6、覆盖equals时要同时覆盖hashCode<br>7、不要企图让equals方法过于智能。<br>8、不要将equals声明中的Object对象替换为其他的类型。</p>
+<h3 id="Item-11-Always-override-hashCode-when-you-override-equals"><a href="#Item-11-Always-override-hashCode-when-you-override-equals" class="headerlink" title="Item 11: Always override hashCode when you override equals"></a>Item 11: Always override hashCode when you override equals</h3><p>每个覆盖了equals方法的类中，也必须同时覆盖hashCode方法。</p>
+<h3 id="Item-12-Always-override-toString"><a href="#Item-12-Always-override-toString" class="headerlink" title="Item 12: Always override toString"></a>Item 12: Always override toString</h3><p>遵守toString的约定并不像遵守equals和hashCode的约定那么重要，但是提供好的toString实现可以使得类使用起来更为舒适。</p>
+<h3 id="Item-13-Override-clone-judiciously"><a href="#Item-13-Override-clone-judiciously" class="headerlink" title="Item 13: Override clone judiciously"></a>Item 13: Override clone judiciously</h3><h3 id="Item-14-Consider-implementing-Comparable"><a href="#Item-14-Consider-implementing-Comparable" class="headerlink" title="Item 14: Consider implementing Comparable"></a>Item 14: Consider implementing Comparable</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/21/effective-java-methods-common-to-all-objects/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-tensorflow-programming-manage-your-experiments-in-tf" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/">How to Manage Your Experiments in TensorFlow</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/" class="archive-article-date">
+  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#tf-train-Saver"><span class="toc-text">tf.train.Saver()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tf-summary"><span class="toc-text">tf.summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Control-Randomization"><span class="toc-text">Control Randomization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在操作级别设置随机种子。-所有的随机张量都允许你在初始化时传入种子值。"><span class="toc-text">在操作级别设置随机种子。 所有的随机张量都允许你在初始化时传入种子值。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在计算图级别用tf-Graph-seed设置随机种子"><span class="toc-text">在计算图级别用tf.Graph.seed设置随机种子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reading-Data-in-Tensorflow"><span class="toc-text">Reading Data in Tensorflow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#从队列读取数据。"><span class="toc-text">从队列读取数据。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Threads-和-Queues"><span class="toc-text">Threads 和  Queues</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=31134197&auto=1&height=66"></iframe><br>主要介绍TensorFlow提供的一系列用来管理实验的优秀的工具。包括tf.train.Saver类，<br>TensorFlow的随机种子和NumPy的随机状态，并可视化我们的训练过程。</p>
+<h2 id="tf-train-Saver"><a href="#tf-train-Saver" class="headerlink" title="tf.train.Saver()"></a>tf.train.Saver()</h2><p>tf.train.Saver()类使得我们能够用二进制文件保存计算图的变量。这样使得我们可以在若干步训练过后保存参数并随时重新加载参数进行训练。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tf.train.Saver.save(sess, save_path, global_step=<span class="keyword">None</span>, lastest_filename=<span class="keyword">None</span>,</div><div class="line">                meta_graph_suffix=<span class="string">'meta'</span>, write_meta_graph=<span class="keyword">True</span>, write_state=<span class="keyword">True</span>)</div></pre></td></tr></table></figure></p>
+<p>例如我们想每训练1000步保存一次参数，我们可以这样做：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">saver = tf.train.Saver()</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> range(trianing_steps):</div><div class="line">        sess.run([optimizer])</div><div class="line">        <span class="keyword">if</span> (step + <span class="number">1</span>) % <span class="number">1000</span> == <span class="number">0</span>：</div><div class="line">            saver.save(sess, <span class="string">'checkpoint_directory/model_name'</span>,</div><div class="line">            global_step=model.global_step)</div></pre></td></tr></table></figure></p>
+<p>在TensorFlow术语中，保存图形变量的步骤称为检查点。由于我们将创建多个检查点，因此将模型所经历的训练步骤的数量附加到名为global_step的变量中会很有帮助。 在TensorFlow程序中看到这是一个非常常见的变量。 我们首先需要创建它，将其初始化为0，并将其设置为不可训练，因为我们不希望TensorFlow对其进行优化。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.global_step = tf.Variable(<span class="number">0</span>, dtype=tf.int32, trainable=<span class="keyword">False</span>, name=<span class="string">'global_step'</span>)</div></pre></td></tr></table></figure></p>
+<p>我们需要将global_step作为参数传递到optimizer中，使得它能够每训练一步加一。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.optimizer = tf.train.GradientDescentOptimizer(self.lr).minimize(self.loss, global_step=self.global_step)</div></pre></td></tr></table></figure></p>
+<p>为了在名为“checkpoints”的文件夹保存检查点，我们这样操作：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">saver.save(sess, <span class="string">'checkpoints/skip-gram'</span>, global_step=model.global_step)</div></pre></td></tr></table></figure></p>
+<p>于是整个word2vec的训练过程大概如下:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">self.global_step = tf.Variable(<span class="number">0</span>, dtype=tf.int32, trainable=<span class="keyword">False</span>, name=<span class="string">'global_step'</span>)</div><div class="line">self.optimizer = tf.train.GradientDescentOptimizer(self.lr).minimize(self.loss,global_step=self.global_step)</div><div class="line">saver = tf.train.Saver()</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variables_initializer())</div><div class="line">    average_loss = <span class="number">0.0</span></div><div class="line">    writer = tf.summary.FileWriter(<span class="string">'./improved_graph'</span>,sess.graph)</div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> range(num_train_steps):</div><div class="line">        batch = batch.gen_next()</div><div class="line">        loss_batch, _ = sess.run([model.loss,model.optimizer],</div><div class="line">            feed_dict=&#123;model.center_words: batch[<span class="number">0</span>],</div><div class="line">                      model.target_words: batch[<span class="number">1</span>]&#125;)</div><div class="line">        average_loss += loss_batch</div><div class="line">        <span class="keyword">if</span> (index + <span class="number">1</span>) % <span class="number">1000</span> == <span class="number">0</span>:</div><div class="line">            saver.save(sess, <span class="string">'checkpoints/skip-gram'</span>,global_step=model.global_step)</div></pre></td></tr></table></figure></p>
+<p>这时检查点文件都在文件夹checkpoints中。<br>如果想要恢复某个检查点，可以用以下语句：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">saver.restore(sess, <span class="string">'checkpoints/skip-gram-1000'</span>)</div></pre></td></tr></table></figure></p>
+<p>值得注意的是，我们只能恢复已经存在的checkpoints文件，所以在恢复时，需要先检查文件的有效性，可以这样做：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ckpt = tf.train.get_checkpoint_state(os.path.dirname(<span class="string">'checkpoints/checkpoint'</span>))</div><div class="line"><span class="keyword">if</span> ckpt <span class="keyword">and</span> ckpt.model_checkpoint_path:</div><div class="line">    saver.restore(sess, ckept.model_checkpoint_path)</div></pre></td></tr></table></figure></p>
+<p>默认情况下，saver.save()保存图中的所有变量，而且也是推荐这么做的。但是，但是也可以通过以下方法只保存部分变量的值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">v1 = tf.Variable(..., name=<span class="string">'v1'</span>)</div><div class="line">v2 = tf.Variable(..., name=<span class="string">'v2'</span>)</div><div class="line"></div><div class="line"><span class="comment"># pass the variables as a dict:</span></div><div class="line">saver = tf.train.Saver(&#123;<span class="string">'v1'</span>: v1, <span class="string">'v2'</span>: v2&#125;)</div><div class="line"></div><div class="line"><span class="comment"># pass them as a list</span></div><div class="line">saver =tf.train.Saver([v1,v2])</div><div class="line"></div><div class="line"><span class="comment"># passing a list is equivalent to passing a dict with the variable op names </span></div><div class="line">saver = tf.train.Saver(&#123;v.op.name: v <span class="keyword">for</span> v <span class="keyword">in</span> [v1, v2]&#125;)</div></pre></td></tr></table></figure></p>
+<p>注意：savers只是保存了变量的值，并没有保存整个计算图，所以我们需要自己创建计算图，然后载入变量。检查点文件指定了从变量到tensor的映射方式。人们通常不只是保存上一次迭代的参数，还保存迄今为止效果最好的参数，以便可以根据最佳参数评估模型。</p>
+<h2 id="tf-summary"><a href="#tf-summary" class="headerlink" title="tf.summary"></a>tf.summary</h2><p>我们可以使用Tensorboard可视化训练数据，包括loss, average loss, accuracy等。可以将它们可视化为点，直方图，甚至是图像。所以我们建立一个新的name scope来管理所有这类操作。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_create_summaries</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'summaries'</span>):</div><div class="line">        tf.summary.scalar(<span class="string">'loss'</span>, self.loss)</div><div class="line">        tf.summary.scalar(<span class="string">'accuracy'</span>, self.accuracy)</div><div class="line">        tf.summary.histogram(<span class="string">'histogram loss'</span>, self.loss)</div><div class="line">        <span class="comment"># because you have several summaries, you should merge them all</span></div><div class="line">        <span class="comment"># into one op to make it easier to manage</span></div><div class="line">        self.summary_op = tf.summary.merge_all()</div></pre></td></tr></table></figure></p>
+<p>然后用 sess.run()来执行。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">loss_batch, _, summary = sess.run([model.loss, model.optimizer, model.summary_op], feed_dict=feed_dict)</div></pre></td></tr></table></figure></p>
+<p>接着我们需要用用于可视化计算图的FileWriter对象来将这些summary写入文件。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">writer.add_summary(summary, global_step=step)</div></pre></td></tr></table></figure></p>
+<p>然后我们就可以得到一些可视化结果。<br>值得注意的是，如果我们将summary数据保存在graph文件夹的不同子文件夹，就可以对不同超参数的训练结果进行比较。<br>我们也可以使用tf.summary.image将结果可视化为图片。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.summary.image(name, tensor, max_output=<span class="number">3</span>, collections=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<h2 id="Control-Randomization"><a href="#Control-Randomization" class="headerlink" title="Control Randomization"></a>Control Randomization</h2><p>我们往往必须控制随机化过程才能为实验获得稳定的结果。NumPy以随机种子和随机状态获得随机数。但是TensorFlow不允许我们以numpy的方式获得随机状态，但它确实可以让我们通过以下两种方式获得稳定的随机结果：</p>
+<h3 id="在操作级别设置随机种子。-所有的随机张量都允许你在初始化时传入种子值。"><a href="#在操作级别设置随机种子。-所有的随机张量都允许你在初始化时传入种子值。" class="headerlink" title="在操作级别设置随机种子。 所有的随机张量都允许你在初始化时传入种子值。"></a>在操作级别设置随机种子。 所有的随机张量都允许你在初始化时传入种子值。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">my_var = tf.Variable(tf.trucated_normal((<span class="number">-1.0</span>,<span class="number">1.0</span>), stddev=<span class="number">0.1</span>, seed=<span class="number">0</span>))</div></pre></td></tr></table></figure>
+<p>注意每个新会话都会重新开始随机状态。例如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57492</span></div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; -5.97319</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57493</span></div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57493</span></div></pre></td></tr></table></figure>
+<p>随着操作级别的随机种子，每个操作保持自己的种子。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line">d = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57493</span></div><div class="line">    print(sess.run(d)) <span class="comment"># &gt;&gt; 3.57493</span></div></pre></td></tr></table></figure></p>
+<h3 id="在计算图级别用tf-Graph-seed设置随机种子"><a href="#在计算图级别用tf-Graph-seed设置随机种子" class="headerlink" title="在计算图级别用tf.Graph.seed设置随机种子"></a>在计算图级别用tf.Graph.seed设置随机种子</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.set_random_seed(seed)</div></pre></td></tr></table></figure>
+<p>如果你不关心图中每个操作的随机化，而只是希望能够在另一个图上复制结果（以便其他人可以在你自己的图上复制你的结果），你可以使用tf.set_random_seed。设置当前的TensorFlow随机种子只影响当前的默认图形。<br>例如，有两个模型 a.py 和 b.py，它们有相同的代码。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line">tf.set_random_seed(<span class="number">2</span>)</div><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>)</div><div class="line">d = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>)</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c))</div><div class="line">    print(sess.run(d))</div></pre></td></tr></table></figure></p>
+<p>当没有设置图级别的随机种子时，两个代码文件会运行得到不同的结果。而如果设置了，则会得到相同的结果。</p>
+<h2 id="Reading-Data-in-Tensorflow"><a href="#Reading-Data-in-Tensorflow" class="headerlink" title="Reading Data in Tensorflow"></a>Reading Data in Tensorflow</h2><p>将数据加载到TensorFlow图中有两种主要的方法：一种是通过我们熟悉的feed_dict，另一种是通过读者使我们直接从文件中读取张量。当然，第三种方法是使用常量加载数据，但是这会造成图严重臃肿且无法运行。为了明白为什么我们需要比feed_dict更多的东西，我们需要看看feed_dict是如何工作的。Feed_dict将首先将数据从存储系统发送到客户端，然后从客户端发送到工作进程。这会导致数据变慢，特别是如果客户端与工作进程不在同一台机器上。TensorFlow有readers可以直接将数据加载到工作进程中。当我们不在分布式系统或者当我们的数据集很小的时候，这种改进将不会被注意到，但是它仍然值得研究。 TensorFlow有几个内置读卡器来满足您的阅读需求。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">tf.TextLineReader</div><div class="line"><span class="comment"># Outputs the lines of a file delimited by newlines</span></div><div class="line"><span class="comment"># E.g. text files, CSV files</span></div><div class="line">tf.FixedLengthRecordReader</div><div class="line"><span class="comment"># Outputs the entire file when all files have same fixed lengths</span></div><div class="line"><span class="comment"># E.g. each MNIST file has 28 x 28 pixels, CIFAR-10 32 x 32 x 3</span></div><div class="line">tf.WholeFileReader</div><div class="line"><span class="comment"># Outputs the entire file content</span></div><div class="line">tf.TFRecordReader</div><div class="line"><span class="comment"># Reads samples from TensorFlow's own binary format (TFRecord)</span></div><div class="line">tf.ReaderBase</div><div class="line"><span class="comment"># Allows you to create your own readers</span></div></pre></td></tr></table></figure></p>
+<h3 id="从队列读取数据。"><a href="#从队列读取数据。" class="headerlink" title="从队列读取数据。"></a>从队列读取数据。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">filename_queue = tf.train.string_input_producer([<span class="string">'file0.csv'</span>, <span class="string">'file1.csv'</span>])</div><div class="line">reader = tf.TextLineReader()</div><div class="line">key , value = reader.read(filename_queue)</div></pre></td></tr></table></figure>
+<h3 id="Threads-和-Queues"><a href="#Threads-和-Queues" class="headerlink" title="Threads 和  Queues"></a>Threads 和  Queues</h3><p>我们可以使用tf.Coordinator 和 tf.QueueRunner 来管理队列。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    <span class="comment"># start populating the filename queue</span></div><div class="line">    coord = tf.train.Coordinator()</div><div class="line">    threads = tf.train.start_queue_runners(coord=coord)</div></pre></td></tr></table></figure></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_05.pdf" target="_blank" rel="external">notes_05</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_05.pdf" target="_blank" rel="external">slides_05</a></p>
 
       
 
@@ -233,7 +422,7 @@ style="background: #4d4d4d"></div>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cpp</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -245,7 +434,7 @@ style="background: #4d4d4d"></div>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/cpp//" class="article-tag-list-link color4">cpp</a>
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
         		</li>
       		
 		</ul>
@@ -254,7 +443,221 @@ style="background: #4d4d4d"></div>
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/21/cpp-smart-ptr/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-tensorflow-programming-structure-your-tf-model" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/20/tensorflow-programming-structure-your-tf-model/">Structure Your Tensorflow Model Notes</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/20/tensorflow-programming-structure-your-tf-model/" class="archive-article-date">
+  	<time datetime="2018-01-20T07:03:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何结构化Tensorflow模型"><span class="toc-text">如何结构化Tensorflow模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#tensorflow中模型的结构"><span class="toc-text">tensorflow中模型的结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步，构建计算图"><span class="toc-text">第一步，构建计算图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步，计算"><span class="toc-text">第二步，计算</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Word2Vec-skip-gram-model实例"><span class="toc-text">Word2Vec, skip-gram model实例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步，构建计算图-1"><span class="toc-text">第一步，构建计算图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步，执行-计算"><span class="toc-text">第二步，执行 计算</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Name-Scope"><span class="toc-text">Name Scope</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要学习梯度？"><span class="toc-text">为什么要学习梯度？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=500293527&auto=1&height=66"></iframe><br>之前已经介绍了使用tensorflow构建线性回归以及用逻辑回归来进行MNIST手写字母识别,这些都属于比较简单的网络结构。当我们需要构建更为复杂的结构时，就需要好好计划编码结构，不然代码混乱不说而且难于调试。这里主要介绍如何高效结构化模型，以word2vec作为例子说明。<br>关于word2vec的理论知识可以参考cs224n的课件。主要介绍利用tensorflow搭建skip-gram模型。原理可参考：<br><a href="http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/" target="_blank" rel="external">Word2Vec Tutorial–The Skip-Gram Model</a></p>
+<h2 id="如何结构化Tensorflow模型"><a href="#如何结构化Tensorflow模型" class="headerlink" title="如何结构化Tensorflow模型"></a>如何结构化Tensorflow模型</h2><h3 id="tensorflow中模型的结构"><a href="#tensorflow中模型的结构" class="headerlink" title="tensorflow中模型的结构"></a>tensorflow中模型的结构</h3><h4 id="第一步，构建计算图"><a href="#第一步，构建计算图" class="headerlink" title="第一步，构建计算图"></a>第一步，构建计算图</h4><p>1、为输入和输出定义placeholders<br>2、定义权重weights<br>3、定义inference model<br>4、定义损失函数<br>5、定义优化器</p>
+<h4 id="第二步，计算"><a href="#第二步，计算" class="headerlink" title="第二步，计算"></a>第二步，计算</h4><p>1、初次初始化所有模型变量<br>2、输入训练数据，可能还会涉及随机化数据样本的顺序。<br>3、对训练数据执行推理模型，从而计算每个训练输入以当前模型参数的输出结果。<br>4、计算损失<br>5、调整模型参数使得模型的损失最大或者最小。<br><img src="compute.jpg" alt=""></p>
+<h3 id="Word2Vec-skip-gram-model实例"><a href="#Word2Vec-skip-gram-model实例" class="headerlink" title="Word2Vec, skip-gram model实例"></a>Word2Vec, skip-gram model实例</h3><h4 id="第一步，构建计算图-1"><a href="#第一步，构建计算图-1" class="headerlink" title="第一步，构建计算图"></a>第一步，构建计算图</h4><p>1、为输入和输出定义placeholders<br>输入是中心词，输出是目标(上下文)词，我们直接输入这些词的索引而不是one-hot向量，例如：如果中心词是单词表中的第1001个单词，我们输入数字1001。每个样本输入都是一个标量，所以我们以形状[BATCH_SIZE]的占位符定义批量大小为BATCH_SIZE的输入。同样，输出也是用同样的方法定义。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">center_words = tf.placeholder(tf.int32, shape=[BATCH_SIZE])</div><div class="line">target_words = tf.placeholder(tf.int32, shape=[BATCH_SIZE])</div></pre></td></tr></table></figure></p>
+<p>2、定义权重weights<br>每行对应一个词的表示向量。如果用一个词表示一个大小为EMBED_SIZE的向量，那么嵌入矩阵的形状为[VOCAB_SIZE,EMBED_SIZE]。我们将嵌入矩阵初始化为随机分布的值。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">embed_matrix = tf.Variable(tf.random_uniform([VOCAB_SIZE,EMBED_SIZE],<span class="number">-1.0</span>,<span class="number">1.0</span>))</div></pre></td></tr></table></figure></p>
+<p>3、定义推理模型<br>我们的目标是得到词汇表中单词的向量表示，embed_matrix的维度是[VOCAB_SIZE x EMBED_SIZE]，embedding矩阵的每一行和该索引出的单词的矢量表示相对应。为了得到批次中所有中心词的表示，我们得到所有相应行的切片嵌入矩阵。Tensorflow为我们提供了一个简单的API：tf.nn.embedding_lookup()。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.nn.embedding_lookup(parmas, ids, partition_strategy=<span class="string">'mod'</span>, name=<span class="keyword">None</span>, validate_indices=<span class="keyword">True</span>, max_norm=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>于是为了得到输入中心词的嵌入矩阵表示，我们这样操作:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">embed = tf.nn.embedding_lookup(embed_matrix, center_words)</div></pre></td></tr></table></figure></p>
+<p>4、定义损失函数<br>对于NCE损失，我们需要隐藏层的权重和偏置来计算。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">nce_weight = tf.Variable(tf.truncated_normal([VOCAB_SIZE, EMBED_SIZE],stddev=<span class="number">1.0</span>/EMBED_SIZE**<span class="number">0.5</span>))</div><div class="line">nce_bias = tf.Variable(tf.zeros([VOCAB_SIZE]))</div><div class="line">loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weight,</div><div class="line">                                     biases=nce_bias,</div><div class="line">                                     labels=target_words,</div><div class="line">                                     inputs=embed,</div><div class="line">                                     num_sampled=NUM_SAMPLED,</div><div class="line">                                     num_classes=VOCAB_SIZE))</div></pre></td></tr></table></figure></p>
+<p>5、定义优化器<br>我们使用梯度下降法。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.GradientDescentOptimizer(LEARNING_RATE).minimize(loss)</div></pre></td></tr></table></figure></p>
+<h4 id="第二步，执行-计算"><a href="#第二步，执行-计算" class="headerlink" title="第二步，执行 计算"></a>第二步，执行 计算</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variable_initializer())</div><div class="line">    average_loss = <span class="number">0.0</span></div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> range(NUM_TRAIN_STEPS):</div><div class="line">        batch = batch_gen.next()</div><div class="line">        loss_batch, _=sess.run([loss, optimizer],</div><div class="line">                                feed_dict=&#123;center_words: batch[<span class="number">0</span>], target_words: batch[<span class="number">1</span>]&#125;)</div><div class="line">        average_loss +=loss_batch</div><div class="line">        <span class="keyword">if</span> (index + <span class="number">1</span>) % <span class="number">200</span> == <span class="number">0</span>:</div><div class="line">            print(<span class="string">'Average loss at step &#123;&#125;: &#123;:5.1f&#125;'</span>.format(index+<span class="number">1</span>,</div><div class="line">                                                    average_loss/(index+<span class="number">1</span>)))</div></pre></td></tr></table></figure>
+<h3 id="Name-Scope"><a href="#Name-Scope" class="headerlink" title="Name Scope"></a>Name Scope</h3><p>给出张量的名称，在Tensorboard中查看<br><img src="tensorboard.jpg" alt=""><br>这看起来可读性并不强，节点到处都是。Tensorboard并不知道哪些节点之间关联性比较强并将它们组合在一起。当构建更为复杂的模型时，这看起来会更混乱。实际上我们可以同过name scope的方法指定节点之间的关联关系，这样有着相同name scope的节点会被放置在一起。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.name_scope(name_of_that_scope):</div><div class="line">    <span class="comment"># declare op_1</span></div><div class="line">    <span class="comment"># declare op_2</span></div></pre></td></tr></table></figure></p>
+<p>这样我们就可以将之前的代码再规范一下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'data'</span>):</div><div class="line">    center_words = tf.placeholder(tf.int32, shape=[BATCH_SIZE], name=<span class="string">'center_words'</span>)</div><div class="line">    target_words = tf.placeholder(tf.in32, shape=[BATCH_SIZE, <span class="number">1</span>], name=<span class="string">'target_words'</span>)</div><div class="line"><span class="keyword">with</span> tf.name_scope(embed):</div><div class="line">    embed_matrix = tf.Variable(tf.random_uniform([VOCAB_SIZE, EMBED_SIZE], <span class="number">-1.0</span>, <span class="number">1.0</span>), name=<span class="string">'embed_matrx'</span>)</div><div class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'loss'</span>):</div><div class="line">    embed = tf.nn.embedding_lookup(embed_matrix, center_words, name=<span class="string">'embed'</span>)</div><div class="line">    nce_weights = tf.Variable(tf.truncated_normal([VOCAB_SIZE, EMBED_SIZE],</div><div class="line">            stddev=<span class="number">1.0</span> / math.sqrt(EMBED_SIZE)), name=<span class="string">'nce_weights'</span>)</div><div class="line">    nce_bias = tf.Variable(tf.zeros([VOCAB_SIZE]), name=<span class="string">'nce_bias'</span>)</div><div class="line">    loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weights, biases=nce_bias, labels=target_words, inputs=embbed, num_sampled=NUM_SAMPLED, num_classes=VOCAB_SIZE), name=<span class="string">'loss'</span>)</div></pre></td></tr></table></figure></p>
+<p>这样Tensorboard中的图看起来更加直观了，鼠标点击相应的块会出现该块的具体内容。<br><img src="with_name_scope.JPG" alt=""><br>Tensorboard中有两种类型的边界，一种是实线一种是虚线，实线代表data flow边，而虚线代表控制依赖的边。<br>此外，为了让代码的复用性更强，我们可以将模型写成一个类，如下所示：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span>  <span class="title">SkipGramModel</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, params)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_create_placeholder</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">    <span class="title">def</span> <span class="title">_create_embedding</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">    <span class="title">def</span> <span class="title">_create_loss</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">    <span class="title">def</span> <span class="title">_create_optimizer</span><span class="params">(self)</span></span></div><div class="line"><span class="function">        <span class="title">pass</span></span></div></pre></td></tr></table></figure></p>
+<h3 id="为什么要学习梯度？"><a href="#为什么要学习梯度？" class="headerlink" title="为什么要学习梯度？"></a>为什么要学习梯度？</h3><p>从以上例子可以看出 ，我们在构建模型的时候并没有计算梯度，而是Tensorflow自动帮我们求解的，那么我们为什么还要学习梯度呢？因为Tensorflow虽然帮我们计算了梯度，但是它并没有告诉我们函数是否会受到梯度爆炸或者消失的影响，所以我们仍然需要了解梯度下降的工作原理。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_04.pdf" target="_blank" rel="external">notes_04</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_04.pdf" target="_blank" rel="external">slides_04</a><br><a href="http://colah.github.io/posts/2014-10-Visualizing-MNIST/" target="_blank" rel="external">Visualizing MNIST</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/20/tensorflow-programming-structure-your-tf-model/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-tensorflow-programming-linear-and-logistic-regression" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/">Linear and Logistic Regression in Tensorflow Notes</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/" class="archive-article-date">
+  	<time datetime="2018-01-18T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#线性回归和逻辑回归"><span class="toc-text">线性回归和逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线性回归"><span class="toc-text">线性回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何判断一个模型是正确的？"><span class="toc-text">如何判断一个模型是正确的？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用相关系数R的平方"><span class="toc-text">使用相关系数R的平方</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在测试集上运行"><span class="toc-text">在测试集上运行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用虚拟数据测试模型"><span class="toc-text">用虚拟数据测试模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部分代码分析"><span class="toc-text">部分代码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化"><span class="toc-text">优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#更多关于梯度计算"><span class="toc-text">更多关于梯度计算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优化器种类"><span class="toc-text">优化器种类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#各种优化器的比较"><span class="toc-text">各种优化器的比较</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑回归"><span class="toc-text">逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理解one-hot-encodiing"><span class="toc-text">理解one-hot encodiing</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=474117771&auto=1&height=66"></iframe></p>
+<h1 id="线性回归和逻辑回归"><a href="#线性回归和逻辑回归" class="headerlink" title="线性回归和逻辑回归"></a>线性回归和逻辑回归</h1><p>之前已经在cs231n的笔记中介绍过基本的线性回归和逻辑回归模型，现在需要用tensorflow实现。</p>
+<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a></p>
+<h3 id="如何判断一个模型是正确的？"><a href="#如何判断一个模型是正确的？" class="headerlink" title="如何判断一个模型是正确的？"></a>如何判断一个模型是正确的？</h3><h4 id="使用相关系数R的平方"><a href="#使用相关系数R的平方" class="headerlink" title="使用相关系数R的平方"></a>使用相关系数R的平方</h4><p><a href="http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit" target="_blank" rel="external">R-squared</a></p>
+<h4 id="在测试集上运行"><a href="#在测试集上运行" class="headerlink" title="在测试集上运行"></a>在测试集上运行</h4><h4 id="用虚拟数据测试模型"><a href="#用虚拟数据测试模型" class="headerlink" title="用虚拟数据测试模型"></a>用虚拟数据测试模型</h4><h3 id="部分代码分析"><a href="#部分代码分析" class="headerlink" title="部分代码分析"></a>部分代码分析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.GradientDescentOptimizer(learning_rate=<span class="number">0.01</span>).minimize(loss)</div><div class="line">sess.run(optimizer, feed_dict=&#123;X: x, Y: y&#125;)</div></pre></td></tr></table></figure>
+<p>有两个疑问？<br>1、为什么train_op在tf.Session.run()的提取列表中？<br>2、Tensorflow怎么知道要更新哪些变量？<br>实际上，我们可以将任何Tensorflow的操作作为tf.Session.run()的提取变量。Tensorflow会执行计算图中这些操作所依赖的部分。在以上例子中，train_op的目的是使loss最小，而loss依赖于w和b的值。<br><img src="graph.jpg" alt=""><br>从图中可以看出，节点GrandientDescentOptimizer依赖于节点weights，bias和gradients。</p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>GradientDescentOptimizer意味着我们的更新策略是梯度下降。Tensorflow已经为我们做了自动微分，然后更新w和b的值使得loss最小。默认情况下，optimizer训练目标函数所依赖的变量中的所有可训练变量，如果这里面有一些你不想训练的变量，可以将在定义参数时其参数trainable设置为False。一个具体的例子是变量global_step，这个变量是用来记录你运行模型多少次数的变量，其不应该为可训练的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">global_step = tf.Variable(<span class="number">0</span>,trainable=<span class="keyword">False</span>, dtype=tf.int32)</div><div class="line">learning_rate = <span class="number">0.01</span> * <span class="number">0.99</span> ** tf.cast(global_step, tf.float32)</div><div class="line">increment_step = global_step.assign_add(<span class="number">1</span>)</div><div class="line">optimizer = tf.GradientDescentOptimizer(learning_rate) <span class="comment"># learning rate 可以是一个tensor</span></div></pre></td></tr></table></figure></p>
+<p>tf.Variable的完整定义是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tf.Variable(initial_value=<span class="keyword">None</span>, trainable=<span class="keyword">True</span>, collections=<span class="keyword">None</span>,</div><div class="line">    validate_shape=<span class="keyword">True</span>, caching_device=<span class="keyword">None</span>, name=<span class="keyword">None</span>, variable_def=<span class="keyword">None</span>,</div><div class="line">    dtype=<span class="keyword">None</span>, expected_shape=<span class="keyword">None</span>, import_scope=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>我们甚至可以让optimizer计算特定变量的梯度，也可以修改由optimizer计算出的梯度。<br>如下所示是一些例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">optimizer = GradientDescentOptimizer(learning_rate=<span class="number">0.1</span>)</div><div class="line"><span class="comment"># 计算一系列变量的梯度</span></div><div class="line">grads_and_vars = opt.compute_gradients(loss, &lt;list of variables&gt;)</div><div class="line"><span class="comment"># grads_and_vars 是由元组(gradient, valriable)</span></div><div class="line"><span class="comment">#组成的列表。可以对其中的gradient项做一些操作。</span></div><div class="line">substracted_grads_and_vars = [(gv[<span class="number">0</span>] - <span class="number">1.0</span>, gv[<span class="number">1</span>]) <span class="keyword">for</span> gv <span class="keyword">in</span> grads_and_vars]</div><div class="line"><span class="comment"># 让optimizer应用减过1的梯度。</span></div><div class="line">optimizer.apply_gradients(subtracted_grads_and_vars)</div></pre></td></tr></table></figure></p>
+<h4 id="更多关于梯度计算"><a href="#更多关于梯度计算" class="headerlink" title="更多关于梯度计算"></a>更多关于梯度计算</h4><p>优化器类会自动计算graph的梯度，但创建新的优化器或专家用户可以调用下面的低级函数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.gradients(ys, xs, grad_ys=<span class="keyword">None</span>, name=<span class="string">'gradients'</span>, colocate_gradients_with_ops=<span class="keyword">False</span>, gate_gradients=<span class="keyword">False</span>, aggregation_method=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
+<p>当只训练一个模型的一个部分时，这种方法很有用。例如我们可以使用tf.gradient()计算中间层loss的梯度G，然后我们使用优化器来最小化中间层输出M和M + G之间的差异，<br>只更新网络的下半部分。</p>
+<h4 id="优化器种类"><a href="#优化器种类" class="headerlink" title="优化器种类"></a>优化器种类</h4><p><img src="optimizer.jpg" alt=""></p>
+<h5 id="各种优化器的比较"><a href="#各种优化器的比较" class="headerlink" title="各种优化器的比较"></a>各种优化器的比较</h5><p>cs231n的笔记中有介绍。也可参考：<br><a href="http://sebastianruder.com/optimizing-gradient-descent/" target="_blank" rel="external">Optimizing Gradient Descent</a></p>
+<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><p>用逻辑回归解决MNIST字符识别的一个例子</p>
+<h3 id="理解one-hot-encodiing"><a href="#理解one-hot-encodiing" class="headerlink" title="理解one-hot encodiing"></a>理解one-hot encodiing</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_03.pdf" target="_blank" rel="external">slides_03</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_03.pdf" target="_blank" rel="external">notes_03</a><br><a href="https://zhuanlan.zhihu.com/p/28924642" target="_blank" rel="external">cs20si: tensorflow for research 学习笔记3</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/19/tensorflow-programming-linear-and-logistic-regression/">展开全文 >></a>
         </p>
       
 
@@ -289,7 +692,7 @@ style="background: #4d4d4d"></div>
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
     </nav>
   
 
@@ -385,11 +788,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -397,11 +800,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -413,15 +816,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">paper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -433,15 +836,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">dl</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
             
             <div class="clearfix"></div>

@@ -256,9 +256,443 @@ style="background: #4d4d4d"></div>
 
 
   
+    <article id="post-normalization-in-deeplearning" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/01/normalization-in-deeplearning/">深度学习中的Normalization方法</a>
+    </h1>
+  
+
+        
+        <a href="/2018/05/01/normalization-in-deeplearning/" class="archive-article-date">
+  	<time datetime="2018-05-01T06:12:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Feature-Scaling"><span class="toc-text">Feature Scaling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Internal-Convariate-Shift"><span class="toc-text">Internal Convariate Shift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Batch-Normalization-1"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要加gamma，beta参数"><span class="toc-text">为什么要加gamma，beta参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#forward"><span class="toc-text">forward</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#backward"><span class="toc-text">backward</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#benefit"><span class="toc-text">benefit</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Other-Normalization"><span class="toc-text">Other Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Layer-Normalization"><span class="toc-text">Layer Normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Group-Normalization"><span class="toc-text">Group Normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Local-Response-Normalization"><span class="toc-text">Local Response Normalization</span></a></li></ol></li></ol>
+</div>
+
+        <p>总结深度学习中常用的Normalization方法，包括BatchNormalization,LayerNormalization,GroupNormalization以及LocalResponseNorm。</p>
+<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><h2 id="Feature-Scaling"><a href="#Feature-Scaling" class="headerlink" title="Feature Scaling"></a>Feature Scaling</h2><p>是指对不同的feature做归一化，使得其有着相同的scaling。<br><img src="feature_scaling.jpg" alt="Feature Scaling"><br>从上图可以看出，输入的两个维度x1,x2相差比较大，如果想要得到比较好的学习效果，需要针对不同维度采用不同learning rate，但是操作起来困难。进行feature scaling可以解决这个问题。<br>如何做：<br><img src="how_to_scaling.jpg" alt="如何做scaling"></p>
+<h2 id="Internal-Convariate-Shift"><a href="#Internal-Convariate-Shift" class="headerlink" title="Internal Convariate Shift"></a>Internal Convariate Shift</h2><p><strong>We define Internal Covariate Shift as the change in the distribution of network activations due to the change in network parameters during training</strong><br>减少Internal Convariate Shift有助于训练。<br><img src="internal_convariate_shift.jpg" alt="Internal Convariate Shift"><br>对于deeplearning 网络来说，可以对每个layer做feature scaling。<br>然而如果只是上面提到的简单的feature scaling的话会带来一个问题：<br>在训练过程中，中间的每一层的参数都是在变化的，那么其每层的output也会随之改变，则mean和std也在不断变化。我们将难以简单计算出mean和std来进行feature scaling。Batch Normalization则可以用来解决这个问题，因为其将normalization加入训练过程中。</p>
+<h2 id="Batch-Normalization-1"><a href="#Batch-Normalization-1" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h2><p><img src="bn.jpg" alt="Batch Normalization"></p>
+<h3 id="为什么要加gamma，beta参数"><a href="#为什么要加gamma，beta参数" class="headerlink" title="为什么要加gamma，beta参数"></a>为什么要加gamma，beta参数</h3><p>gamma，beta参数的加入使得整个BN过程可训练，使得其与普通的预处理归一化操作区别开。??<br><strong>为了保证模型的表达能力不因为规范化而下降</strong><br><a href="https://zhuanlan.zhihu.com/p/33173246" target="_blank" rel="external">详解深度学习中的Normalization，不只是BN</a></p>
+<h3 id="forward"><a href="#forward" class="headerlink" title="forward"></a>forward</h3><p>针对每一个batch做归一化操作。<br><strong>training</strong><br><img src="training_bn.jpg" alt="训练"><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">sample_mean=np.mean(x,axis=<span class="number">0</span>)</div><div class="line">sample_var=np.var(x,axis=<span class="number">0</span>)</div><div class="line">x_hat=(x-sample_mean)/np.sqrt(sample_var+eps)</div><div class="line">out=gamma*x_hat+beta</div><div class="line"></div><div class="line"><span class="comment"># move average mean</span></div><div class="line">running_mean=momentum*running_mean+(<span class="number">1</span>-momentum)*sample_mean</div><div class="line"><span class="comment"># move average var</span></div><div class="line">running_var=momentum*running_var+(<span class="number">1</span>-momentum)*sample_mean</div></pre></td></tr></table></figure></p>
+<p><strong>test</strong><br>存在一个问题：我们无法知道batch的信息，所以没法算mean和std。<br>解决方法：<br><strong>1</strong>ideal solution: Computing mean and std using the whole training dataset<br><strong>2</strong>practical solution: computing  the moving average of mean and std of the batches during training</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">temp=(x-running_mean)/np.sqrt(running_var+eps)</div><div class="line">out=gamma*temp+beta</div></pre></td></tr></table></figure>
+<h3 id="backward"><a href="#backward" class="headerlink" title="backward"></a>backward</h3><p><a href="http://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html" target="_blank" rel="external">Understanding the backward pass through Batch Normalization Layer</a></p>
+<h3 id="benefit"><a href="#benefit" class="headerlink" title="benefit"></a>benefit</h3><p><strong>1、BN通过减少Internal Convariate Shift使得我们可以使用更高的learning rate来让训练更快速。</strong><br><strong>2、BN对解决梯度爆炸和梯度消失有作用，特别是对tanh、sigmoid等激活函数。</strong><br>    原因：因为BN确保了数据都在0附近斜率比较大的地方，不会出现梯度爆炸和消失的问题。<br><strong>3、使得参数初始化对训练的影响不大</strong><br><img src="init.jpg" alt="参数初始化"><br><strong>4、BN也有regularization的作用，防止overfitting</strong></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1、<a href="https://www.quora.com/Why-does-batch-normalization-help" target="_blank" rel="external">Why-does-batch-normalization-help</a><br>2、<a href="http://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html" target="_blank" rel="external">Understanding the backward pass through Batch Normalization Layer</a><br>3、<a href="https://www.youtube.com/watch?v=BZh1ltr5Rkg&amp;t=21s" target="_blank" rel="external">李宏毅老师讲BN(图片都来自该视频截图)</a><br>4、<a href="http://pytorch.org/docs/master/nn.html#batchnorm2d" target="_blank" rel="external">pytorch doc</a><br>5、<a href="https://arxiv.org/abs/1502.03167" target="_blank" rel="external">BN论文</a><br>6、<a href="https://zhuanlan.zhihu.com/p/33173246" target="_blank" rel="external">详解深度学习中的Normalization，不只是BN</a></p>
+<h1 id="Other-Normalization"><a href="#Other-Normalization" class="headerlink" title="Other Normalization"></a>Other Normalization</h1><h2 id="Layer-Normalization"><a href="#Layer-Normalization" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h2><p>Layer Normalization和BN的区别在于：LN是对每个单独的数据做归一化，BN是对mini-batch的数据做归一化。</p>
+<h2 id="Group-Normalization"><a href="#Group-Normalization" class="headerlink" title="Group Normalization"></a>Group Normalization</h2><p><strong>GN divides the channels into groups and computes within each group the mean and variance for normalization. GN’s computation is independent of batch sizes, and its accuracy is stable in a wide range of batch sizes.</strong><br>其可以用于在batch_size较小时对BN的替代。<br><img src="gn_tf.jpg" alt="GN implement"></p>
+<h2 id="Local-Response-Normalization"><a href="#Local-Response-Normalization" class="headerlink" title="Local Response Normalization"></a>Local Response Normalization</h2>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">dl</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/01/normalization-in-deeplearning/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-cpp-lvalue-and-rvalue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/23/cpp-lvalue-and-rvalue/">C++中的左值和右值以及std::move, std::forward</a>
+    </h1>
+  
+
+        
+        <a href="/2018/04/23/cpp-lvalue-and-rvalue/" class="archive-article-date">
+  	<time datetime="2018-04-23T15:15:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#lvalue-and-rvalue"><span class="toc-text">lvalue and rvalue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Effective-Modern-C-中相关条款笔记总结"><span class="toc-text">Effective Modern C++中相关条款笔记总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-23-Understanding-std-move-and-std-forward"><span class="toc-text">Item 23: Understanding std::move and std::forward</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-24：Distinguish-universal-references-from-rvalue-references"><span class="toc-text">Item 24：Distinguish universal references from rvalue references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><span class="toc-text">Item 25：Use std::move on rvalue references, std::forward on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-26-Avoid-overloading-on-universal-references"><span class="toc-text">Item 26: Avoid overloading on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><span class="toc-text">Item 27: Familiarize yourself with alternatives to overloading on universal references.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-28-Understand-reference-collapsing"><span class="toc-text">Item 28: Understand reference collapsing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><span class="toc-text">Item 29: Assume that move operations are not present, not cheap, and not used</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><span class="toc-text">Item 30: Familiarize yourself with perfect forwarding failure cases</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <h1 id="lvalue-and-rvalue"><a href="#lvalue-and-rvalue" class="headerlink" title="lvalue and rvalue"></a>lvalue and rvalue</h1><p> 在概念上,右值对应于从函数返回的临时对象，而左值对应于可以引用的对象，无论是通过名称还是通过跟随指针或左值引用。一种判断表达式是左值还是右值的方法是：如果能得到其地址，那么它是左值，否则其是右值。<br><strong>注意:</strong>一个表达式的类型和这个表达式本身是左值还是右值无关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//一个参数始终是lvalue，即便其类型是一个rvalue reference</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Widget(Widget&amp;&amp; rhs);<span class="comment">//rhs是一个左值，但是其有一个右值引用的类型。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Effective-Modern-C-中相关条款笔记总结"><a href="#Effective-Modern-C-中相关条款笔记总结" class="headerlink" title="Effective Modern C++中相关条款笔记总结"></a>Effective Modern C++中相关条款笔记总结</h1><h2 id="Item-23-Understanding-std-move-and-std-forward"><a href="#Item-23-Understanding-std-move-and-std-forward" class="headerlink" title="Item 23: Understanding std::move and std::forward"></a>Item 23: Understanding std::move and std::forward</h2><p><strong>要点</strong><br><strong>1、std::move</strong><br>move semantic使得编译器将代价昂贵的copy操作替换为相对代价低的move。move semantics使得move-only类型的创建成为可能，比如std::unique_ptr,std::future,std::thread。<br>实际上std::move并没有移动任何东西。它做的其实是一个类型转换工作。就是将输入转型为rvalue。<br><strong>2、std::forward </strong><br>std::forward和std::move类似，比较大的区别就是std::forward是有条件的类型转换，<br>只有当参数是和rvalue绑定时将其转型为rvalue，否则不做转换。</p>
+<h2 id="Item-24：Distinguish-universal-references-from-rvalue-references"><a href="#Item-24：Distinguish-universal-references-from-rvalue-references" class="headerlink" title="Item 24：Distinguish universal references from rvalue references"></a>Item 24：Distinguish universal references from rvalue references</h2><p><strong>要点</strong><br><strong>1、判断原则</strong><br><strong>A、当函数的模板参数有着T&amp;&amp;的形式，并且有推导类型T，或者一个对象被声明为auto&amp;&amp;，那么它就是一个universal reference。</strong><br><strong>B、如果type的声明的格式并不完全是type&amp;&amp;，或者类型推断没有发生，那么type&amp;&amp;表示的就是rvalue reference。</strong><br><strong>C、对于universal reference，如果它被rvalue初始化，它就是rvalue，与之对应，如果被lvalue初始化，其就是lvalue。</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//实例</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(Widget&amp;&amp; param)</span></span>;<span class="comment">//B rvalue  reference  没有类型推断</span></div><div class="line">Widget&amp;&amp; var1=Widget();<span class="comment">//B rvalue reference 没有类型推断</span></div><div class="line"><span class="keyword">auto</span>&amp;&amp; var2=var1;<span class="comment">//A universal references var2有形式auto&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;&amp;&amp; param)</span></span>; <span class="comment">//B rvalue references param类型不完全是type&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>;<span class="comment">//universal references param有推导类型T，且形式是T&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">const</span> T&amp;&amp; param)</span></span>;<span class="comment">//universal reference 因</span></div><div class="line"><span class="comment">//为type的声明格式并不完全是type&amp;&amp;(多了const)</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">class</span> <span class="title">Allocator</span> = <span class="title">allocator</span>&lt;T&gt;&gt;</span></div><div class="line"><span class="class"><span class="title">class</span> <span class="title">vector</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">push_back</span><span class="params">(T&amp;&amp; x)</span><span class="comment">//rvalue reference </span></span></div><div class="line"><span class="function">    <span class="comment">//因为没有类型推断，当vector被初始化时，T的类型就被确定了。</span></span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>,<span class="title">class</span> <span class="title">Allocator</span>=<span class="title">allcator</span>&lt;T&gt;&gt;</span></div><div class="line"><span class="class"><span class="title">class</span> <span class="title">vector</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span>... <span class="title">Args</span>&gt;</span></div><div class="line"><span class="class">    <span class="title">void</span> <span class="title">emplace_back</span>(<span class="title">Args</span>&amp;&amp;... <span class="title">args</span>);</span><span class="comment">//universal </span></div><div class="line">    <span class="comment">//reference，存在类型推断，因为即</span></div><div class="line">    <span class="comment">//便T的类型在vector初始化时确定，但是Args的类型不能确定，需要类型推导。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><a href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references" class="headerlink" title="Item 25：Use std::move on rvalue references, std::forward on universal references"></a>Item 25：Use std::move on rvalue references, std::forward on universal references</h2><p><strong>要点</strong><br><strong>1、当将rvalue reference转发给其它函数时，其应该被无条件转型为rvalue，即用std::move，因为它总是被rvalues限制，而将universal referencies转发给其它函数时，应该有条件地转型，即使用std::forward,因为它可能是lvalues。</strong><br><strong>注意1</strong>为什么不在任何情况下都使用std::forward？尽管使用std::forward对于rvalue references也能产生正确的行为，但是这样源代码冗长也容易出错。<br><strong>注意2</strong>对universal references使用std::move会对lvalues造成意外的修改，更应该避免。<br><strong>2、当一个函数按值返回时，如果是返回一个与 universal reference或者rvalue reference绑定的对象，那么在返回时可以对其施加std::forward或者std::move操作，这样效率更高</strong><br><strong>注意:</strong>即便该对象不支持move操作也没有任何副作用，因为如果不支持的话会自动调用该对象的拷贝构造函数完成copy。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Matrix </div><div class="line"><span class="keyword">operator</span>+(Matrix&amp;&amp; lhs,<span class="keyword">const</span> Matrix&amp; rhs)&#123;</div><div class="line">    lhs+=rhs;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::move(lhs);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>3、不要将std::move或者std::forward应用到local  object</strong><br>原因详见P174，和编译器的返回值优化有关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">Widget <span class="title">makeWidget</span><span class="params">()</span></span>&#123;</div><div class="line">    Widget w;</div><div class="line">    ...</div><div class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::move(w);<span class="comment">//避免这样做</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Item-26-Avoid-overloading-on-universal-references"><a href="#Item-26-Avoid-overloading-on-universal-references" class="headerlink" title="Item 26: Avoid overloading on universal references"></a>Item 26: Avoid overloading on universal references</h2><p><strong>要点</strong>看原书比较清楚(没太看懂。)<br><strong>1、对通用引用进行重载往往导致其被调用的次数比预期要多很多。</strong><br><strong>2、完美转发的构造函数特别有问题，因为它们通常比拷贝构造函数更适合非常量lvalue，并且它们可以劫持派生类调用到其基类的拷贝和移动构造函数</strong></p>
+<h2 id="Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><a href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references" class="headerlink" title="Item 27: Familiarize yourself with alternatives to overloading on universal references."></a>Item 27: Familiarize yourself with alternatives to overloading on universal references.</h2><h2 id="Item-28-Understand-reference-collapsing"><a href="#Item-28-Understand-reference-collapsing" class="headerlink" title="Item 28: Understand reference collapsing"></a>Item 28: Understand reference collapsing</h2><p><strong>要点</strong><br><strong>1、</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment">根据传入param是lvalue或者rvalue，T的推导类型会有不同。param是lvalue，则T推导为lvalue reference，当param是rvalue，T推导为non-reference。</span></div><div class="line"><span class="comment">*/</span></div></pre></td></tr></table></figure></p>
+<p><strong>2、在C++中引用的引用是违法的</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> x;</div><div class="line">...</div><div class="line"><span class="keyword">auto</span>&amp; &amp; rx=x;<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
+<p><strong>3、但是当lvalue传入一个以universal reference为类型的模板时</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</div><div class="line"></div><div class="line">Widget w;</div><div class="line">func(w);<span class="comment">//w是一个lvalue，那么T推导为Widget&amp;</span></div><div class="line"><span class="comment">//则模板应该被实例化为以下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; &amp;&amp; param)</span></span>;</div><div class="line"><span class="comment">//实际上这时一种叫做reference collapsing的机制，使得模板的最终实例化如下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; param)</span></span>;<span class="comment">//这与之前所说的以lvalue初始化universal </span></div><div class="line"><span class="comment">//reference，其结果为lvalue  reference一致。</span></div></pre></td></tr></table></figure></p>
+<p><strong>4、reference collapsing规则</strong><br>在允许reference collapsing的情况下，如果两个reference中，任一个是lvalue reference，则结果是lvalue reference，否则结果是rvalue reference。<br>实际上，std::forward就是根据这个机制实现的。<br><strong>5、深入理解universal reference</strong><br>实际上，universal reference不是一种新引用，它是rvalue reference在以下条件满足时的一种特殊情况：<br><strong>条件1</strong>类型推导区分左值和右值。类型T的左值推导为类型 T&amp;，类型T的右值推导为类型 T。<br><strong>条件2</strong>发生了reference collapsing。<br><strong>6、reference collapsing发生的情况</strong><br><strong>情况1</strong>模板实例化<br><strong>情况2</strong>auto类型生成<br><strong>情况3</strong>生成、使用typedef 和 使用别名声明<br><strong>情况4</strong>使用decltype</p>
+<h2 id="Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><a href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used" class="headerlink" title="Item 29: Assume that move operations are not present, not cheap, and not used"></a>Item 29: Assume that move operations are not present, not cheap, and not used</h2><p><strong>要点</strong><br><strong>1、在以下情况下，std::move不会带来任何好处。</strong><br><strong>No move operations</strong><br><strong>Move not faster</strong><br><strong>Move not usable</strong><br><strong>Source object is lvalue</strong><br><strong>2、最好假设move操作不存在，不高效，没用过。只有在类型明确或者支持move语义时不需要这个假设。</strong></p>
+<h2 id="Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><a href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases" class="headerlink" title="Item 30: Familiarize yourself with perfect forwarding failure cases"></a>Item 30: Familiarize yourself with perfect forwarding failure cases</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、Scott Meyers<br>Effective Modern C++ : 42 Specific Ways to Improve Your Use of C++11 and C++14</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cpp</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/cpp//" class="article-tag-list-link color4">cpp</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/04/23/cpp-lvalue-and-rvalue/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-cpp-smart-ptr" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/21/cpp-smart-ptr/">C++中的智能指针笔记</a>
+    </h1>
+  
+
+        
+        <a href="/2018/04/21/cpp-smart-ptr/" class="archive-article-date">
+  	<time datetime="2018-04-21T07:28:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#STL中智能指针"><span class="toc-text">STL中智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-ptr"><span class="toc-text">shared_ptr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr的声明和初始化"><span class="toc-text">shared_ptr的声明和初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#析构策略"><span class="toc-text">析构策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr陷阱"><span class="toc-text">shared_ptr陷阱</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#weak-ptr"><span class="toc-text">weak_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unique-ptr"><span class="toc-text">unique_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Modern-C-中的有关条款"><span class="toc-text">Effective Modern C++ 中的有关条款</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#opencv-中的cv-Ptr"><span class="toc-text">opencv 中的cv::Ptr</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p>最近在看opencv的文档时，对cv::Ptr类了解了一些，其与STL中的shared_ptr类似，是一种智能指针，于是又看了《C++标准库》中有关智能指针的章节和《Effective Modern C++》中的有关智能指针的章节，将智能指针所涉及的一些内容总结如下。</p>
+<h1 id="STL中智能指针"><a href="#STL中智能指针" class="headerlink" title="STL中智能指针"></a>STL中智能指针</h1><p>C++中比较棘手的一个问题就是内存的管理，指针在其中扮演了及其重要的作用，但是同时对指针的不当使用会造成很多问题。自C++11起，STL提供了两大类型的智能指针，使得对指针的操作更加安全。其中shared_ptr类实现了共享式拥有概念，而unique_ptr实现了独占式拥有概念。另外还有weak_ptr等辅助类。所有这些指针类都定义在头文件 &lt; memory&gt;中。</p>
+<h2 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h2><p>shared_ptr主要使用一种称为引用计数的方法来管理其所指向的内容。当该指针多指向一个内容时，引用计数加一，少指向一个内容时，引用计数值减1，当引用计数值减到0时，该内容会被自动删除。</p>
+<h3 id="shared-ptr的声明和初始化"><a href="#shared-ptr的声明和初始化" class="headerlink" title="shared_ptr的声明和初始化"></a>shared_ptr的声明和初始化</h3><p>1、<strong>使用构造函数初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div></pre></td></tr></table></figure></p>
+<p>2、<strong>新式初始化语法</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt&#123;<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>)&#125;;</div></pre></td></tr></table></figure></p>
+<p>3、<strong>使用make_shared()初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt=<span class="built_in">std</span>::make_shared&lt;<span class="keyword">int</span>&gt;(<span class="number">1</span>);</div></pre></td></tr></table></figure></p>
+<p>4、<strong>先声明shared pointer，然后使用reset()方法赋值</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt;</div><div class="line">pInt.reset(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div></pre></td></tr></table></figure></p>
+<p><strong>注意不能使用赋值符进行初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
+<p>最常用和可靠的初始化方法是使用make_shared()函数。</p>
+<h3 id="析构策略"><a href="#析构策略" class="headerlink" title="析构策略"></a>析构策略</h3><p>实际上，我们可以声明特化的deleter，可以通过传递一个lambda作为shared_ptr构造函数的第二实参。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>),[](<span class="keyword">int</span>* p)&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"delete "</span>&lt;&lt;*p&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">delete</span> p;</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
+<p><strong>注意</strong>：shared_ptr提供的default deleter 调用的是 delete,而不是delete []，所以即便为array建立一个shared_ptr是可以的，但是却有致命错误，解决方法是为其指定delete []作为析构函数，最好不要这样使用shared_ptr。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>]);<span class="comment">//ERROR,能通过编译</span></div><div class="line"><span class="comment">//(《C++标准库》一书中这样写，但是实际测试没有出现问题？)</span></div><div class="line"></div><div class="line"><span class="comment">//解决方案</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>],[](<span class="keyword">int</span>* p)&#123;</div><div class="line">    <span class="keyword">delete</span>[] p;</div><div class="line">    &#125;)</div><div class="line"><span class="comment">//也可以这样</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>],<span class="built_in">std</span>::default_delete&lt;<span class="keyword">int</span>[]&gt;());</div></pre></td></tr></table></figure></p>
+<p><strong>如果析构时不仅仅需要删除内存，还需要 一些其它操作，那么必须指定deleter</strong></p>
+<h3 id="shared-ptr陷阱"><a href="#shared-ptr陷阱" class="headerlink" title="shared_ptr陷阱"></a>shared_ptr陷阱</h3><p><strong>1、cyclic reference问题</strong><br>两个对象使用shared_ptr互相指向对方时，使用shared_ptr无法释放相应的资源，因为每个对象的use_count()至少为1。<br><strong>解决方法</strong>:1、使用普通指针，但是这样又得自行管理资源释放，比较麻烦也更容易出问题。2、其中一方的指向使用weak_ptr，可以完美解决该问题。<br><strong>2、试图访问已被释放的数据</strong><br>也可通过使用weak_ptr解决。<br><strong>3、应该确保某对象只被一组shared_ptr拥有</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* p=<span class="keyword">new</span> <span class="keyword">int</span>;</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp1(p);</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp2(p);<span class="comment">//ERROR 但是可以编译通过 具体在后面有解释</span></div></pre></td></tr></table></figure></p>
+<p>当sp1和sp2丢失p的拥有权时，两者都会试图释放p的资源，即释放资源的操作会执行两次。解决方法是在创建对象和其相应资源的时候直接设立shared_ptr。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp1(<span class="keyword">new</span> <span class="keyword">int</span>);</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp2(sp1);</div></pre></td></tr></table></figure></p>
+<h2 id="weak-ptr"><a href="#weak-ptr" class="headerlink" title="weak_ptr"></a>weak_ptr</h2><p>weak_ptr是辅助shared_ptr的类，其用来共享但是不拥有对象。</p>
+<h2 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h2><p><strong>概念</strong><br>unique_ptr实现了独占式拥有概念，其可以确保一个对象和其相应的资源在同一时间只能被一个pointer拥有。unique_ptr是其所指向的对象的唯一拥有者。unique_ptr有着与普通指针相同的接口，不同的是：它不提供pointer算术比如++等操作，但是实际上这省去了一些麻烦。<br><strong>转移unique_ptr的拥有权</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* p=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up1(p);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up2(p);<span class="comment">//ERROR,up1和up2拥有相同对象了。</span></div><div class="line"></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up3(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up4(up3);<span class="comment">//ERROR, 不能对unique_ptr进行拷贝和赋值</span></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up5(<span class="built_in">std</span>::move(up3));<span class="comment">//OK 使用move转移所有权是可以的</span></div><div class="line"></div><div class="line"><span class="comment">//同理</span></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up6=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up7;</div><div class="line">up7=up6;<span class="comment">//ERROR</span></div><div class="line">up7=<span class="built_in">std</span>::move(up6);<span class="comment">//可以</span></div><div class="line"></div><div class="line">up7=<span class="literal">nullptr</span>;<span class="comment">//给unique_ptr赋值nullptr是可以的，和调用reset()方法相同</span></div></pre></td></tr></table></figure></p>
+<p><strong>源头和去处</strong><br>函数可以利用unique_ptr的转移所有权的功能将拥有权转给其他函数。<br><strong>unique_ptr当做当做class内的成员</strong><br>可以避免资源泄漏。</p>
+<h2 id="Effective-Modern-C-中的有关条款"><a href="#Effective-Modern-C-中的有关条款" class="headerlink" title="Effective Modern C++ 中的有关条款"></a>Effective Modern C++ 中的有关条款</h2><p>《Effective Modern C++》一书中有几个关于smart pointer的条款。<br><strong>Item 18: Use std::unique_ptr for exclusive-ownership resource management</strong><br>要点：详见原书 P118<br>1、std::unique_ptr是一种足够小，很快并且只支持move的智能指针，其用来管理独占式资源。默认情况下，std::unique_ptr的大小和raw pointer  是一样的，而且对于大多数包括解引用在内的操作，其都和raw pointer一致。<br>2、默认情况下，其使用delete作为deleter。但是当deleter采用自定义时，std::unique_ptr的大小会变大，其具体大小取决于函数对象的状态。使用lambda表达式作为deleter是比较好的一种选择。<br>3、std::unique_ptr不能进行复制，否则就违反了其只能拥有一个对象的规则。<br>4、std::unique_ptr有两种形式: std::unique_ptr<t>,std::unique_ptr<t[]>。这两种形式所能进行的操作略有不同，对于单对象形式，其没有索引操作，对于数组形式，其没有 解引用操作。<br>5、从std::unique_ptr转型为std::shared_ptr很方便，在不知道指针的具体用途时最好先用unique_ptr，待需要时再转型为shared_ptr。<br><strong>题外话</strong>要想正确调用继承类的析构函数，基类的析构函数必须是虚函数。</t[]></t></p>
+<p><strong>Item 19: Use std::shared_ptr for shared_ownership resource management</strong><br>要点：详见原书 P125<br>1、<strong>关于引用计数</strong><br>通常，构造函数增加引用计数；析构函数减少引用计数；复制赋值操作减少左边所指对象的引用计数，增加右边所指对象的引用计数。<br>2、<strong>引用计数会影响性能</strong><br>主要由以下原因造成：首先，shared_ptr的大小是原始指针的2倍，因为其有1个指针指向所引的对象，1个指针指向引用计数；然后，用于引用计数的内存要动态分配；对于引用计数的增加和减少操作必须是原子性的，这是为了保证其在多线程情况下的安全性。<br>3、<strong>shared_ptr和unique_ptr的区别和联系</strong><br>A、都支持自定义deleter，但是实现有所不同，对于unique_ptr，deleter的类型是智能指针类型的一部分，而对于shared_ptr,deleter的类型不是其一部分。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> loggingDel =[](Type* pc)&#123;</div><div class="line">    makeLogEntry(pt);</div><div class="line">    <span class="keyword">delete</span> pt;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;Type, <span class="keyword">decltype</span>(loggingDel)&gt; upt(<span class="keyword">new</span> Type,loggingDel);</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt(<span class="keyword">new</span> Type,loggingDel);</div></pre></td></tr></table></figure></p>
+<p>所以，对于不同类型的deleter的两个shared_ptr，只要它们的对象类型相同，其就可以相互赋值；而对于unique_ptr则不能，因为deleter也是其类型的一部分，这意味着这两个unique_ptr的类型不同，不能相互转移所有权。<br>B、对于shared_ptr，自定义deleter并不改变shared_ptr的大小，但是对于unique_ptr是有影响的。<br>C、shared_ptr不支持数组类型。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">shared_ptr</span>&lt;T[]&gt; sp;<span class="comment">//不能编译</span></div></pre></td></tr></table></figure></p>
+<p><strong>4、shared_ptr的实现原理</strong><br>其使用control block管理引用计数及其他(包括自定义deleter)数据。<br><img src="shared_ptr.JPG" alt="shared_ptr原理"><br>我们希望某个对象的control block是在初次有指针指该对象时创建。然而当创建shared_ptr指向某一对象时，我们事先并不能知道是否已有其它shared_ptr指向该对象。于是使用以下规则来进行control block的创建：<br><strong>std::make_shared总是创建一个control block</strong><br><strong>当shared_ptr是由unique<em>ptr转型创建时要建立control block</em></strong><br><strong>当用raw pointer构造shared_ptr时要创建control block</strong></p>
+<p>考虑如下语句<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> pt = <span class="keyword">new</span> Type;</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt1(pt,loggingDel);</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt2(pt,loggingDel);</div></pre></td></tr></table></figure></p>
+<p>按照之前的control block创建规则，对于pt指针指向的对象，将会创建2个control block，于是离开作用域时，会尝试对*pt进行两次内存释放操作，这样第二次操作将会造成未定义行为。这是我们不愿意看到的。<br>从以上例子我们可以得到这样的经验：<br><strong>避免向shared_ptr的构造函数传递raw pointer</strong><br>可以采用以下方法<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//对于自定义deleter的情况</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt1(<span class="keyword">new</span> Type,loggingDel);</div><div class="line"><span class="comment">//无自定义deleter时还可使用make_shared</span></div><div class="line"><span class="built_in">std</span>::make_shared&lt;Type&gt;(t);</div></pre></td></tr></table></figure></p>
+<p><strong>5、可使用std::enable_shared_from_this将this指针转型成shared_ptr</strong></p>
+<p><strong>Item 20: Use std::weak_ptr for std::shared_ptr like pointers that can dangle</strong><br>要点：具体看原书P134<br><strong>std::weak_ptr不会影响引用计数值</strong><br>std::weak_ptr的行为和shared_ptr相似，但是其不会影响所指对象的引用计数值，也不能被解引用，其是shared_ptr的辅助。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> spt=<span class="built_in">std</span>::make_shared&lt;Type&gt;();<span class="comment">//ref count=1</span></div><div class="line"><span class="built_in">std</span>::weak_ptr&lt;Type&gt; wpt(spt);<span class="comment">// ref count remains 1</span></div><div class="line">spt=<span class="literal">nullptr</span>;<span class="comment">//ref count=0 and wpt now dangles</span></div><div class="line"><span class="keyword">if</span>(wpt.expired())&#123;&#125; <span class="comment">//test if wpt doesn't point to an object</span></div></pre></td></tr></table></figure></p>
+<p>一个问题就是：在判断weak_ptr仍然指着一个特定对象时，如何访问该对象？这里有几个棘手的问题需要解决：weak_ptr并没有解引用操作，而且即便有解引用操作，在判断是否expired和解引用的语句之间，可能有另一个线程使得最后一个指向该对象的指针失效，使得该对象被destroy，这样解引用操作将会导致未定义行为，即我们无法保证线程安全性。<br>我们需要的是一个原子性的操作检查weak_ptr是否expired，如果没有，那么访问该指针所指对象，这可以通过从weak_ptr构造一个shared_ptr实现。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//第一种形式</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt1=wpt.lock();<span class="comment">//if wpt's expired,spt1 is nullptr</span></div><div class="line"></div><div class="line"><span class="comment">//第二种形式</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt2(wpt);<span class="comment">//if wpt's expired, throw std::bad_weak_ptr</span></div></pre></td></tr></table></figure></p>
+<p><strong>2、weak_ptr的应用场景</strong><br>A、管理缓存时，需要知道cache什么时候会dangle，这样的场景就需要weak_ptr辅助。(P136)<br>B、解决shared_ptr的环形引用问题。<br><strong>3、weak_ptr和shared_ptr</strong><br>从效率的角度讲，weak_ptr的效率和shared_ptr是一样的。其存储和shared_ptr是一样的 ，其大小和shared_ptr也是一样的，它也要使用control block管理对象。<strong>注意</strong>：weak_ptr不是不管理引用计数，而是不拥有对象共享关系，所以不会影响所指对象的引用计数，但是其会管理另外的不同功能的引用计数。</p>
+<p><strong>Item 21: Prefer std::make_unique and std::make_shared to direct use of new</strong><br>要点：具体看原书P139<br><strong>1、使用make函数的优点</strong><br>make_shared是C++11的标准，make_unique是C++14的标准。<br><strong>A、使得代码和编译的目标代码更精简</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">auto upt1(std::make_unique&lt;Type&gt;());</div><div class="line"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;Type&gt; upt2(<span class="keyword">new</span> Type);</div><div class="line"></div><div class="line">auto spt1(std::make_shared&lt;Type&gt;());</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt2(<span class="keyword">new</span> Type);</div></pre></td></tr></table></figure></p>
+<p><strong>B、使用make函数使得异常安全(exception safety)</strong><br><strong>C、make_shared和allocate_shared函数使得编译器生成更小更快的代码(相比使用new创建)</strong></p>
+<p>原则是优先使用make函数创建只能指针，但是也有make函数不能使用的情况。<br><strong>A</strong>、比如要自定义deleter时，就只能使用new作为参数创建，而不能使用make函数。<br><strong>B</strong>、一些所指对象的初始化细节使得不能使用make函数创建智能指针。<br><strong>C</strong>、一些自定义了new和delete的对象不方便用make函数创建智能指针。<br><strong>D</strong>、对于比较大的对象，不要使用make函数创建智能指针。</p>
+<p><strong>Item 22: When using the Pimpl  Idiom, define special member functions in the implementation file</strong><br>要点：<br><strong>1、Pimpl Idiom通过类客户和类实现之间减少编译依赖来减少构建时间</strong><br><strong>2、对于std::unique_ptr pImpl指针，需要在类头文件中声明特殊成员函数，在实现文件中实现。即便是默认函数实现，也需要声明和定义。</strong><br><strong>3、对于 shared_ptr则没有以上这种限制。主要原因还是在于unique_ptr和shared_ptr中deleter是否是类型的一部分的一个区别。</strong></p>
+<h1 id="opencv-中的cv-Ptr"><a href="#opencv-中的cv-Ptr" class="headerlink" title="opencv 中的cv::Ptr"></a>opencv 中的cv::Ptr</h1><p>其行为和std::shared_ptr类似。用法也基本相同。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、Nicolai M. Josuttis<br> The C++ Standard Library - A Tutorial and Reference, 2nd Edition<br> Addison Wesley Longman, 2012<br>2、Scott Meyers<br>Effective Modern C++ : 42 Specific Ways to Improve Your Use of C++11 and C++14<br>3、<a href="http://en.cppreference.com/w/cpp/memory/shared_ptr" target="_blank" rel="external">std::shared_ptr</a><br>4、<a href="http://en.cppreference.com/w/cpp/memory/weak_ptr" target="_blank" rel="external">std::weak_ptr</a><br>5、<a href="http://en.cppreference.com/w/cpp/memory/unique_ptr" target="_blank" rel="external">std::unique_ptr</a><br>6、<a href="https://docs.opencv.org/3.4.1/d0/de7/structcv_1_1Ptr.html" target="_blank" rel="external">cv::Ptr</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cpp</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/cpp//" class="article-tag-list-link color4">cpp</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/04/21/cpp-smart-ptr/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-ssd-detailed" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/27/ssd-detailed/">SSD-Single Shot MultiBox Detector</a>
+    </h1>
+  
+
+        
+        <a href="/2018/03/27/ssd-detailed/" class="archive-article-date">
+  	<time datetime="2018-03-27T08:48:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#亮点"><span class="toc-text">亮点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本结构"><span class="toc-text">基本结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本思想"><span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络结构"><span class="toc-text">网络结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现细节"><span class="toc-text">实现细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#prior-box的生成"><span class="toc-text">prior box的生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#匹配策略"><span class="toc-text">匹配策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#loss-function"><span class="toc-text">loss function</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p>因为毕设是做关于目标检测的项目，也看了一些目标检测的论文，由于项目对实时性的要求，最后选用了MobilenetV2+SSD作为基础结构，也仔细阅读了SSD的论文，现梳理如下。</p>
+<h2 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h2><p>一步完成检测，同时进行边框回归和类别预测，相对于两步完成的网络在时间上会快很多。结合多个feature maps的特征进行预测。</p>
+<h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p><img src="default_boxes.jpg" alt="feature map"><br>在不同尺度的feature map上指定一系列default boxes。具体来说就是，上图的feature map中，对于每个cell，首先生成k个default boxes，对于每个default box,预测其类别和位置，于是共有(4+cls)个参数。每层的k个default boxes的aspect ratio不同，而不同feature maps上的default boxes的scale不同，这样基本就能适配各种状态下的目标。最后将不同feature maps上的结果综合起来进行训练。这样对于一个输入的大小为mxm的feature map，最后的得到的default boxes个数为 m<em>m</em>k<em>(4+cls),为了达到这样的输出维度，用一个深度为k</em>(4+cls)的3<em>3，stride=1的卷积核即可得到，但是实际上是分为两个不同的卷积来实现，一个深度为4</em>k的loc层，一个深度为k*cls的conf层。</p>
+<h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h3><p><img src="ssd_architecture.jpg" alt="SSD网络结构"><br>SSD的网络结构中包括base部分的特征提取层，以及额外的extra layer用于生成不同尺度的feature map用于default boxes的生成。base部分理论上可以是任何用于classification的卷积网络。在原论文中，作者使用VGG-16作为base网络，feature maps总共有6层，前两层为base 网络中的两个卷积层，后4层feature maps来自extra layers。在6个feature maps上做卷积操作得到综合的输出送入loss层进行回归训练。</p>
+<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><h3 id="prior-box的生成"><a href="#prior-box的生成" class="headerlink" title="prior box的生成"></a>prior box的生成</h3><p>实际上就是解决不同level的feature maps上的default boxes如何与原图上的default boxes相对应的问题，也就是根据default box的4个offset参数，如何找到其在原图上的对应坐标。这就是prior box的生成问题。<br>简单来说就是根据scale以及aspect ratio按照步长生成，步长就相当于feature map中一个像素对应的原图中的像素数，实际上就是原图大小和feature map的比值。论文中生成的坐标格式是[cx,cy,w,h]格式。</p>
+<h3 id="匹配策略"><a href="#匹配策略" class="headerlink" title="匹配策略"></a>匹配策略</h3><p>在确定default box和 groud truth的对应关系时，采用best jaccard overlap方法，对于jaccard overlap高于一个阈值(0.5)的匹配对，我们都认为它们匹配成功。然后利用这些匹配对计算loss，进行回归。</p>
+<h3 id="loss-function"><a href="#loss-function" class="headerlink" title="loss function"></a>loss function</h3><p>loss由loc loss和 conf loss两部分组成，分别表示定位损失和分类损失，具体计算公式在原文中讲的很具体。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://arxiv.org/abs/1512.02325" target="_blank" rel="external">SSD论文</a><br><a href="https://github.com/ShuangXieIrene/ssds.pytorch" target="_blank" rel="external">ssds.pytorch</a><br><a href="http://www.cnblogs.com/xuanyuyt/p/7222867.html" target="_blank" rel="external">SSD阅读笔记</a><br><a href="https://zhuanlan.zhihu.com/p/33544892" target="_blank" rel="external">目标检测|SSD原理与实现</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/paper//" class="article-tag-list-link color1">paper</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/03/27/ssd-detailed/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -354,11 +788,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -366,11 +800,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -382,15 +816,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">paper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -402,15 +836,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">dl</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
             
             <div class="clearfix"></div>
