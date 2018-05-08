@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
-  <title>ads_notes | Fengyang</title>
+  <title>高级数据结构与算法分析 课程要点 | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="高级数据结构课程资料week1 AVL Trees, Splay Trees and Amoritized AnalysisAVL TreesSplay TreesAmoritized AnalysisWeek2 Red-Black Trees and B+ TreesRed-Black TreesB+ Trees参考">
+  <meta name="description" content="week1 AVL Trees, Splay Trees and Amoritized AnalysisAVL TreesInsertRR LL LR RLDeleteno childonly left/right childleft and right children: find smallest node in right child, swap and delete Splay Tree">
 <meta name="keywords" content="algorithm">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ads_notes">
+<meta property="og:title" content="高级数据结构与算法分析 课程要点">
 <meta property="og:url" content="https://wwdguu.github.io/2018/03/18/ads-notes/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="高级数据结构课程资料week1 AVL Trees, Splay Trees and Amoritized AnalysisAVL TreesSplay TreesAmoritized AnalysisWeek2 Red-Black Trees and B+ TreesRed-Black TreesB+ Trees参考">
+<meta property="og:description" content="week1 AVL Trees, Splay Trees and Amoritized AnalysisAVL TreesInsertRR LL LR RLDeleteno childonly left/right childleft and right children: find smallest node in right child, swap and delete Splay Tree">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-18T08:43:24.912Z">
+<meta property="og:updated_time" content="2018-05-08T12:01:58.581Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ads_notes">
-<meta name="twitter:description" content="高级数据结构课程资料week1 AVL Trees, Splay Trees and Amoritized AnalysisAVL TreesSplay TreesAmoritized AnalysisWeek2 Red-Black Trees and B+ TreesRed-Black TreesB+ Trees参考">
+<meta name="twitter:title" content="高级数据结构与算法分析 课程要点">
+<meta name="twitter:description" content="week1 AVL Trees, Splay Trees and Amoritized AnalysisAVL TreesInsertRR LL LR RLDeleteno childonly left/right childleft and right children: find smallest node in right child, swap and delete Splay Tree">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -168,7 +168,7 @@ style="background: #4d4d4d"></div>
         
   
     <h1 class="article-title" itemprop="name">
-      ads_notes
+      高级数据结构与算法分析 课程要点
     </h1>
   
 
@@ -183,10 +183,20 @@ style="background: #4d4d4d"></div>
       
         
 <div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#高级数据结构课程资料"><span class="toc-text">高级数据结构课程资料</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#week1-AVL-Trees-Splay-Trees-and-Amoritized-Analysis"><span class="toc-text">week1 AVL Trees, Splay Trees and Amoritized Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AVL-Trees"><span class="toc-text">AVL Trees</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Splay-Trees"><span class="toc-text">Splay Trees</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Amoritized-Analysis"><span class="toc-text">Amoritized Analysis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Week2-Red-Black-Trees-and-B-Trees"><span class="toc-text">Week2 Red-Black Trees and B+ Trees</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Red-Black-Trees"><span class="toc-text">Red-Black Trees</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B-Trees"><span class="toc-text">B+ Trees</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#week1-AVL-Trees-Splay-Trees-and-Amoritized-Analysis"><span class="toc-text">week1 AVL Trees, Splay Trees and Amoritized Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AVL-Trees"><span class="toc-text">AVL Trees</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Splay-Trees"><span class="toc-text">Splay Trees</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Amoritized-Analysis"><span class="toc-text">Amoritized Analysis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Week2-Red-Black-Trees-and-B-Trees"><span class="toc-text">Week2 Red-Black Trees and B+ Trees</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Red-Black-Trees"><span class="toc-text">Red-Black Trees</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B-Trees"><span class="toc-text">B+ Trees</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Week3-Inverted-File-Index"><span class="toc-text">Week3 Inverted File Index</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Week4-Leftist-Heaps-and-Skew-Heaps"><span class="toc-text">Week4 Leftist Heaps and Skew Heaps</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Leftist-Heaps"><span class="toc-text">Leftist Heaps</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Skew-Heaps"><span class="toc-text">Skew Heaps</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Week5-Binomial-Queue"><span class="toc-text">Week5 Binomial Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Week6-Backtracking"><span class="toc-text">Week6 Backtracking</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Week7-Divide-and-Conquer"><span class="toc-text">Week7 Divide and Conquer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Week8-Dynamic-Programming"><span class="toc-text">Week8 Dynamic Programming</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
 </div>
 
-        <h1 id="高级数据结构课程资料"><a href="#高级数据结构课程资料" class="headerlink" title="高级数据结构课程资料"></a>高级数据结构课程资料</h1><h2 id="week1-AVL-Trees-Splay-Trees-and-Amoritized-Analysis"><a href="#week1-AVL-Trees-Splay-Trees-and-Amoritized-Analysis" class="headerlink" title="week1 AVL Trees, Splay Trees and Amoritized Analysis"></a>week1 AVL Trees, Splay Trees and Amoritized Analysis</h2><h3 id="AVL-Trees"><a href="#AVL-Trees" class="headerlink" title="AVL Trees"></a>AVL Trees</h3><h3 id="Splay-Trees"><a href="#Splay-Trees" class="headerlink" title="Splay Trees"></a>Splay Trees</h3><h3 id="Amoritized-Analysis"><a href="#Amoritized-Analysis" class="headerlink" title="Amoritized Analysis"></a>Amoritized Analysis</h3><h2 id="Week2-Red-Black-Trees-and-B-Trees"><a href="#Week2-Red-Black-Trees-and-B-Trees" class="headerlink" title="Week2 Red-Black Trees and B+ Trees"></a>Week2 Red-Black Trees and B+ Trees</h2><h3 id="Red-Black-Trees"><a href="#Red-Black-Trees" class="headerlink" title="Red-Black Trees"></a>Red-Black Trees</h3><h3 id="B-Trees"><a href="#B-Trees" class="headerlink" title="B+ Trees"></a>B+ Trees</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2>
+        <p><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script></p>
+<h2 id="week1-AVL-Trees-Splay-Trees-and-Amoritized-Analysis"><a href="#week1-AVL-Trees-Splay-Trees-and-Amoritized-Analysis" class="headerlink" title="week1 AVL Trees, Splay Trees and Amoritized Analysis"></a>week1 AVL Trees, Splay Trees and Amoritized Analysis</h2><h3 id="AVL-Trees"><a href="#AVL-Trees" class="headerlink" title="AVL Trees"></a>AVL Trees</h3><p><strong>Insert</strong><br>RR LL LR RL<br><strong>Delete</strong><br>no child<br>only left/right child<br>left and right children: find smallest node in right child, swap and delete</p>
+<h3 id="Splay-Trees"><a href="#Splay-Trees" class="headerlink" title="Splay Trees"></a>Splay Trees</h3><p><strong>Find</strong><br>每查询一次都将其旋转到根节点。<br><strong>Delete</strong><br>Find X –&gt; Remove X –&gt; FindMax(LTree) –&gt; 将右子树作为左子树的右孩子</p>
+<h3 id="Amoritized-Analysis"><a href="#Amoritized-Analysis" class="headerlink" title="Amoritized Analysis"></a>Amoritized Analysis</h3><p><strong>Aggregate analysis</strong><br><strong>Accounting method</strong><br><strong>Potential method</strong></p>
+<h2 id="Week2-Red-Black-Trees-and-B-Trees"><a href="#Week2-Red-Black-Trees-and-B-Trees" class="headerlink" title="Week2 Red-Black Trees and B+ Trees"></a>Week2 Red-Black Trees and B+ Trees</h2><h3 id="Red-Black-Trees"><a href="#Red-Black-Trees" class="headerlink" title="Red-Black Trees"></a>Red-Black Trees</h3><p><strong>Definition</strong><br>A red-black tree with N internal nodes has height at most 2ln(N +1).<br><strong>Insert</strong><br>3 cases<br><strong>Delete</strong><br>delete a leaf node<br>delete a degree 1 node<br>delete a degree 2 node<br>关键是调整颜色：4 cases</p>
+<h3 id="B-Trees"><a href="#B-Trees" class="headerlink" title="B+ Trees"></a>B+ Trees</h3><p><strong>Definition</strong><br><strong>Insert</strong><br><strong>Delete</strong></p>
+<h2 id="Week3-Inverted-File-Index"><a href="#Week3-Inverted-File-Index" class="headerlink" title="Week3 Inverted File Index"></a>Week3 Inverted File Index</h2><p><strong>Some definition</strong><br>Index<br>Inverted file<br><strong>Key points</strong><br>Word Stemming<br>Stop Words<br>Accessing a term: Search trees(B-trees,B+ trees, Tries,..) or Hashing?<br>Distributed indexing: Term-partitioned index and Document-partitioned index<br>Measures for a search engine: 1-How fast does it index? 2-How fast does it search? 3-Expressiveness of query language<br>Relevance measurement: Precise Recall</p>
+<h2 id="Week4-Leftist-Heaps-and-Skew-Heaps"><a href="#Week4-Leftist-Heaps-and-Skew-Heaps" class="headerlink" title="Week4 Leftist Heaps and Skew Heaps"></a>Week4 Leftist Heaps and Skew Heaps</h2><h3 id="Leftist-Heaps"><a href="#Leftist-Heaps" class="headerlink" title="Leftist Heaps"></a>Leftist Heaps</h3><p><strong>Definition</strong><br>null path length<br>A leftist tree with r nodes on the right path must have at least \(b^2-1\) nodes.<br><strong>Merge</strong><br>recursive version and iterative version<br><strong>DeleteMin</strong><br>delete the root and merge the two subtrees</p>
+<h3 id="Skew-Heaps"><a href="#Skew-Heaps" class="headerlink" title="Skew Heaps"></a>Skew Heaps</h3><p><strong>Definition</strong><br>a simple version of the leftest heaps<br><strong>Merge</strong><br><strong>Amortized Analysis for Skew Heaps</strong></p>
+<h2 id="Week5-Binomial-Queue"><a href="#Week5-Binomial-Queue" class="headerlink" title="Week5 Binomial Queue"></a>Week5 Binomial Queue</h2><p><strong>Definition</strong><br><strong>FindMin</strong><br><strong>Merge</strong><br><strong>DeleteMin</strong><br><strong>Implementation</strong><br>left child and right next sibling<br>Performing N Inserts on an initially empty binomial queue will take O(N) worst-case time.  Hence the average time is constant.</p>
+<h2 id="Week6-Backtracking"><a href="#Week6-Backtracking" class="headerlink" title="Week6 Backtracking"></a>Week6 Backtracking</h2><h2 id="Week7-Divide-and-Conquer"><a href="#Week7-Divide-and-Conquer" class="headerlink" title="Week7 Divide and Conquer"></a>Week7 Divide and Conquer</h2><h2 id="Week8-Dynamic-Programming"><a href="#Week8-Dynamic-Programming" class="headerlink" title="Week8 Dynamic Programming"></a>Week8 Dynamic Programming</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2>
       
 
       
@@ -469,15 +479,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">paper</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -486,6 +492,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">dl</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
