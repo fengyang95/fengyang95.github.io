@@ -464,6 +464,103 @@ style="background: #4d4d4d"></div>
 
 
   
+    <article id="post-effective-java-methods-common-to-all-objects" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/21/effective-java-methods-common-to-all-objects/">Effective Java -- Methods Common to All Objects</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/21/effective-java-methods-common-to-all-objects/" class="archive-article-date">
+  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Methods-Common-to-All-Objects"><span class="toc-text">Effective Java Items about Methods Common to All Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-10-Obey-the-general-contract-when-overriding-equals"><span class="toc-text">Item 10: Obey the general contract when overriding equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-11-Always-override-hashCode-when-you-override-equals"><span class="toc-text">Item 11: Always override hashCode when you override equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-12-Always-override-toString"><span class="toc-text">Item 12: Always override toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-13-Override-clone-judiciously"><span class="toc-text">Item 13: Override clone judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-14-Consider-implementing-Comparable"><span class="toc-text">Item 14: Consider implementing Comparable</span></a></li></ol></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=483671599&auto=1&height=66"></iframe></p>
+<h2 id="Effective-Java-Items-about-Methods-Common-to-All-Objects"><a href="#Effective-Java-Items-about-Methods-Common-to-All-Objects" class="headerlink" title="Effective Java Items about Methods Common to All Objects"></a>Effective Java Items about Methods Common to All Objects</h2><p>设计Object类的目的是为了扩展，它所有的非final方法(equals, hashCode, toString, clone, finalize)都有着明确的通用约定，它们都被设计成要被覆盖的。任何一个类在覆盖这些方法时都要遵守一些通用规定。</p>
+<h3 id="Item-10-Obey-the-general-contract-when-overriding-equals"><a href="#Item-10-Obey-the-general-contract-when-overriding-equals" class="headerlink" title="Item 10: Obey the general contract when overriding equals"></a>Item 10: Obey the general contract when overriding equals</h3><p>equals方法实现了等价关系，主要要满足以下条件：自反性，对称性，传递性，一致性，非空性。为了高效编写符合要求的equals方法，书中总结了以下方法：<br>1、使用==操作符检查参数是否是这个对象的引用。<br>2、使用instanceof操作符检查“参数是否为正确的类型”。<br>3、把参数转换成正确的类型。<br>4、对于该类中的每个“关键”域,检查参数中的域是否与该对象中对应的域相匹配。<br>5、编写好equals方法之后，再仔细检查是否满足之前的几个条件。<br>6、覆盖equals时要同时覆盖hashCode<br>7、不要企图让equals方法过于智能。<br>8、不要将equals声明中的Object对象替换为其他的类型。</p>
+<h3 id="Item-11-Always-override-hashCode-when-you-override-equals"><a href="#Item-11-Always-override-hashCode-when-you-override-equals" class="headerlink" title="Item 11: Always override hashCode when you override equals"></a>Item 11: Always override hashCode when you override equals</h3><p>每个覆盖了equals方法的类中，也必须同时覆盖hashCode方法。</p>
+<h3 id="Item-12-Always-override-toString"><a href="#Item-12-Always-override-toString" class="headerlink" title="Item 12: Always override toString"></a>Item 12: Always override toString</h3><p>遵守toString的约定并不像遵守equals和hashCode的约定那么重要，但是提供好的toString实现可以使得类使用起来更为舒适。</p>
+<h3 id="Item-13-Override-clone-judiciously"><a href="#Item-13-Override-clone-judiciously" class="headerlink" title="Item 13: Override clone judiciously"></a>Item 13: Override clone judiciously</h3><h3 id="Item-14-Consider-implementing-Comparable"><a href="#Item-14-Consider-implementing-Comparable" class="headerlink" title="Item 14: Consider implementing Comparable"></a>Item 14: Consider implementing Comparable</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/21/effective-java-methods-common-to-all-objects/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-tensorflow-programming-manage-your-experiments-in-tf" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -551,103 +648,6 @@ style="background: #4d4d4d"></div>
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-effective-java-methods-common-to-all-objects" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/21/effective-java-methods-common-to-all-objects/">Effective Java -- Methods Common to All Objects</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/21/effective-java-methods-common-to-all-objects/" class="archive-article-date">
-  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Methods-Common-to-All-Objects"><span class="toc-text">Effective Java Items about Methods Common to All Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-10-Obey-the-general-contract-when-overriding-equals"><span class="toc-text">Item 10: Obey the general contract when overriding equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-11-Always-override-hashCode-when-you-override-equals"><span class="toc-text">Item 11: Always override hashCode when you override equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-12-Always-override-toString"><span class="toc-text">Item 12: Always override toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-13-Override-clone-judiciously"><span class="toc-text">Item 13: Override clone judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-14-Consider-implementing-Comparable"><span class="toc-text">Item 14: Consider implementing Comparable</span></a></li></ol></li></ol>
-</div>
-
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=483671599&auto=1&height=66"></iframe></p>
-<h2 id="Effective-Java-Items-about-Methods-Common-to-All-Objects"><a href="#Effective-Java-Items-about-Methods-Common-to-All-Objects" class="headerlink" title="Effective Java Items about Methods Common to All Objects"></a>Effective Java Items about Methods Common to All Objects</h2><p>设计Object类的目的是为了扩展，它所有的非final方法(equals, hashCode, toString, clone, finalize)都有着明确的通用约定，它们都被设计成要被覆盖的。任何一个类在覆盖这些方法时都要遵守一些通用规定。</p>
-<h3 id="Item-10-Obey-the-general-contract-when-overriding-equals"><a href="#Item-10-Obey-the-general-contract-when-overriding-equals" class="headerlink" title="Item 10: Obey the general contract when overriding equals"></a>Item 10: Obey the general contract when overriding equals</h3><p>equals方法实现了等价关系，主要要满足以下条件：自反性，对称性，传递性，一致性，非空性。为了高效编写符合要求的equals方法，书中总结了以下方法：<br>1、使用==操作符检查参数是否是这个对象的引用。<br>2、使用instanceof操作符检查“参数是否为正确的类型”。<br>3、把参数转换成正确的类型。<br>4、对于该类中的每个“关键”域,检查参数中的域是否与该对象中对应的域相匹配。<br>5、编写好equals方法之后，再仔细检查是否满足之前的几个条件。<br>6、覆盖equals时要同时覆盖hashCode<br>7、不要企图让equals方法过于智能。<br>8、不要将equals声明中的Object对象替换为其他的类型。</p>
-<h3 id="Item-11-Always-override-hashCode-when-you-override-equals"><a href="#Item-11-Always-override-hashCode-when-you-override-equals" class="headerlink" title="Item 11: Always override hashCode when you override equals"></a>Item 11: Always override hashCode when you override equals</h3><p>每个覆盖了equals方法的类中，也必须同时覆盖hashCode方法。</p>
-<h3 id="Item-12-Always-override-toString"><a href="#Item-12-Always-override-toString" class="headerlink" title="Item 12: Always override toString"></a>Item 12: Always override toString</h3><p>遵守toString的约定并不像遵守equals和hashCode的约定那么重要，但是提供好的toString实现可以使得类使用起来更为舒适。</p>
-<h3 id="Item-13-Override-clone-judiciously"><a href="#Item-13-Override-clone-judiciously" class="headerlink" title="Item 13: Override clone judiciously"></a>Item 13: Override clone judiciously</h3><h3 id="Item-14-Consider-implementing-Comparable"><a href="#Item-14-Consider-implementing-Comparable" class="headerlink" title="Item 14: Consider implementing Comparable"></a>Item 14: Consider implementing Comparable</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/21/effective-java-methods-common-to-all-objects/">展开全文 >></a>
         </p>
       
 
@@ -778,15 +778,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -794,7 +786,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">cpp</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -806,15 +806,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">dl</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -822,7 +822,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">dl</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
