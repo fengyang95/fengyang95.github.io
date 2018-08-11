@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://wwdguu.github.io/2018/08/11/titanic/output_40_5.png">
 <meta property="og:image" content="https://wwdguu.github.io/2018/08/11/titanic/output_40_6.png">
 <meta property="og:image" content="https://wwdguu.github.io/2018/08/11/titanic/output_41_1.png">
-<meta property="og:updated_time" content="2018-08-11T09:58:27.632Z">
+<meta property="og:updated_time" content="2018-08-11T10:07:19.532Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kaggle入门赛之Titanic">
 <meta name="twitter:description" content="本文是初次参加Kaggle入门赛Titanic生还预测的一个过程记录，通过这个比赛，主要熟悉了pandas以及sklearn包的使用，对于常见的分类问题有了一定的了解。现将数据分析的过程记录如下。 12345678910111213141516import pandas as pdimport matplotlib.pyplot as pltimport seaborn as snsimport">
@@ -561,13 +561,11 @@ D:\Anaconda\lib\site-packages\sklearn\preprocessing\label.py:151: DeprecationWar
 <p><img src="output_40_6.png" alt="png"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">nrows =<span class="number">3</span></div><div class="line">ncols=<span class="number">2</span></div><div class="line">fig, axes = plt.subplots(nrows=nrows, ncols=ncols, sharex=<span class="string">"all"</span>, figsize=(<span class="number">15</span>, <span class="number">15</span>))</div><div class="line">names_classifiers = [(<span class="string">'rfc'</span>, RFC_best), (<span class="string">'extc'</span>, ExtC_best),</div><div class="line">                        (<span class="string">'adac'</span>, ada_best), (<span class="string">'gbc'</span>, GBC_best),</div><div class="line">                        (<span class="string">'xgbc'</span>,XGBC_best)]</div><div class="line">nclassifier = <span class="number">0</span></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> range(nrows):</div><div class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> range(ncols):</div><div class="line">        <span class="keyword">if</span> nclassifier&gt;=<span class="number">5</span>:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        name = names_classifiers[nclassifier][<span class="number">0</span>]</div><div class="line">        classifier = names_classifiers[nclassifier][<span class="number">1</span>]</div><div class="line">        indices = np.argsort(classifier.feature_importances_)[::<span class="number">-1</span>][:<span class="number">40</span>]</div><div class="line">        g = sns.barplot(y=X_train_original.columns[indices][:<span class="number">40</span>], x=classifier.feature_importances_[indices][:<span class="number">40</span>],</div><div class="line">                            orient=<span class="string">'h'</span>, ax=axes[row][col])</div><div class="line">        g.set_xlabel(<span class="string">"Relative importance"</span>, fontsize=<span class="number">12</span>)</div><div class="line">        g.set_ylabel(<span class="string">"Features"</span>, fontsize=<span class="number">12</span>)</div><div class="line">        g.tick_params(labelsize=<span class="number">9</span>)</div><div class="line">        g.set_title(name + <span class="string">" feature importance"</span>)</div><div class="line">        nclassifier += <span class="number">1</span></div><div class="line"></div><div class="line"></div><div class="line">test_Survived_RFC = pd.Series(RFC_best.predict(test), name=<span class="string">"RFC"</span>)</div><div class="line">test_Survived_ExtC = pd.Series(ExtC_best.predict(test), name=<span class="string">"ExtC"</span>)</div><div class="line">test_Survived_SVMC = pd.Series(SVMC_best.predict(test), name=<span class="string">"SVC"</span>)</div><div class="line">test_Survived_AdaC = pd.Series(ada_best.predict(test), name=<span class="string">"Ada"</span>)</div><div class="line">test_Survived_GBC = pd.Series(GBC_best.predict(test), name=<span class="string">"GBC"</span>)</div><div class="line">test_Survived_XGBC=pd.Series(XGBC_best.predict(test),name=<span class="string">'XGBC'</span>)</div><div class="line">test_Survived_LR=pd.Series(LR_best.predict(test),name=<span class="string">'LR'</span>)</div><div class="line">test_Survived_Voting=pd.Series(votingC.predict(test),name=<span class="string">'Voting'</span>)</div><div class="line">    <span class="comment"># Concatenate all classifier results</span></div><div class="line">ensemble_results = pd.concat(</div><div class="line">        [test_Survived_RFC, test_Survived_ExtC, test_Survived_AdaC, test_Survived_GBC, test_Survived_SVMC,</div><div class="line">         test_Survived_XGBC,test_Survived_LR,test_Survived_Voting], axis=<span class="number">1</span>)</div><div class="line"></div><div class="line">g = sns.heatmap(ensemble_results.corr(), annot=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
 <p><img src="output_41_1.png" alt="png"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">test_Survived = pd.Series(votingC.predict(test), name=<span class="string">"Survived"</span>)</div><div class="line">test_Survived_XGBC_submition=pd.Series(XGBC_best.predict(test),name=<span class="string">'Survived'</span>)</div><div class="line">xgbc_results=pd.concat([IDtest,test_Survived_XGBC_submition],axis=<span class="number">1</span>)</div><div class="line">xgbc_results.to_csv(<span class="string">'xgbc.csv'</span>,index=<span class="keyword">False</span>)</div><div class="line">print(IDtest.shape)</div><div class="line">print(test_Survived.shape)</div><div class="line">results = pd.concat([IDtest, test_Survived], axis=<span class="number">1</span>)</div><div class="line">results.to_csv(<span class="string">"ensemble_python_voting.csv"</span>, index=<span class="keyword">False</span>)</div><div class="line">results.head()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">test_Survived = pd.Series(votingC.predict(test), name=<span class="string">"Survived"</span>)</div><div class="line">test_Survived_XGBC_submition=pd.Series(XGBC_best.predict(test),name=<span class="string">'Survived'</span>)</div><div class="line">xgbc_results=pd.concat([IDtest,test_Survived_XGBC_submition],axis=<span class="number">1</span>)</div><div class="line">xgbc_results.to_csv(<span class="string">'xgbc.csv'</span>,index=<span class="keyword">False</span>)</div><div class="line">print(IDtest.shape)</div><div class="line">print(test_Survived.shape)</div><div class="line">results = pd.concat([IDtest, test_Survived], axis=<span class="number">1</span>)</div><div class="line">results.to_csv(<span class="string">"ensemble_python_voting.csv"</span>, index=<span class="keyword">False</span>)</div></pre></td></tr></table></figure>
 <pre><code>(418,)
 (418,)
-</code></pre><div><br><style scoped><br>    .dataframe tbody tr th:only-of-type {<br>        vertical-align: middle;<br>    }<br><br>    .dataframe tbody tr th {<br>        vertical-align: top;<br>    }<br><br>    .dataframe thead th {<br>        text-align: right;<br>    }<br></style><br><table border="1" class="dataframe"><br>  <thead><br>    <tr style="text-align: right;"><br>      <th></th><br>      <th>PassengerId</th><br>      <th>Survived</th><br>    </tr><br>  </thead><br>  <tbody><br>    <tr><br>      <th>0</th><br>      <td>892</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>1</th><br>      <td>893</td><br>      <td>1</td><br>    </tr><br>    <tr><br>      <th>2</th><br>      <td>894</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>3</th><br>      <td>895</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>4</th><br>      <td>896</td><br>      <td>1</td><br>    </tr><br>  </tbody><br></table><br></div>
-
-<p>最后提交的voting方法的结果得到了0.81339的分数。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、(yassineghouzam’s kernel)[<a href="https://www.kaggle.com/yassineghouzam/titanic-top-4-with-ensemble-modeling" target="_blank" rel="external">https://www.kaggle.com/yassineghouzam/titanic-top-4-with-ensemble-modeling</a>]<br>2、(konstantinmasich’s kernel)[<a href="https://www.kaggle.com/konstantinmasich/titanic-0-82-0-83" target="_blank" rel="external">https://www.kaggle.com/konstantinmasich/titanic-0-82-0-83</a>]<br>3、(pandas document)[<a href="http://pandas.pydata.org/pandas-docs/stable/" target="_blank" rel="external">http://pandas.pydata.org/pandas-docs/stable/</a>]<br>4、(seaborn tutorial)[<a href="https://seaborn.pydata.org/tutorial.html" target="_blank" rel="external">https://seaborn.pydata.org/tutorial.html</a>]</p>
+</code></pre><p>最后提交的voting方法的结果得到了0.81339的分数。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、<a href="https://www.kaggle.com/yassineghouzam/titanic-top-4-with-ensemble-modeling" target="_blank" rel="external">yassineghouzam’s kernel</a><br>2、<a href="https://www.kaggle.com/konstantinmasich/titanic-0-82-0-83" target="_blank" rel="external">konstantinmasich’s kernel</a><br>3、<a href="http://pandas.pydata.org/pandas-docs/stable/" target="_blank" rel="external">pandas document</a><br>4、<a href="https://seaborn.pydata.org/tutorial.html" target="_blank" rel="external">seaborn tutorial</a></p>
 
       
 
@@ -814,11 +812,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -854,19 +852,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">dl</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
              
               <li class="article-tag-list-item">
