@@ -162,6 +162,511 @@ style="background: #4d4d4d"></div>
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-titanic" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/11/titanic/">Kaggle入门赛之Titanic</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/11/titanic/" class="archive-article-date">
+  	<time datetime="2018-08-11T09:44:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据分析"><span class="toc-text">数据分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#填充缺失值"><span class="toc-text">填充缺失值</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Scale以及模型选择"><span class="toc-text">Scale以及模型选择</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p>本文是初次参加Kaggle入门赛Titanic生还预测的一个过程记录，通过这个比赛，主要熟悉了pandas以及sklearn包的使用，对于常见的分类问题有了一定的了解。现将数据分析的过程记录如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> xgboost</div><div class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OneHotEncoder, LabelEncoder,StandardScaler,MinMaxScaler</div><div class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier, ExtraTreesClassifier, VotingClassifier,RandomForestRegressor</div><div class="line"><span class="keyword">from</span> sklearn.discriminant_analysis <span class="keyword">import</span> LinearDiscriminantAnalysis</div><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</div><div class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</div><div class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</div><div class="line"><span class="keyword">from</span> sklearn.neural_network <span class="keyword">import</span> MLPClassifier</div><div class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</div><div class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV, cross_val_score, StratifiedKFold, learning_curve</div><div class="line">%matplotlib inline</div></pre></td></tr></table></figure>
+<h1 id="数据分析"><a href="#数据分析" class="headerlink" title="数据分析"></a>数据分析</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">train_df=pd.read_csv(<span class="string">'data/train.csv'</span>)</div><div class="line">test_df=pd.read_csv(<span class="string">'data/test.csv'</span>)</div><div class="line">data_all=pd.concat([train_df,test_df],ignore_index=<span class="keyword">True</span>)</div><div class="line">train_len=train_df.shape[<span class="number">0</span>]</div><div class="line">print(train_df.shape)</div><div class="line">print(test_df.shape)</div></pre></td></tr></table></figure>
+<pre><code>(891, 12)
+(418, 11)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data_all.info()</div></pre></td></tr></table></figure>
+<pre><code>&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;
+RangeIndex: 1309 entries, 0 to 1308
+Data columns (total 12 columns):
+Age            1046 non-null float64
+Cabin          295 non-null object
+Embarked       1307 non-null object
+Fare           1308 non-null float64
+Name           1309 non-null object
+Parch          1309 non-null int64
+PassengerId    1309 non-null int64
+Pclass         1309 non-null int64
+Sex            1309 non-null object
+SibSp          1309 non-null int64
+Survived       891 non-null float64
+Ticket         1309 non-null object
+dtypes: float64(3), int64(4), object(5)
+memory usage: 122.8+ KB
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">n = data_all.drop([<span class="string">'PassengerId'</span>,<span class="string">'Survived'</span>], axis=<span class="number">1</span>).loc[:, data_all.isnull().any()].isnull().sum()</div><div class="line">print(<span class="string">'ALL:'</span>, data_all.shape[<span class="number">0</span>])</div><div class="line">print(<span class="string">'-'</span> * <span class="number">30</span>)</div><div class="line">print(n.sort_values(ascending=<span class="keyword">False</span>))</div></pre></td></tr></table></figure>
+<pre><code>ALL: 1309
+------------------------------
+Cabin       1014
+Age          263
+Embarked       2
+Fare           1
+dtype: int64
+</code></pre><h2 id="填充缺失值"><a href="#填充缺失值" class="headerlink" title="填充缺失值"></a>填充缺失值</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## Cabin缺失较多 考虑将其分为 有值和无值两类 或者直接弃用</span></div><div class="line"><span class="comment"># 这里直接弃用</span></div><div class="line"></div><div class="line"><span class="comment">## Fare只缺1个值，用均值或中值填充，这里采用中值填充</span></div><div class="line">data_all[<span class="string">'Fare'</span>].fillna(data_all[<span class="string">'Fare'</span>].median(),inplace=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="comment">## Embarked缺失2个值，为object类型，这里考虑添加一组新值，以"None"填充</span></div><div class="line">data_all[<span class="string">'Embarked'</span>].fillna(<span class="string">'None'</span>,inplace=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="comment">## Age对于预测很重要，这里考虑用机器学习的方法对其进行预测填充，考虑到Age和SibSp,Parch以及Pclass，Fare等因素有关</span></div><div class="line"><span class="comment"># 分析Age的影响因素</span></div><div class="line"></div><div class="line"><span class="comment"># 性别可能对age有影响，先将sex转化为数值类型</span></div><div class="line"><span class="comment"># convert Sex into categorical value 0 for male and 1 for female</span></div><div class="line">data_all[<span class="string">"Sex"</span>] = data_all[<span class="string">"Sex"</span>].map(&#123;<span class="string">"male"</span>: <span class="number">0</span>, <span class="string">"female"</span>:<span class="number">1</span>&#125;)</div><div class="line"></div><div class="line">g = sns.heatmap(data_all[[<span class="string">"Age"</span>,<span class="string">"Sex"</span>,<span class="string">"SibSp"</span>,<span class="string">"Parch"</span>,<span class="string">"Pclass"</span>,<span class="string">"Fare"</span>]].corr(),cmap=<span class="string">"BrBG"</span>,annot=<span class="keyword">True</span>)</div><div class="line"><span class="comment"># 分析出Age与Sex关系较小，而与其它几个属性都有一定关系</span></div><div class="line"><span class="comment"># 考虑使用RF模型结合其它几个属性对Age进行预测填充</span></div><div class="line"></div><div class="line"><span class="comment"># 把已有的数值型特征取出来丢进Random Forest Regressor中</span></div><div class="line">age_df = data_all[[<span class="string">'Age'</span>, <span class="string">'Fare'</span>, <span class="string">'Parch'</span>, <span class="string">'SibSp'</span>, <span class="string">'Pclass'</span>]]</div><div class="line"><span class="comment"># 乘客分成已知年龄和未知年龄两部分</span></div><div class="line">known_age = age_df[age_df.Age.notnull()].as_matrix()</div><div class="line">unknown_age = age_df[age_df.Age.isnull()].as_matrix()</div><div class="line"><span class="comment"># y即目标年龄</span></div><div class="line">y = known_age[:, <span class="number">0</span>]</div><div class="line"><span class="comment"># X即特征属性值</span></div><div class="line">X = known_age[:, <span class="number">1</span>:]</div><div class="line"></div><div class="line"><span class="comment"># fit到RandomForestRegressor之中</span></div><div class="line">rfr = RandomForestRegressor(random_state=<span class="number">0</span>, n_estimators=<span class="number">2000</span>, n_jobs=<span class="number">-1</span>)</div><div class="line">rfr.fit(X, y)</div><div class="line"><span class="comment"># 用得到的模型进行未知年龄结果预测</span></div><div class="line">predictedAges = rfr.predict(unknown_age[:, <span class="number">1</span>::])</div><div class="line"><span class="comment"># 用得到的预测结果填补原缺失数据</span></div><div class="line">data_all.loc[(data_all.Age.isnull()), <span class="string">'Age'</span>] = predictedAges</div></pre></td></tr></table></figure>
+<p><img src="output_7_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 显示数值类型的统计结果</span></div><div class="line">print(<span class="string">'number describe:\n'</span>,data_all.drop([<span class="string">'PassengerId'</span>,<span class="string">'Survived'</span>],axis=<span class="number">1</span>).describe(include=[<span class="string">'number'</span>]).loc[[<span class="string">'min'</span>, <span class="string">'max'</span>, <span class="string">'mean'</span>,<span class="string">'std'</span>,<span class="string">'count'</span>]].T.sort_values(<span class="string">'max'</span>))</div><div class="line"></div><div class="line"><span class="comment"># 看出Age的缺失值已经被填充</span></div></pre></td></tr></table></figure>
+<pre><code>number describe:
+          min       max       mean        std   count
+Sex     0.00    1.0000   0.355997   0.478997  1309.0
+Pclass  1.00    3.0000   2.294882   0.837836  1309.0
+SibSp   0.00    8.0000   0.498854   1.041658  1309.0
+Parch   0.00    9.0000   0.385027   0.865560  1309.0
+Age     0.17   80.0000  29.876751  13.447012  1309.0
+Fare    0.00  512.3292  33.281086  51.741500  1309.0
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 显示object类型的取值</span></div><div class="line">print(<span class="string">'object describe:\n'</span>)</div><div class="line">n = data_all.select_dtypes(include=object)</div><div class="line"><span class="keyword">for</span> c <span class="keyword">in</span> n.columns:</div><div class="line">    print(<span class="string">'&#123;:&lt;14&#125;'</span>.format(c),<span class="string">':'</span>,len(data_all[c].unique()),<span class="string">'\n'</span>,data_all[c].unique())</div></pre></td></tr></table></figure>
+<pre><code>object describe:
+
+Cabin          : 187 
+ [nan &apos;C85&apos; &apos;C123&apos; &apos;E46&apos; &apos;G6&apos; &apos;C103&apos; &apos;D56&apos; &apos;A6&apos; &apos;C23 C25 C27&apos; &apos;B78&apos; &apos;D33&apos;
+ &apos;B30&apos; &apos;C52&apos; &apos;B28&apos; &apos;C83&apos; &apos;F33&apos; &apos;F G73&apos; &apos;E31&apos; &apos;A5&apos; &apos;D10 D12&apos; &apos;D26&apos; &apos;C110&apos;
+ &apos;B58 B60&apos; &apos;E101&apos; &apos;F E69&apos; &apos;D47&apos; &apos;B86&apos; &apos;F2&apos; &apos;C2&apos; &apos;E33&apos; &apos;B19&apos; &apos;A7&apos; &apos;C49&apos;
+ &apos;F4&apos; &apos;A32&apos; &apos;B4&apos; &apos;B80&apos; &apos;A31&apos; &apos;D36&apos; &apos;D15&apos; &apos;C93&apos; &apos;C78&apos; &apos;D35&apos; &apos;C87&apos; &apos;B77&apos;
+ &apos;E67&apos; &apos;B94&apos; &apos;C125&apos; &apos;C99&apos; &apos;C118&apos; &apos;D7&apos; &apos;A19&apos; &apos;B49&apos; &apos;D&apos; &apos;C22 C26&apos; &apos;C106&apos;
+ &apos;C65&apos; &apos;E36&apos; &apos;C54&apos; &apos;B57 B59 B63 B66&apos; &apos;C7&apos; &apos;E34&apos; &apos;C32&apos; &apos;B18&apos; &apos;C124&apos; &apos;C91&apos;
+ &apos;E40&apos; &apos;T&apos; &apos;C128&apos; &apos;D37&apos; &apos;B35&apos; &apos;E50&apos; &apos;C82&apos; &apos;B96 B98&apos; &apos;E10&apos; &apos;E44&apos; &apos;A34&apos;
+ &apos;C104&apos; &apos;C111&apos; &apos;C92&apos; &apos;E38&apos; &apos;D21&apos; &apos;E12&apos; &apos;E63&apos; &apos;A14&apos; &apos;B37&apos; &apos;C30&apos; &apos;D20&apos; &apos;B79&apos;
+ &apos;E25&apos; &apos;D46&apos; &apos;B73&apos; &apos;C95&apos; &apos;B38&apos; &apos;B39&apos; &apos;B22&apos; &apos;C86&apos; &apos;C70&apos; &apos;A16&apos; &apos;C101&apos; &apos;C68&apos;
+ &apos;A10&apos; &apos;E68&apos; &apos;B41&apos; &apos;A20&apos; &apos;D19&apos; &apos;D50&apos; &apos;D9&apos; &apos;A23&apos; &apos;B50&apos; &apos;A26&apos; &apos;D48&apos; &apos;E58&apos;
+ &apos;C126&apos; &apos;B71&apos; &apos;B51 B53 B55&apos; &apos;D49&apos; &apos;B5&apos; &apos;B20&apos; &apos;F G63&apos; &apos;C62 C64&apos; &apos;E24&apos; &apos;C90&apos;
+ &apos;C45&apos; &apos;E8&apos; &apos;B101&apos; &apos;D45&apos; &apos;C46&apos; &apos;D30&apos; &apos;E121&apos; &apos;D11&apos; &apos;E77&apos; &apos;F38&apos; &apos;B3&apos; &apos;D6&apos;
+ &apos;B82 B84&apos; &apos;D17&apos; &apos;A36&apos; &apos;B102&apos; &apos;B69&apos; &apos;E49&apos; &apos;C47&apos; &apos;D28&apos; &apos;E17&apos; &apos;A24&apos; &apos;C50&apos;
+ &apos;B42&apos; &apos;C148&apos; &apos;B45&apos; &apos;B36&apos; &apos;A21&apos; &apos;D34&apos; &apos;A9&apos; &apos;C31&apos; &apos;B61&apos; &apos;C53&apos; &apos;D43&apos; &apos;C130&apos;
+ &apos;C132&apos; &apos;C55 C57&apos; &apos;C116&apos; &apos;F&apos; &apos;A29&apos; &apos;C6&apos; &apos;C28&apos; &apos;C51&apos; &apos;C97&apos; &apos;D22&apos; &apos;B10&apos;
+ &apos;E45&apos; &apos;E52&apos; &apos;A11&apos; &apos;B11&apos; &apos;C80&apos; &apos;C89&apos; &apos;F E46&apos; &apos;B26&apos; &apos;F E57&apos; &apos;A18&apos; &apos;E60&apos;
+ &apos;E39 E41&apos; &apos;B52 B54 B56&apos; &apos;C39&apos; &apos;B24&apos; &apos;D40&apos; &apos;D38&apos; &apos;C105&apos;]
+Embarked       : 4 
+ [&apos;S&apos; &apos;C&apos; &apos;Q&apos; &apos;None&apos;]
+Name           : 1307 
+ [&apos;Braund, Mr. Owen Harris&apos;
+ &apos;Cumings, Mrs. John Bradley (Florence Briggs Thayer)&apos;
+ &apos;Heikkinen, Miss. Laina&apos; ... &apos;Saether, Mr. Simon Sivertsen&apos;
+ &apos;Ware, Mr. Frederick&apos; &apos;Peter, Master. Michael J&apos;]
+Ticket         : 929 
+ [&apos;A/5 21171&apos; &apos;PC 17599&apos; &apos;STON/O2. 3101282&apos; &apos;113803&apos; &apos;373450&apos; &apos;330877&apos;
+ &apos;17463&apos; &apos;349909&apos; &apos;347742&apos; &apos;237736&apos; &apos;PP 9549&apos; &apos;113783&apos; &apos;A/5. 2151&apos;
+ &apos;347082&apos; &apos;350406&apos; &apos;248706&apos; &apos;382652&apos; &apos;244373&apos; &apos;345763&apos; &apos;2649&apos; &apos;239865&apos;
+ &apos;248698&apos; &apos;330923&apos; &apos;113788&apos; &apos;347077&apos; &apos;2631&apos; &apos;19950&apos; &apos;330959&apos; &apos;349216&apos;
+ &apos;PC 17601&apos; &apos;PC 17569&apos; &apos;335677&apos; &apos;C.A. 24579&apos; &apos;PC 17604&apos; &apos;113789&apos; &apos;2677&apos;
+ &apos;A./5. 2152&apos; &apos;345764&apos; &apos;2651&apos; &apos;7546&apos; &apos;11668&apos; &apos;349253&apos; &apos;SC/Paris 2123&apos;
+ &apos;330958&apos; &apos;S.C./A.4. 23567&apos; &apos;370371&apos; &apos;14311&apos; &apos;2662&apos; &apos;349237&apos; &apos;3101295&apos;
+ &apos;A/4. 39886&apos; &apos;PC 17572&apos; &apos;2926&apos; &apos;113509&apos; &apos;19947&apos; &apos;C.A. 31026&apos; &apos;2697&apos;
+ &apos;C.A. 34651&apos; &apos;CA 2144&apos; &apos;2669&apos; &apos;113572&apos; &apos;36973&apos; &apos;347088&apos; &apos;PC 17605&apos; &apos;2661&apos;
+ &apos;C.A. 29395&apos; &apos;S.P. 3464&apos; &apos;3101281&apos; &apos;315151&apos; &apos;C.A. 33111&apos; &apos;S.O.C. 14879&apos;
+ &apos;2680&apos; &apos;1601&apos; &apos;348123&apos; &apos;349208&apos; &apos;374746&apos; &apos;248738&apos; &apos;364516&apos; &apos;345767&apos;
+ &apos;345779&apos; &apos;330932&apos; &apos;113059&apos; &apos;SO/C 14885&apos; &apos;3101278&apos; &apos;W./C. 6608&apos;
+ &apos;SOTON/OQ 392086&apos; &apos;343275&apos; &apos;343276&apos; &apos;347466&apos; &apos;W.E.P. 5734&apos; &apos;C.A. 2315&apos;
+ &apos;364500&apos; &apos;374910&apos; &apos;PC 17754&apos; &apos;PC 17759&apos; &apos;231919&apos; &apos;244367&apos; &apos;349245&apos;
+ &apos;349215&apos; &apos;35281&apos; &apos;7540&apos; &apos;3101276&apos; &apos;349207&apos; &apos;343120&apos; &apos;312991&apos; &apos;349249&apos;
+ &apos;371110&apos; &apos;110465&apos; &apos;2665&apos; &apos;324669&apos; &apos;4136&apos; &apos;2627&apos; &apos;STON/O 2. 3101294&apos;
+ &apos;370369&apos; &apos;PC 17558&apos; &apos;A4. 54510&apos; &apos;27267&apos; &apos;370372&apos; &apos;C 17369&apos; &apos;2668&apos;
+ &apos;347061&apos; &apos;349241&apos; &apos;SOTON/O.Q. 3101307&apos; &apos;A/5. 3337&apos; &apos;228414&apos; &apos;C.A. 29178&apos;
+ &apos;SC/PARIS 2133&apos; &apos;11752&apos; &apos;7534&apos; &apos;PC 17593&apos; &apos;2678&apos; &apos;347081&apos;
+ &apos;STON/O2. 3101279&apos; &apos;365222&apos; &apos;231945&apos; &apos;C.A. 33112&apos; &apos;350043&apos; &apos;230080&apos;
+ &apos;244310&apos; &apos;S.O.P. 1166&apos; &apos;113776&apos; &apos;A.5. 11206&apos; &apos;A/5. 851&apos; &apos;Fa 265302&apos;
+ &apos;PC 17597&apos; &apos;35851&apos; &apos;SOTON/OQ 392090&apos; &apos;315037&apos; &apos;CA. 2343&apos; &apos;371362&apos;
+ &apos;C.A. 33595&apos; &apos;347068&apos; &apos;315093&apos; &apos;363291&apos; &apos;113505&apos; &apos;PC 17318&apos; &apos;111240&apos;
+ &apos;STON/O 2. 3101280&apos; &apos;17764&apos; &apos;350404&apos; &apos;4133&apos; &apos;PC 17595&apos; &apos;250653&apos; &apos;LINE&apos;
+ &apos;SC/PARIS 2131&apos; &apos;230136&apos; &apos;315153&apos; &apos;113767&apos; &apos;370365&apos; &apos;111428&apos; &apos;364849&apos;
+ &apos;349247&apos; &apos;234604&apos; &apos;28424&apos; &apos;350046&apos; &apos;PC 17610&apos; &apos;368703&apos; &apos;4579&apos; &apos;370370&apos;
+ &apos;248747&apos; &apos;345770&apos; &apos;3101264&apos; &apos;2628&apos; &apos;A/5 3540&apos; &apos;347054&apos; &apos;2699&apos; &apos;367231&apos;
+ &apos;112277&apos; &apos;SOTON/O.Q. 3101311&apos; &apos;F.C.C. 13528&apos; &apos;A/5 21174&apos; &apos;250646&apos;
+ &apos;367229&apos; &apos;35273&apos; &apos;STON/O2. 3101283&apos; &apos;243847&apos; &apos;11813&apos; &apos;W/C 14208&apos;
+ &apos;SOTON/OQ 392089&apos; &apos;220367&apos; &apos;21440&apos; &apos;349234&apos; &apos;19943&apos; &apos;PP 4348&apos; &apos;SW/PP 751&apos;
+ &apos;A/5 21173&apos; &apos;236171&apos; &apos;347067&apos; &apos;237442&apos; &apos;C.A. 29566&apos; &apos;W./C. 6609&apos; &apos;26707&apos;
+ &apos;C.A. 31921&apos; &apos;28665&apos; &apos;SCO/W 1585&apos; &apos;367230&apos; &apos;W./C. 14263&apos;
+ &apos;STON/O 2. 3101275&apos; &apos;2694&apos; &apos;19928&apos; &apos;347071&apos; &apos;250649&apos; &apos;11751&apos; &apos;244252&apos;
+ &apos;362316&apos; &apos;113514&apos; &apos;A/5. 3336&apos; &apos;370129&apos; &apos;2650&apos; &apos;PC 17585&apos; &apos;110152&apos;
+ &apos;PC 17755&apos; &apos;230433&apos; &apos;384461&apos; &apos;110413&apos; &apos;112059&apos; &apos;382649&apos; &apos;C.A. 17248&apos;
+ &apos;347083&apos; &apos;PC 17582&apos; &apos;PC 17760&apos; &apos;113798&apos; &apos;250644&apos; &apos;PC 17596&apos; &apos;370375&apos;
+ &apos;13502&apos; &apos;347073&apos; &apos;239853&apos; &apos;C.A. 2673&apos; &apos;336439&apos; &apos;347464&apos; &apos;345778&apos;
+ &apos;A/5. 10482&apos; &apos;113056&apos; &apos;349239&apos; &apos;345774&apos; &apos;349206&apos; &apos;237798&apos; &apos;370373&apos;
+ &apos;19877&apos; &apos;11967&apos; &apos;SC/Paris 2163&apos; &apos;349236&apos; &apos;349233&apos; &apos;PC 17612&apos; &apos;2693&apos;
+ &apos;113781&apos; &apos;19988&apos; &apos;9234&apos; &apos;367226&apos; &apos;226593&apos; &apos;A/5 2466&apos; &apos;17421&apos; &apos;PC 17758&apos;
+ &apos;P/PP 3381&apos; &apos;PC 17485&apos; &apos;11767&apos; &apos;PC 17608&apos; &apos;250651&apos; &apos;349243&apos;
+ &apos;F.C.C. 13529&apos; &apos;347470&apos; &apos;29011&apos; &apos;36928&apos; &apos;16966&apos; &apos;A/5 21172&apos; &apos;349219&apos;
+ &apos;234818&apos; &apos;345364&apos; &apos;28551&apos; &apos;111361&apos; &apos;113043&apos; &apos;PC 17611&apos; &apos;349225&apos; &apos;7598&apos;
+ &apos;113784&apos; &apos;248740&apos; &apos;244361&apos; &apos;229236&apos; &apos;248733&apos; &apos;31418&apos; &apos;386525&apos;
+ &apos;C.A. 37671&apos; &apos;315088&apos; &apos;7267&apos; &apos;113510&apos; &apos;2695&apos; &apos;2647&apos; &apos;345783&apos; &apos;237671&apos;
+ &apos;330931&apos; &apos;330980&apos; &apos;SC/PARIS 2167&apos; &apos;2691&apos; &apos;SOTON/O.Q. 3101310&apos; &apos;C 7076&apos;
+ &apos;110813&apos; &apos;2626&apos; &apos;14313&apos; &apos;PC 17477&apos; &apos;11765&apos; &apos;3101267&apos; &apos;323951&apos; &apos;C 7077&apos;
+ &apos;113503&apos; &apos;2648&apos; &apos;347069&apos; &apos;PC 17757&apos; &apos;2653&apos; &apos;STON/O 2. 3101293&apos; &apos;349227&apos;
+ &apos;27849&apos; &apos;367655&apos; &apos;SC 1748&apos; &apos;113760&apos; &apos;350034&apos; &apos;3101277&apos; &apos;350052&apos; &apos;350407&apos;
+ &apos;28403&apos; &apos;244278&apos; &apos;240929&apos; &apos;STON/O 2. 3101289&apos; &apos;341826&apos; &apos;4137&apos; &apos;315096&apos;
+ &apos;28664&apos; &apos;347064&apos; &apos;29106&apos; &apos;312992&apos; &apos;349222&apos; &apos;394140&apos; &apos;STON/O 2. 3101269&apos;
+ &apos;343095&apos; &apos;28220&apos; &apos;250652&apos; &apos;28228&apos; &apos;345773&apos; &apos;349254&apos; &apos;A/5. 13032&apos; &apos;315082&apos;
+ &apos;347080&apos; &apos;A/4. 34244&apos; &apos;2003&apos; &apos;250655&apos; &apos;364851&apos; &apos;SOTON/O.Q. 392078&apos;
+ &apos;110564&apos; &apos;376564&apos; &apos;SC/AH 3085&apos; &apos;STON/O 2. 3101274&apos; &apos;13507&apos; &apos;C.A. 18723&apos;
+ &apos;345769&apos; &apos;347076&apos; &apos;230434&apos; &apos;65306&apos; &apos;33638&apos; &apos;113794&apos; &apos;2666&apos; &apos;113786&apos;
+ &apos;65303&apos; &apos;113051&apos; &apos;17453&apos; &apos;A/5 2817&apos; &apos;349240&apos; &apos;13509&apos; &apos;17464&apos;
+ &apos;F.C.C. 13531&apos; &apos;371060&apos; &apos;19952&apos; &apos;364506&apos; &apos;111320&apos; &apos;234360&apos; &apos;A/S 2816&apos;
+ &apos;SOTON/O.Q. 3101306&apos; &apos;113792&apos; &apos;36209&apos; &apos;323592&apos; &apos;315089&apos; &apos;SC/AH Basle 541&apos;
+ &apos;7553&apos; &apos;31027&apos; &apos;3460&apos; &apos;350060&apos; &apos;3101298&apos; &apos;239854&apos; &apos;A/5 3594&apos; &apos;4134&apos;
+ &apos;11771&apos; &apos;A.5. 18509&apos; &apos;65304&apos; &apos;SOTON/OQ 3101317&apos; &apos;113787&apos; &apos;PC 17609&apos;
+ &apos;A/4 45380&apos; &apos;36947&apos; &apos;C.A. 6212&apos; &apos;350035&apos; &apos;315086&apos; &apos;364846&apos; &apos;330909&apos;
+ &apos;4135&apos; &apos;26360&apos; &apos;111427&apos; &apos;C 4001&apos; &apos;382651&apos; &apos;SOTON/OQ 3101316&apos; &apos;PC 17473&apos;
+ &apos;PC 17603&apos; &apos;349209&apos; &apos;36967&apos; &apos;C.A. 34260&apos; &apos;226875&apos; &apos;349242&apos; &apos;12749&apos;
+ &apos;349252&apos; &apos;2624&apos; &apos;2700&apos; &apos;367232&apos; &apos;W./C. 14258&apos; &apos;PC 17483&apos; &apos;3101296&apos;
+ &apos;29104&apos; &apos;2641&apos; &apos;2690&apos; &apos;315084&apos; &apos;113050&apos; &apos;PC 17761&apos; &apos;364498&apos; &apos;13568&apos;
+ &apos;WE/P 5735&apos; &apos;2908&apos; &apos;693&apos; &apos;SC/PARIS 2146&apos; &apos;244358&apos; &apos;330979&apos; &apos;2620&apos;
+ &apos;347085&apos; &apos;113807&apos; &apos;11755&apos; &apos;345572&apos; &apos;372622&apos; &apos;349251&apos; &apos;218629&apos;
+ &apos;SOTON/OQ 392082&apos; &apos;SOTON/O.Q. 392087&apos; &apos;A/4 48871&apos; &apos;349205&apos; &apos;2686&apos;
+ &apos;350417&apos; &apos;S.W./PP 752&apos; &apos;11769&apos; &apos;PC 17474&apos; &apos;14312&apos; &apos;A/4. 20589&apos; &apos;358585&apos;
+ &apos;243880&apos; &apos;2689&apos; &apos;STON/O 2. 3101286&apos; &apos;237789&apos; &apos;13049&apos; &apos;3411&apos; &apos;237565&apos;
+ &apos;13567&apos; &apos;14973&apos; &apos;A./5. 3235&apos; &apos;STON/O 2. 3101273&apos; &apos;A/5 3902&apos; &apos;364848&apos;
+ &apos;SC/AH 29037&apos; &apos;248727&apos; &apos;2664&apos; &apos;349214&apos; &apos;113796&apos; &apos;364511&apos; &apos;111426&apos;
+ &apos;349910&apos; &apos;349246&apos; &apos;113804&apos; &apos;SOTON/O.Q. 3101305&apos; &apos;370377&apos; &apos;364512&apos;
+ &apos;220845&apos; &apos;31028&apos; &apos;2659&apos; &apos;11753&apos; &apos;350029&apos; &apos;54636&apos; &apos;36963&apos; &apos;219533&apos;
+ &apos;349224&apos; &apos;334912&apos; &apos;27042&apos; &apos;347743&apos; &apos;13214&apos; &apos;112052&apos; &apos;237668&apos;
+ &apos;STON/O 2. 3101292&apos; &apos;350050&apos; &apos;349231&apos; &apos;13213&apos; &apos;S.O./P.P. 751&apos; &apos;CA. 2314&apos;
+ &apos;349221&apos; &apos;8475&apos; &apos;330919&apos; &apos;365226&apos; &apos;349223&apos; &apos;29751&apos; &apos;2623&apos; &apos;5727&apos; &apos;349210&apos;
+ &apos;STON/O 2. 3101285&apos; &apos;234686&apos; &apos;312993&apos; &apos;A/5 3536&apos; &apos;19996&apos; &apos;29750&apos;
+ &apos;F.C. 12750&apos; &apos;C.A. 24580&apos; &apos;244270&apos; &apos;239856&apos; &apos;349912&apos; &apos;342826&apos; &apos;4138&apos;
+ &apos;330935&apos; &apos;6563&apos; &apos;349228&apos; &apos;350036&apos; &apos;24160&apos; &apos;17474&apos; &apos;349256&apos; &apos;2672&apos;
+ &apos;113800&apos; &apos;248731&apos; &apos;363592&apos; &apos;35852&apos; &apos;348121&apos; &apos;PC 17475&apos; &apos;36864&apos; &apos;350025&apos;
+ &apos;223596&apos; &apos;PC 17476&apos; &apos;PC 17482&apos; &apos;113028&apos; &apos;7545&apos; &apos;250647&apos; &apos;348124&apos; &apos;34218&apos;
+ &apos;36568&apos; &apos;347062&apos; &apos;350048&apos; &apos;12233&apos; &apos;250643&apos; &apos;113806&apos; &apos;315094&apos; &apos;36866&apos;
+ &apos;236853&apos; &apos;STON/O2. 3101271&apos; &apos;239855&apos; &apos;28425&apos; &apos;233639&apos; &apos;349201&apos; &apos;349218&apos;
+ &apos;16988&apos; &apos;376566&apos; &apos;STON/O 2. 3101288&apos; &apos;250648&apos; &apos;113773&apos; &apos;335097&apos; &apos;29103&apos;
+ &apos;392096&apos; &apos;345780&apos; &apos;349204&apos; &apos;350042&apos; &apos;29108&apos; &apos;363294&apos; &apos;SOTON/O2 3101272&apos;
+ &apos;2663&apos; &apos;347074&apos; &apos;112379&apos; &apos;364850&apos; &apos;8471&apos; &apos;345781&apos; &apos;350047&apos; &apos;S.O./P.P. 3&apos;
+ &apos;2674&apos; &apos;29105&apos; &apos;347078&apos; &apos;383121&apos; &apos;36865&apos; &apos;2687&apos; &apos;113501&apos; &apos;W./C. 6607&apos;
+ &apos;SOTON/O.Q. 3101312&apos; &apos;374887&apos; &apos;3101265&apos; &apos;12460&apos; &apos;PC 17600&apos; &apos;349203&apos;
+ &apos;28213&apos; &apos;17465&apos; &apos;349244&apos; &apos;2685&apos; &apos;2625&apos; &apos;347089&apos; &apos;347063&apos; &apos;112050&apos;
+ &apos;347087&apos; &apos;248723&apos; &apos;3474&apos; &apos;28206&apos; &apos;364499&apos; &apos;112058&apos; &apos;STON/O2. 3101290&apos;
+ &apos;S.C./PARIS 2079&apos; &apos;C 7075&apos; &apos;315098&apos; &apos;19972&apos; &apos;368323&apos; &apos;367228&apos; &apos;2671&apos;
+ &apos;347468&apos; &apos;2223&apos; &apos;PC 17756&apos; &apos;315097&apos; &apos;392092&apos; &apos;11774&apos; &apos;SOTON/O2 3101287&apos;
+ &apos;2683&apos; &apos;315090&apos; &apos;C.A. 5547&apos; &apos;349213&apos; &apos;347060&apos; &apos;PC 17592&apos; &apos;392091&apos;
+ &apos;113055&apos; &apos;2629&apos; &apos;350026&apos; &apos;28134&apos; &apos;17466&apos; &apos;233866&apos; &apos;236852&apos;
+ &apos;SC/PARIS 2149&apos; &apos;PC 17590&apos; &apos;345777&apos; &apos;349248&apos; &apos;695&apos; &apos;345765&apos; &apos;2667&apos;
+ &apos;349212&apos; &apos;349217&apos; &apos;349257&apos; &apos;7552&apos; &apos;C.A./SOTON 34068&apos; &apos;SOTON/OQ 392076&apos;
+ &apos;211536&apos; &apos;112053&apos; &apos;111369&apos; &apos;370376&apos; &apos;330911&apos; &apos;363272&apos; &apos;240276&apos; &apos;315154&apos;
+ &apos;7538&apos; &apos;330972&apos; &apos;2657&apos; &apos;349220&apos; &apos;694&apos; &apos;21228&apos; &apos;24065&apos; &apos;233734&apos; &apos;2692&apos;
+ &apos;STON/O2. 3101270&apos; &apos;2696&apos; &apos;C 17368&apos; &apos;PC 17598&apos; &apos;2698&apos; &apos;113054&apos;
+ &apos;C.A. 31029&apos; &apos;13236&apos; &apos;2682&apos; &apos;342712&apos; &apos;315087&apos; &apos;345768&apos; &apos;113778&apos;
+ &apos;SOTON/O.Q. 3101263&apos; &apos;237249&apos; &apos;STON/O 2. 3101291&apos; &apos;PC 17594&apos; &apos;370374&apos;
+ &apos;13695&apos; &apos;SC/PARIS 2168&apos; &apos;SC/A.3 2861&apos; &apos;349230&apos; &apos;348122&apos; &apos;349232&apos; &apos;237216&apos;
+ &apos;347090&apos; &apos;334914&apos; &apos;F.C.C. 13534&apos; &apos;330963&apos; &apos;2543&apos; &apos;382653&apos; &apos;349211&apos;
+ &apos;3101297&apos; &apos;PC 17562&apos; &apos;359306&apos; &apos;11770&apos; &apos;248744&apos; &apos;368702&apos; &apos;19924&apos; &apos;349238&apos;
+ &apos;240261&apos; &apos;2660&apos; &apos;330844&apos; &apos;A/4 31416&apos; &apos;364856&apos; &apos;347072&apos; &apos;345498&apos; &apos;376563&apos;
+ &apos;13905&apos; &apos;350033&apos; &apos;STON/O 2. 3101268&apos; &apos;347471&apos; &apos;A./5. 3338&apos; &apos;11778&apos;
+ &apos;365235&apos; &apos;347070&apos; &apos;330920&apos; &apos;383162&apos; &apos;3410&apos; &apos;248734&apos; &apos;237734&apos; &apos;330968&apos;
+ &apos;PC 17531&apos; &apos;329944&apos; &apos;2681&apos; &apos;13050&apos; &apos;367227&apos; &apos;392095&apos; &apos;368783&apos; &apos;350045&apos;
+ &apos;211535&apos; &apos;342441&apos; &apos;STON/OQ. 369943&apos; &apos;113780&apos; &apos;2621&apos; &apos;349226&apos; &apos;350409&apos;
+ &apos;2656&apos; &apos;248659&apos; &apos;SOTON/OQ 392083&apos; &apos;17475&apos; &apos;SC/A4 23568&apos; &apos;113791&apos; &apos;349255&apos;
+ &apos;3701&apos; &apos;350405&apos; &apos;S.O./P.P. 752&apos; &apos;347469&apos; &apos;110489&apos; &apos;SOTON/O.Q. 3101315&apos;
+ &apos;335432&apos; &apos;220844&apos; &apos;343271&apos; &apos;237393&apos; &apos;PC 17591&apos; &apos;17770&apos; &apos;7548&apos;
+ &apos;S.O./P.P. 251&apos; &apos;2670&apos; &apos;2673&apos; &apos;233478&apos; &apos;7935&apos; &apos;239059&apos; &apos;S.O./P.P. 2&apos;
+ &apos;A/4 48873&apos; &apos;28221&apos; &apos;111163&apos; &apos;235509&apos; &apos;347465&apos; &apos;347066&apos; &apos;C.A. 31030&apos;
+ &apos;65305&apos; &apos;C.A. 34050&apos; &apos;F.C. 12998&apos; &apos;9232&apos; &apos;28034&apos; &apos;PC 17613&apos; &apos;349250&apos;
+ &apos;SOTON/O.Q. 3101308&apos; &apos;347091&apos; &apos;113038&apos; &apos;330924&apos; &apos;32302&apos; &apos;SC/PARIS 2148&apos;
+ &apos;342684&apos; &apos;W./C. 14266&apos; &apos;350053&apos; &apos;PC 17606&apos; &apos;350054&apos; &apos;370368&apos; &apos;242963&apos;
+ &apos;113795&apos; &apos;3101266&apos; &apos;330971&apos; &apos;350416&apos; &apos;2679&apos; &apos;250650&apos; &apos;112377&apos; &apos;3470&apos;
+ &apos;SOTON/O2 3101284&apos; &apos;13508&apos; &apos;7266&apos; &apos;345775&apos; &apos;C.A. 42795&apos; &apos;AQ/4 3130&apos;
+ &apos;363611&apos; &apos;28404&apos; &apos;345501&apos; &apos;350410&apos; &apos;C.A. 34644&apos; &apos;349235&apos; &apos;112051&apos;
+ &apos;C.A. 49867&apos; &apos;A. 2. 39186&apos; &apos;315095&apos; &apos;368573&apos; &apos;2676&apos; &apos;SC 14888&apos; &apos;CA 31352&apos;
+ &apos;W./C. 14260&apos; &apos;315085&apos; &apos;364859&apos; &apos;A/5 21175&apos; &apos;SOTON/O.Q. 3101314&apos; &apos;2655&apos;
+ &apos;A/5 1478&apos; &apos;PC 17607&apos; &apos;382650&apos; &apos;2652&apos; &apos;345771&apos; &apos;349202&apos; &apos;113801&apos; &apos;347467&apos;
+ &apos;347079&apos; &apos;237735&apos; &apos;315092&apos; &apos;383123&apos; &apos;112901&apos; &apos;315091&apos; &apos;2658&apos; &apos;LP 1588&apos;
+ &apos;368364&apos; &apos;AQ/3. 30631&apos; &apos;28004&apos; &apos;350408&apos; &apos;347075&apos; &apos;2654&apos; &apos;244368&apos; &apos;113790&apos;
+ &apos;SOTON/O.Q. 3101309&apos; &apos;236854&apos; &apos;PC 17580&apos; &apos;2684&apos; &apos;349229&apos; &apos;110469&apos;
+ &apos;244360&apos; &apos;2675&apos; &apos;2622&apos; &apos;C.A. 15185&apos; &apos;350403&apos; &apos;348125&apos; &apos;237670&apos; &apos;2688&apos;
+ &apos;248726&apos; &apos;F.C.C. 13540&apos; &apos;113044&apos; &apos;1222&apos; &apos;368402&apos; &apos;315083&apos; &apos;112378&apos;
+ &apos;SC/PARIS 2147&apos; &apos;28133&apos; &apos;248746&apos; &apos;315152&apos; &apos;29107&apos; &apos;680&apos; &apos;366713&apos; &apos;330910&apos;
+ &apos;SC/PARIS 2159&apos; &apos;349911&apos; &apos;244346&apos; &apos;364858&apos; &apos;C.A. 30769&apos; &apos;371109&apos; &apos;347065&apos;
+ &apos;21332&apos; &apos;17765&apos; &apos;SC/PARIS 2166&apos; &apos;28666&apos; &apos;334915&apos; &apos;365237&apos; &apos;347086&apos;
+ &apos;A.5. 3236&apos; &apos;SOTON/O.Q. 3101262&apos; &apos;359309&apos;]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#对object特征分组</span></div><div class="line"><span class="comment">#处理Name属性</span></div><div class="line">data_all[<span class="string">'Title'</span>] = data_all[<span class="string">'Name'</span>]</div><div class="line"><span class="comment"># Cleaning name and extracting Title</span></div><div class="line"><span class="keyword">for</span> name_string <span class="keyword">in</span> data_all[<span class="string">'Name'</span>]:</div><div class="line">    data_all[<span class="string">'Title'</span>] = data_all[<span class="string">'Name'</span>].str.extract(<span class="string">'([A-Za-z]+)\.'</span>, expand=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="comment"># Replacing rare titles with more common ones</span></div><div class="line">mapping = &#123;<span class="string">'Mlle'</span>: <span class="string">'Miss'</span>, <span class="string">'Major'</span>: <span class="string">'Mr'</span>, <span class="string">'Col'</span>: <span class="string">'Mr'</span>, <span class="string">'Sir'</span>: <span class="string">'Mr'</span>, <span class="string">'Don'</span>: <span class="string">'Mr'</span>, <span class="string">'Mme'</span>: <span class="string">'Miss'</span>,</div><div class="line">               <span class="string">'Jonkheer'</span>: <span class="string">'Mr'</span>, <span class="string">'Lady'</span>: <span class="string">'Mrs'</span>, <span class="string">'Capt'</span>: <span class="string">'Mr'</span>, <span class="string">'Countess'</span>: <span class="string">'Mrs'</span>, <span class="string">'Ms'</span>: <span class="string">'Miss'</span>, <span class="string">'Dona'</span>: <span class="string">'Mrs'</span>&#125;</div><div class="line">data_all.replace(&#123;<span class="string">'Title'</span>: mapping&#125;, inplace=<span class="keyword">True</span>)</div><div class="line"></div><div class="line">g = sns.factorplot(x=<span class="string">"Title"</span>, y=<span class="string">"Survived"</span>,  data=data_all.iloc[:train_len,:],</div><div class="line">                   size=<span class="number">6</span>, kind=<span class="string">"bar"</span>, palette=<span class="string">"muted"</span>)</div><div class="line">g.despine(left=<span class="keyword">True</span>)</div><div class="line">g = g.set_ylabels(<span class="string">"survival probability"</span>)</div><div class="line"><span class="comment"># 分析得出女人小孩确实生存率更高</span></div></pre></td></tr></table></figure>
+<p><img src="output_10_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 对Title进行编码</span></div><div class="line">data_all[<span class="string">'Title'</span>].replace([<span class="string">'Mr'</span>,<span class="string">'Miss'</span>,<span class="string">'Mrs'</span>,<span class="string">'Master'</span>,<span class="string">'Rev'</span>,<span class="string">'Dr'</span>],[<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">4</span>],inplace=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 家族属性特征提取</span></div><div class="line"></div><div class="line"><span class="comment"># 合并Parch属性和SibSp属性，添加Family_size属性</span></div><div class="line">data_all[<span class="string">'Family_size'</span>]=data_all[<span class="string">'Parch'</span>]+data_all[<span class="string">'SibSp'</span>]+<span class="number">1</span></div><div class="line"></div><div class="line">g = sns.factorplot(x=<span class="string">"Parch"</span>, y=<span class="string">"Survived"</span>,  data=data_all.iloc[:train_len,:],</div><div class="line">                   size=<span class="number">6</span>, kind=<span class="string">"bar"</span>, palette=<span class="string">"muted"</span>)</div><div class="line">g.despine(left=<span class="keyword">True</span>)</div><div class="line">g = g.set_ylabels(<span class="string">"survival probability"</span>)</div><div class="line"></div><div class="line">g = sns.factorplot(x=<span class="string">"SibSp"</span>, y=<span class="string">"Survived"</span>,  data=data_all.iloc[:train_len,:],</div><div class="line">                   size=<span class="number">6</span>, kind=<span class="string">"bar"</span>, palette=<span class="string">"muted"</span>)</div><div class="line">g.despine(left=<span class="keyword">True</span>)</div><div class="line">g = g.set_ylabels(<span class="string">"survival probability"</span>)</div><div class="line"></div><div class="line"></div><div class="line">g = sns.factorplot(x=<span class="string">"Family_size"</span>, y=<span class="string">"Survived"</span>,  data=data_all.iloc[:train_len,:],</div><div class="line">                   size=<span class="number">6</span>, kind=<span class="string">"bar"</span>, palette=<span class="string">"muted"</span>)</div><div class="line">g.despine(left=<span class="keyword">True</span>)</div><div class="line">g = g.set_ylabels(<span class="string">"survival probability"</span>)</div><div class="line"></div><div class="line">g = sns.countplot(x=<span class="string">"Family_size"</span>, hue=<span class="string">"Survived"</span>, data=data_all.iloc[:train_len,:])</div></pre></td></tr></table></figure>
+<p><img src="output_12_0.png" alt="png"></p>
+<p><img src="output_12_1.png" alt="png"></p>
+<p><img src="output_12_2.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 家族属性深挖</span></div><div class="line">data_all[<span class="string">'Last_Name'</span>] = data_all[<span class="string">'Name'</span>].apply(<span class="keyword">lambda</span> x: str.split(x, <span class="string">","</span>)[<span class="number">0</span>])</div><div class="line"></div><div class="line">DEFAULT_SURVIVAL_VALUE = <span class="number">0.5</span></div><div class="line">data_all[<span class="string">'Family_Survival'</span>] = DEFAULT_SURVIVAL_VALUE</div><div class="line"></div><div class="line"><span class="keyword">for</span> grp, grp_df <span class="keyword">in</span> data_all[[<span class="string">'Survived'</span>, <span class="string">'Name'</span>, <span class="string">'Last_Name'</span>, <span class="string">'Fare'</span>, <span class="string">'Ticket'</span>, <span class="string">'PassengerId'</span>,</div><div class="line">                                <span class="string">'SibSp'</span>, <span class="string">'Parch'</span>, <span class="string">'Age'</span>, <span class="string">'Cabin'</span>]].groupby([<span class="string">'Last_Name'</span>, <span class="string">'Fare'</span>]):</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (len(grp_df) != <span class="number">1</span>):</div><div class="line">        <span class="comment"># A Family group is found.</span></div><div class="line">        <span class="keyword">for</span> ind, row <span class="keyword">in</span> grp_df.iterrows():</div><div class="line">            smax = grp_df.drop(ind)[<span class="string">'Survived'</span>].max()</div><div class="line">            smin = grp_df.drop(ind)[<span class="string">'Survived'</span>].min()</div><div class="line">            passID = row[<span class="string">'PassengerId'</span>]</div><div class="line">            <span class="keyword">if</span> (smax == <span class="number">1.0</span>):</div><div class="line">                data_all.loc[data_all[<span class="string">'PassengerId'</span>] == passID, <span class="string">'Family_Survival'</span>] = <span class="number">1</span></div><div class="line">            <span class="keyword">elif</span> (smin == <span class="number">0.0</span>):</div><div class="line">                data_all.loc[data_all[<span class="string">'PassengerId'</span>] == passID, <span class="string">'Family_Survival'</span>] = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> _, grp_df <span class="keyword">in</span> data_all.groupby(<span class="string">'Ticket'</span>):</div><div class="line">    <span class="keyword">if</span> (len(grp_df) != <span class="number">1</span>):</div><div class="line">        <span class="keyword">for</span> ind, row <span class="keyword">in</span> grp_df.iterrows():</div><div class="line">            <span class="keyword">if</span> (row[<span class="string">'Family_Survival'</span>] == <span class="number">0</span>) | (row[<span class="string">'Family_Survival'</span>] == <span class="number">0.5</span>):</div><div class="line">                smax = grp_df.drop(ind)[<span class="string">'Survived'</span>].max()</div><div class="line">                smin = grp_df.drop(ind)[<span class="string">'Survived'</span>].min()</div><div class="line">                passID = row[<span class="string">'PassengerId'</span>]</div><div class="line">                <span class="keyword">if</span> (smax == <span class="number">1.0</span>):</div><div class="line">                    data_all.loc[data_all[<span class="string">'PassengerId'</span>] == passID, <span class="string">'Family_Survival'</span>] = <span class="number">1</span></div><div class="line">                <span class="keyword">elif</span> (smin == <span class="number">0.0</span>):</div><div class="line">                    data_all.loc[data_all[<span class="string">'PassengerId'</span>] == passID, <span class="string">'Family_Survival'</span>] = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="comment"># 查看Family_Survival分布</span></div><div class="line">g = sns.countplot(x=<span class="string">"Family_Survival"</span>, hue=<span class="string">"Survived"</span>, data=data_all.iloc[:train_len,:])</div></pre></td></tr></table></figure>
+<p><img src="output_13_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 将连续数值分成bins</span></div><div class="line"><span class="comment"># 处理Fare</span></div><div class="line"><span class="comment"># 显示Fare的分布 </span></div><div class="line">g = sns.distplot(data_all[<span class="string">"Fare"</span>], color=<span class="string">"m"</span>, label=<span class="string">"Skewness : %.2f"</span>%(data_all[<span class="string">"Fare"</span>].skew()))</div><div class="line">g = g.legend(loc=<span class="string">"best"</span>)</div></pre></td></tr></table></figure>
+<p><img src="output_14_0.png" alt="png"></p>
+<p>从上面可以看出Fare的分布比较不均匀，对其通过log尺度变换进行处理。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Apply log to Fare to reduce skewness distribution</span></div><div class="line">data_all[<span class="string">"Fare"</span>] = data_all[<span class="string">"Fare"</span>].map(<span class="keyword">lambda</span> i: np.log(i) <span class="keyword">if</span> i &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span>)</div><div class="line">g = sns.distplot(data_all[<span class="string">"Fare"</span>], color=<span class="string">"b"</span>, label=<span class="string">"Skewness : %.2f"</span>%(data_all[<span class="string">"Fare"</span>].skew()))</div><div class="line">g = g.legend(loc=<span class="string">"best"</span>)</div></pre></td></tr></table></figure>
+<p><img src="output_16_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 现在对Fare分成bins</span></div><div class="line"><span class="comment"># 这里选择qcut方法，对频率进行等距分箱</span></div><div class="line">n_bins=<span class="number">5</span></div><div class="line">data_all[<span class="string">'FareBin'</span>] = pd.qcut(data_all[<span class="string">'Fare'</span>], n_bins)</div><div class="line">label = LabelEncoder()</div><div class="line">data_all[<span class="string">'FareBin_Code'</span>] = label.fit_transform(data_all[<span class="string">'FareBin'</span>])</div><div class="line"></div><div class="line">g = sns.countplot(x=<span class="string">"FareBin_Code"</span>,hue=<span class="string">'Survived'</span>,data=data_all.iloc[:train_len,:])</div></pre></td></tr></table></figure>
+<p><img src="output_17_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 同样对年龄进行处理</span></div><div class="line">g = sns.distplot(data_all[<span class="string">"Age"</span>], color=<span class="string">"m"</span>, label=<span class="string">"Skewness : %.2f"</span>%(data_all[<span class="string">"Age"</span>].skew()))</div><div class="line">g = g.legend(loc=<span class="string">"best"</span>)</div></pre></td></tr></table></figure>
+<p><img src="output_18_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 年龄的分布就比较均匀，不需要做任何预处理</span></div><div class="line"><span class="comment"># 这里用cut方法，对年龄选择等距分箱，分成n_bins_age个年龄段</span></div><div class="line">n_bins_age=<span class="number">8</span></div><div class="line">data_all[<span class="string">'AgeBin'</span>] = pd.cut(data_all[<span class="string">'Age'</span>], n_bins_age)</div><div class="line">label = LabelEncoder()</div><div class="line">data_all[<span class="string">'AgeBin_Code'</span>] = label.fit_transform(data_all[<span class="string">'AgeBin'</span>])</div><div class="line"></div><div class="line">g = sns.countplot(x=<span class="string">"AgeBin"</span>,hue=<span class="string">'Survived'</span>,data=data_all.iloc[:train_len,:])</div></pre></td></tr></table></figure>
+<p><img src="output_19_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 处理Embarked属性</span></div><div class="line">g = sns.countplot(x=<span class="string">"Embarked"</span>,data=data_all)</div></pre></td></tr></table></figure>
+<p><img src="output_20_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">g = sns.countplot(x=<span class="string">"Embarked"</span>,hue=<span class="string">'Survived'</span>,data=data_all.iloc[:train_len,:])</div></pre></td></tr></table></figure>
+<p><img src="output_21_0.png" alt="png"></p>
+<p>对Embarked属性进行dummy操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data_all=pd.get_dummies(data_all,columns=[<span class="string">'Embarked'</span>],prefix=<span class="string">'Embarked'</span>)</div></pre></td></tr></table></figure>
+<p>剩下Ticket属性看起来比较复杂，先不做任何提取。</p>
+<p>下面再继续看目前的data_all的信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data_all.info()</div></pre></td></tr></table></figure>
+<pre><code>&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;
+RangeIndex: 1309 entries, 0 to 1308
+Data columns (total 23 columns):
+Age                1309 non-null float64
+Cabin              295 non-null object
+Fare               1309 non-null float64
+Name               1309 non-null object
+Parch              1309 non-null int64
+PassengerId        1309 non-null int64
+Pclass             1309 non-null int64
+Sex                1309 non-null int64
+SibSp              1309 non-null int64
+Survived           891 non-null float64
+Ticket             1309 non-null object
+Title              1309 non-null int64
+Family_size        1309 non-null int64
+Last_Name          1309 non-null object
+Family_Survival    1309 non-null float64
+FareBin            1309 non-null category
+FareBin_Code       1309 non-null int64
+AgeBin             1309 non-null category
+AgeBin_Code        1309 non-null int64
+Embarked_C         1309 non-null uint8
+Embarked_None      1309 non-null uint8
+Embarked_Q         1309 non-null uint8
+Embarked_S         1309 non-null uint8
+dtypes: category(2), float64(4), int64(9), object(4), uint8(4)
+memory usage: 181.8+ KB
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 选用部分特征做为最终特征</span></div><div class="line">data_all=data_all[[<span class="string">'PassengerId'</span>,<span class="string">'Pclass'</span>,<span class="string">'Sex'</span>,<span class="string">'Title'</span>,<span class="string">'Family_size'</span>,<span class="string">'Family_Survival'</span>,<span class="string">'FareBin_Code'</span>,<span class="string">'AgeBin_Code'</span>,</div><div class="line">                  <span class="string">'Embarked_C'</span>,<span class="string">'Embarked_None'</span>,<span class="string">'Embarked_Q'</span>,<span class="string">'Embarked_S'</span>,<span class="string">'Survived'</span>]]</div><div class="line"></div><div class="line">g = sns.heatmap(data_all.iloc[:train_len,:].drop([<span class="string">'PassengerId'</span>],axis=<span class="number">1</span>).corr(),cmap=<span class="string">"BrBG"</span>,annot=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p><img src="output_27_0.png" alt="png"></p>
+<h1 id="Scale以及模型选择"><a href="#Scale以及模型选择" class="headerlink" title="Scale以及模型选择"></a>Scale以及模型选择</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">X_train_original=data_all.iloc[:train_len,:].drop([<span class="string">'PassengerId'</span>,<span class="string">'Survived'</span>],axis=<span class="number">1</span>)</div><div class="line">Y_train=data_all.iloc[:train_len,:][<span class="string">'Survived'</span>].astype(int)</div><div class="line">test_original=data_all.iloc[train_len:,:].drop([<span class="string">'PassengerId'</span>,<span class="string">'Survived'</span>],axis=<span class="number">1</span>)</div><div class="line">testID=data_all.iloc[train_len:,:][<span class="string">'PassengerId'</span>]</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># scalar</span></div><div class="line">scaler=MinMaxScaler()</div><div class="line">X_train= scaler.fit_transform(X_train_original)</div><div class="line">test= scaler.transform(test_original)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">kfold = StratifiedKFold(n_splits=<span class="number">5</span>)</div><div class="line"></div><div class="line"><span class="comment"># Modeling step Test differents algorithms</span></div><div class="line">random_state = <span class="number">2</span></div><div class="line">classifiers = []</div><div class="line"></div><div class="line"></div><div class="line">classifiers.append(SVC(random_state=random_state))</div><div class="line">classifiers.append(DecisionTreeClassifier(random_state=random_state))</div><div class="line">classifiers.append(AdaBoostClassifier(DecisionTreeClassifier(random_state=random_state), random_state=random_state,</div><div class="line">                                          learning_rate=<span class="number">0.1</span>))</div><div class="line">classifiers.append(RandomForestClassifier(random_state=random_state))</div><div class="line">classifiers.append(ExtraTreesClassifier(random_state=random_state))</div><div class="line">classifiers.append(GradientBoostingClassifier(random_state=random_state))</div><div class="line">classifiers.append(MLPClassifier(random_state=random_state))</div><div class="line">classifiers.append(KNeighborsClassifier())</div><div class="line">classifiers.append(LogisticRegression(random_state=random_state))</div><div class="line">classifiers.append(LinearDiscriminantAnalysis())</div><div class="line"></div><div class="line">cv_results = []</div><div class="line"><span class="keyword">for</span> classifier <span class="keyword">in</span> classifiers:</div><div class="line">    cv_results.append(cross_val_score(classifier, X_train, y=Y_train, scoring=<span class="string">"accuracy"</span>, cv=kfold))</div><div class="line"></div><div class="line">cv_means = []</div><div class="line">cv_std = []</div><div class="line"><span class="keyword">for</span> cv_result <span class="keyword">in</span> cv_results:</div><div class="line">    cv_means.append(cv_result.mean())</div><div class="line">    cv_std.append(cv_result.std())</div><div class="line"></div><div class="line">cv_res = pd.DataFrame(</div><div class="line">        &#123;<span class="string">"CrossValMeans"</span>: cv_means, <span class="string">"CrossValerrors"</span>: cv_std, <span class="string">"Algorithm"</span>: [<span class="string">"SVC"</span>, <span class="string">"DecisionTree"</span>, <span class="string">"AdaBoost"</span>,<span class="string">"RandomForest"</span>, <span class="string">"ExtraTrees"</span>,<span class="string">"GradientBoosting"</span>,<span class="string">"MultipleLayerPerceptron"</span>, <span class="string">"KNeighboors"</span>,<span class="string">"LogisticRegression"</span>,<span class="string">"LinearDiscriminantAnalysis"</span>]&#125;)</div><div class="line"></div><div class="line">g = sns.barplot(<span class="string">"CrossValMeans"</span>, <span class="string">"Algorithm"</span>, data=cv_res, palette=<span class="string">"Set3"</span>, orient=<span class="string">"h"</span>, **&#123;<span class="string">'xerr'</span>: cv_std&#125;)</div><div class="line">g.set_xlabel(<span class="string">"Mean Accuracy"</span>)</div><div class="line">g = g.set_title(<span class="string">"Cross validation scores"</span>)</div></pre></td></tr></table></figure>
+<p><img src="output_31_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Adaboost</span></div><div class="line">DTC = DecisionTreeClassifier()</div><div class="line"></div><div class="line">adaDTC = AdaBoostClassifier(DTC, random_state=<span class="number">7</span>)</div><div class="line"></div><div class="line">ada_param_grid = &#123;<span class="string">"base_estimator__criterion"</span>: [<span class="string">"entropy"</span>],</div><div class="line">                      <span class="string">"base_estimator__splitter"</span>: [ <span class="string">"random"</span>],</div><div class="line">                      <span class="string">"algorithm"</span>: [<span class="string">"SAMME"</span>],</div><div class="line">                      <span class="string">"n_estimators"</span>: [<span class="number">100</span>],</div><div class="line">                      <span class="string">"learning_rate"</span>: [<span class="number">0.0001</span>]&#125;</div><div class="line"></div><div class="line">gsadaDTC = GridSearchCV(adaDTC, param_grid=ada_param_grid, cv=kfold, scoring=<span class="string">"accuracy"</span>, n_jobs=<span class="number">4</span>, verbose=<span class="number">1</span>)</div><div class="line"></div><div class="line">gsadaDTC.fit(X_train, Y_train)</div><div class="line"></div><div class="line">ada_best = gsadaDTC.best_estimator_</div><div class="line">print(<span class="string">'AdaBoost:'</span>)</div><div class="line">print(gsadaDTC.best_params_)</div><div class="line">print(gsadaDTC.best_score_)</div></pre></td></tr></table></figure>
+<pre><code>Fitting 5 folds for each of 1 candidates, totalling 5 fits
+
+
+[Parallel(n_jobs=4)]: Done   5 out of   5 | elapsed:    3.0s finished
+
+
+AdaBoost:
+{&apos;algorithm&apos;: &apos;SAMME&apos;, &apos;base_estimator__criterion&apos;: &apos;entropy&apos;, &apos;base_estimator__splitter&apos;: &apos;random&apos;, &apos;learning_rate&apos;: 0.0001, &apos;n_estimators&apos;: 100}
+0.8294051627384961
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># ExtraTrees</span></div><div class="line">ExtC = ExtraTreesClassifier()</div><div class="line"></div><div class="line"><span class="comment">## Search grid for optimal parameters</span></div><div class="line">ex_param_grid = &#123;<span class="string">"max_depth"</span>: [<span class="keyword">None</span>],</div><div class="line">                     <span class="string">"max_features"</span>: [<span class="number">0.2</span>,<span class="number">0.3</span>],</div><div class="line">                     <span class="string">"min_samples_split"</span>: [<span class="number">3</span>,<span class="number">5</span>],</div><div class="line">                     <span class="string">"min_samples_leaf"</span>: [<span class="number">5</span>,],</div><div class="line">                     <span class="string">"bootstrap"</span>: [<span class="keyword">False</span>],</div><div class="line">                     <span class="string">"n_estimators"</span>: [<span class="number">500</span>],</div><div class="line">                     <span class="string">"criterion"</span>: [<span class="string">"gini"</span>]&#125;</div><div class="line"></div><div class="line">gsExtC = GridSearchCV(ExtC, param_grid=ex_param_grid, cv=kfold, scoring=<span class="string">"accuracy"</span>, n_jobs=<span class="number">4</span>, verbose=<span class="number">1</span>)</div><div class="line"></div><div class="line">gsExtC.fit(X_train, Y_train)</div><div class="line"></div><div class="line">print(<span class="string">'Extra Tree:'</span>)</div><div class="line">ExtC_best = gsExtC.best_estimator_</div><div class="line">print(gsExtC.best_params_)</div><div class="line"><span class="comment"># Best score</span></div><div class="line">print(gsExtC.best_score_)</div></pre></td></tr></table></figure>
+<pre><code>Fitting 5 folds for each of 4 candidates, totalling 20 fits
+
+
+[Parallel(n_jobs=4)]: Done  20 out of  20 | elapsed:    8.1s finished
+
+
+Extra Tree:
+{&apos;bootstrap&apos;: False, &apos;criterion&apos;: &apos;gini&apos;, &apos;max_depth&apos;: None, &apos;max_features&apos;: 0.3, &apos;min_samples_leaf&apos;: 5, &apos;min_samples_split&apos;: 5, &apos;n_estimators&apos;: 500}
+0.8462401795735129
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#xgboost</span></div><div class="line">XGBC = xgboost.sklearn.XGBClassifier()</div><div class="line">xgbc_param_grid = &#123;</div><div class="line">                     <span class="string">"n_estimators"</span>: [<span class="number">500</span>],</div><div class="line">                    <span class="string">'learning_rate'</span>:[<span class="number">0.001</span>],</div><div class="line">                    <span class="string">'max_depth'</span>:[<span class="number">3</span>],</div><div class="line">                    <span class="string">'booster'</span>:[<span class="string">'gbtree'</span>]&#125;</div><div class="line"></div><div class="line">gsXGBC= GridSearchCV(XGBC, param_grid=xgbc_param_grid, cv=kfold, scoring=<span class="string">"accuracy"</span>, n_jobs=<span class="number">4</span>, verbose=<span class="number">1</span>)</div><div class="line">gsXGBC.fit(X_train, Y_train)</div><div class="line">print(<span class="string">'xgboost:'</span>)</div><div class="line">XGBC_best = gsXGBC.best_estimator_</div><div class="line">print(gsXGBC.best_params_)</div><div class="line">print(gsXGBC.best_score_)</div></pre></td></tr></table></figure>
+<pre><code>Fitting 5 folds for each of 1 candidates, totalling 5 fits
+
+
+[Parallel(n_jobs=4)]: Done   5 out of   5 | elapsed:    2.5s finished
+
+
+xgboost:
+{&apos;booster&apos;: &apos;gbtree&apos;, &apos;learning_rate&apos;: 0.001, &apos;max_depth&apos;: 3, &apos;n_estimators&apos;: 500}
+0.8518518518518519
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">LR=LogisticRegression()</div><div class="line">lr_param_grid = &#123;</div><div class="line">       <span class="string">'penalty'</span>:[<span class="string">'l1'</span>],</div><div class="line">        <span class="string">'tol'</span>:[<span class="number">1e-4</span>],</div><div class="line">        <span class="string">'C'</span>:[<span class="number">10</span>]&#125;</div><div class="line">gsLR = GridSearchCV(LR, param_grid=lr_param_grid, cv=kfold, scoring=<span class="string">"accuracy"</span>, n_jobs=<span class="number">4</span>, verbose=<span class="number">1</span>)</div><div class="line">gsLR.fit(X_train, Y_train)</div><div class="line">print(<span class="string">'Logistic Regression:'</span>)</div><div class="line">LR_best = gsLR.best_estimator_</div><div class="line">print(gsLR.best_params_)</div><div class="line">print(gsLR.best_score_)</div></pre></td></tr></table></figure>
+<pre><code>Fitting 5 folds for each of 1 candidates, totalling 5 fits
+Logistic Regression:
+{&apos;C&apos;: 10, &apos;penalty&apos;: &apos;l1&apos;, &apos;tol&apos;: 0.0001}
+0.8361391694725028
+
+
+[Parallel(n_jobs=4)]: Done   5 out of   5 | elapsed:    2.3s finished
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># RFC Parameters tunning</span></div><div class="line">RFC = RandomForestClassifier()</div><div class="line"></div><div class="line"><span class="comment">## Search grid for optimal parameters</span></div><div class="line">rf_param_grid = &#123;<span class="string">"max_depth"</span>: [<span class="keyword">None</span>],</div><div class="line">                <span class="string">"max_features"</span>: [<span class="string">'auto'</span>,<span class="number">0.3</span>],</div><div class="line">                <span class="string">"min_samples_split"</span>: [<span class="number">5</span>],</div><div class="line">                <span class="string">"min_samples_leaf"</span>: [<span class="number">6</span>],</div><div class="line">                <span class="string">"bootstrap"</span>: [<span class="keyword">False</span>],</div><div class="line">                <span class="string">"n_estimators"</span>: [<span class="number">150</span>],</div><div class="line">                <span class="string">"criterion"</span>: [<span class="string">"gini"</span>]&#125;</div><div class="line"></div><div class="line">gsRFC = GridSearchCV(RFC, param_grid=rf_param_grid, cv=kfold, scoring=<span class="string">"accuracy"</span>, n_jobs=<span class="number">4</span>, verbose=<span class="number">1</span>)</div><div class="line">gsRFC.fit(X_train, Y_train)</div><div class="line">print(<span class="string">'Random Forest:'</span>)</div><div class="line">RFC_best = gsRFC.best_estimator_</div><div class="line">print(gsRFC.best_params_)</div><div class="line"><span class="comment"># Best score</span></div><div class="line">print(gsRFC.best_score_)</div></pre></td></tr></table></figure>
+<pre><code>Fitting 5 folds for each of 2 candidates, totalling 10 fits
+
+
+[Parallel(n_jobs=4)]: Done  10 out of  10 | elapsed:    3.1s finished
+
+
+Random Forest:
+{&apos;bootstrap&apos;: False, &apos;criterion&apos;: &apos;gini&apos;, &apos;max_depth&apos;: None, &apos;max_features&apos;: 0.3, &apos;min_samples_leaf&apos;: 6, &apos;min_samples_split&apos;: 5, &apos;n_estimators&apos;: 150}
+0.8552188552188552
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Gradient boosting tunning</span></div><div class="line">GBC = GradientBoostingClassifier()</div><div class="line">gb_param_grid = &#123;<span class="string">'loss'</span>: [<span class="string">"deviance"</span>],</div><div class="line">                     <span class="string">'n_estimators'</span>: [<span class="number">200</span>],</div><div class="line">                     <span class="string">'learning_rate'</span>: [<span class="number">0.01</span>],</div><div class="line">                     <span class="string">'max_depth'</span>: [<span class="number">4</span>],</div><div class="line">                     <span class="string">'min_samples_leaf'</span>: [<span class="number">100</span>],</div><div class="line">                     <span class="string">"max_features"</span>: [<span class="string">'auto'</span>]</div><div class="line">                     &#125;</div><div class="line"></div><div class="line">gsGBC = GridSearchCV(GBC, param_grid=gb_param_grid, cv=kfold, scoring=<span class="string">"accuracy"</span>, n_jobs=<span class="number">4</span>, verbose=<span class="number">1</span>)</div><div class="line">gsGBC.fit(X_train, Y_train)</div><div class="line">print(<span class="string">'Gradient Boost:'</span>)</div><div class="line">print(gsGBC.best_params_)</div><div class="line">GBC_best = gsGBC.best_estimator_</div><div class="line">print(gsGBC.best_score_)</div></pre></td></tr></table></figure>
+<pre><code>Fitting 5 folds for each of 1 candidates, totalling 5 fits
+
+
+[Parallel(n_jobs=4)]: Done   5 out of   5 | elapsed:    2.5s finished
+
+
+Gradient Boost:
+{&apos;learning_rate&apos;: 0.01, &apos;loss&apos;: &apos;deviance&apos;, &apos;max_depth&apos;: 4, &apos;max_features&apos;: &apos;auto&apos;, &apos;min_samples_leaf&apos;: 100, &apos;n_estimators&apos;: 200}
+0.8484848484848485
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">### SVC classifier</span></div><div class="line">SVMC = SVC(probability=<span class="keyword">True</span>)</div><div class="line">svc_param_grid = &#123;<span class="string">'kernel'</span>: [<span class="string">'rbf'</span>],</div><div class="line">                      <span class="string">'gamma'</span>: [ <span class="number">1</span>],</div><div class="line">                      <span class="string">'C'</span>: [<span class="number">0.1</span>]&#125;</div><div class="line">gsSVMC = GridSearchCV(SVMC, param_grid=svc_param_grid, cv=kfold, scoring=<span class="string">"accuracy"</span>, n_jobs=<span class="number">4</span>, verbose=<span class="number">1</span>)</div><div class="line">gsSVMC.fit(X_train, Y_train)</div><div class="line">print(<span class="string">'SVC'</span>)</div><div class="line">print(gsSVMC.best_params_)</div><div class="line">SVMC_best = gsSVMC.best_estimator_</div><div class="line"><span class="comment"># Best score</span></div><div class="line">print(gsSVMC.best_score_)</div></pre></td></tr></table></figure>
+<pre><code>Fitting 5 folds for each of 1 candidates, totalling 5 fits
+
+
+[Parallel(n_jobs=4)]: Done   5 out of   5 | elapsed:    2.5s finished
+
+
+SVC
+{&apos;C&apos;: 0.1, &apos;gamma&apos;: 1, &apos;kernel&apos;: &apos;rbf&apos;}
+0.8305274971941639
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#Voting</span></div><div class="line">votingC = VotingClassifier(estimators=[(<span class="string">'rfc'</span>, RFC_best), (<span class="string">'extc'</span>, ExtC_best),</div><div class="line">                                           (<span class="string">'svc'</span>, SVMC_best), (<span class="string">'adac'</span>, ada_best), (<span class="string">'gbc'</span>, GBC_best),</div><div class="line">                                           (<span class="string">'xgbc'</span>,XGBC_best),(<span class="string">'lr'</span>,LR_best)], voting=<span class="string">'soft'</span>,</div><div class="line">                               n_jobs=<span class="number">4</span>)</div><div class="line"></div><div class="line">votingC = votingC.fit(X_train, Y_train)</div><div class="line">voting_score=cross_val_score(votingC, X_train, y=Y_train, scoring=<span class="string">"accuracy"</span>, cv=kfold)</div><div class="line">print(<span class="string">'voting:'</span>,voting_score)</div></pre></td></tr></table></figure>
+<pre><code>voting: [0.86592179 0.84357542 0.85393258 0.81460674 0.84745763]
+
+
+D:\Anaconda\lib\site-packages\sklearn\preprocessing\label.py:151: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size &gt; 0` to check that an array is not empty.
+  if diff:
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_learning_curve</span><span class="params">(estimator, title, X, y, ylim=None, cv=None,n_jobs=<span class="number">-1</span>, train_sizes=np.linspace<span class="params">(<span class="number">.1</span>, <span class="number">1.0</span>, <span class="number">5</span>)</span>)</span>:</span></div><div class="line">        <span class="string">"""Generate a simple plot of the test and training learning curve"""</span></div><div class="line">        plt.figure()</div><div class="line">        plt.title(title)</div><div class="line">        <span class="keyword">if</span> ylim <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            plt.ylim(*ylim)</div><div class="line">        plt.xlabel(<span class="string">"Training examples"</span>)</div><div class="line">        plt.ylabel(<span class="string">"Score"</span>)</div><div class="line">        train_sizes, train_scores, test_scores = learning_curve(</div><div class="line">            estimator, X, y, cv=cv, n_jobs=n_jobs, train_sizes=train_sizes)</div><div class="line">        train_scores_mean = np.mean(train_scores, axis=<span class="number">1</span>)</div><div class="line">        train_scores_std = np.std(train_scores, axis=<span class="number">1</span>)</div><div class="line">        test_scores_mean = np.mean(test_scores, axis=<span class="number">1</span>)</div><div class="line">        test_scores_std = np.std(test_scores, axis=<span class="number">1</span>)</div><div class="line">        plt.grid()</div><div class="line"></div><div class="line">        plt.fill_between(train_sizes, train_scores_mean - train_scores_std,</div><div class="line">                         train_scores_mean + train_scores_std, alpha=<span class="number">0.1</span>,</div><div class="line">                         color=<span class="string">"r"</span>)</div><div class="line">        plt.fill_between(train_sizes, test_scores_mean - test_scores_std,</div><div class="line">                         test_scores_mean + test_scores_std, alpha=<span class="number">0.1</span>, color=<span class="string">"g"</span>)</div><div class="line">        plt.plot(train_sizes, train_scores_mean, <span class="string">'o-'</span>, color=<span class="string">"r"</span>,</div><div class="line">                 label=<span class="string">"Training score"</span>)</div><div class="line">        plt.plot(train_sizes, test_scores_mean, <span class="string">'o-'</span>, color=<span class="string">"g"</span>,</div><div class="line">                 label=<span class="string">"Cross-validation score"</span>)</div><div class="line">        plt.legend(loc=<span class="string">"best"</span>)</div><div class="line">        <span class="keyword">return</span> plt</div><div class="line"></div><div class="line">g = plot_learning_curve(gsRFC.best_estimator_, <span class="string">"RF mearning curves"</span>, X_train, Y_train, cv=kfold)</div><div class="line">g = plot_learning_curve(gsExtC.best_estimator_, <span class="string">"ExtraTrees learning curves"</span>, X_train, Y_train, cv=kfold)</div><div class="line">g = plot_learning_curve(gsSVMC.best_estimator_, <span class="string">"SVC learning curves"</span>, X_train, Y_train, cv=kfold)</div><div class="line">g = plot_learning_curve(gsadaDTC.best_estimator_, <span class="string">"AdaBoost learning curves"</span>, X_train, Y_train, cv=kfold)</div><div class="line">g = plot_learning_curve(gsGBC.best_estimator_, <span class="string">"GradientBoosting learning curves"</span>, X_train, Y_train, cv=kfold)</div><div class="line">g = plot_learning_curve(gsXGBC.best_estimator_,<span class="string">"xgboost learning curves"</span>,X_train,Y_train,cv=kfold)</div><div class="line">g = plot_learning_curve(gsLR.best_estimator_,<span class="string">"Logistic Regression learning curves"</span>,X_train,Y_train,cv=kfold)</div></pre></td></tr></table></figure>
+<p><img src="output_40_0.png" alt="png"></p>
+<p><img src="output_40_1.png" alt="png"></p>
+<p><img src="output_40_2.png" alt="png"></p>
+<p><img src="output_40_3.png" alt="png"></p>
+<p><img src="output_40_4.png" alt="png"></p>
+<p><img src="output_40_5.png" alt="png"></p>
+<p><img src="output_40_6.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">nrows =<span class="number">3</span></div><div class="line">ncols=<span class="number">2</span></div><div class="line">fig, axes = plt.subplots(nrows=nrows, ncols=ncols, sharex=<span class="string">"all"</span>, figsize=(<span class="number">15</span>, <span class="number">15</span>))</div><div class="line">names_classifiers = [(<span class="string">'rfc'</span>, RFC_best), (<span class="string">'extc'</span>, ExtC_best),</div><div class="line">                        (<span class="string">'adac'</span>, ada_best), (<span class="string">'gbc'</span>, GBC_best),</div><div class="line">                        (<span class="string">'xgbc'</span>,XGBC_best)]</div><div class="line">nclassifier = <span class="number">0</span></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> range(nrows):</div><div class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> range(ncols):</div><div class="line">        <span class="keyword">if</span> nclassifier&gt;=<span class="number">5</span>:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        name = names_classifiers[nclassifier][<span class="number">0</span>]</div><div class="line">        classifier = names_classifiers[nclassifier][<span class="number">1</span>]</div><div class="line">        indices = np.argsort(classifier.feature_importances_)[::<span class="number">-1</span>][:<span class="number">40</span>]</div><div class="line">        g = sns.barplot(y=X_train_original.columns[indices][:<span class="number">40</span>], x=classifier.feature_importances_[indices][:<span class="number">40</span>],</div><div class="line">                            orient=<span class="string">'h'</span>, ax=axes[row][col])</div><div class="line">        g.set_xlabel(<span class="string">"Relative importance"</span>, fontsize=<span class="number">12</span>)</div><div class="line">        g.set_ylabel(<span class="string">"Features"</span>, fontsize=<span class="number">12</span>)</div><div class="line">        g.tick_params(labelsize=<span class="number">9</span>)</div><div class="line">        g.set_title(name + <span class="string">" feature importance"</span>)</div><div class="line">        nclassifier += <span class="number">1</span></div><div class="line"></div><div class="line"></div><div class="line">test_Survived_RFC = pd.Series(RFC_best.predict(test), name=<span class="string">"RFC"</span>)</div><div class="line">test_Survived_ExtC = pd.Series(ExtC_best.predict(test), name=<span class="string">"ExtC"</span>)</div><div class="line">test_Survived_SVMC = pd.Series(SVMC_best.predict(test), name=<span class="string">"SVC"</span>)</div><div class="line">test_Survived_AdaC = pd.Series(ada_best.predict(test), name=<span class="string">"Ada"</span>)</div><div class="line">test_Survived_GBC = pd.Series(GBC_best.predict(test), name=<span class="string">"GBC"</span>)</div><div class="line">test_Survived_XGBC=pd.Series(XGBC_best.predict(test),name=<span class="string">'XGBC'</span>)</div><div class="line">test_Survived_LR=pd.Series(LR_best.predict(test),name=<span class="string">'LR'</span>)</div><div class="line">test_Survived_Voting=pd.Series(votingC.predict(test),name=<span class="string">'Voting'</span>)</div><div class="line">    <span class="comment"># Concatenate all classifier results</span></div><div class="line">ensemble_results = pd.concat(</div><div class="line">        [test_Survived_RFC, test_Survived_ExtC, test_Survived_AdaC, test_Survived_GBC, test_Survived_SVMC,</div><div class="line">         test_Survived_XGBC,test_Survived_LR,test_Survived_Voting], axis=<span class="number">1</span>)</div><div class="line"></div><div class="line">g = sns.heatmap(ensemble_results.corr(), annot=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p><img src="output_41_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">test_Survived = pd.Series(votingC.predict(test), name=<span class="string">"Survived"</span>)</div><div class="line">test_Survived_XGBC_submition=pd.Series(XGBC_best.predict(test),name=<span class="string">'Survived'</span>)</div><div class="line">xgbc_results=pd.concat([IDtest,test_Survived_XGBC_submition],axis=<span class="number">1</span>)</div><div class="line">xgbc_results.to_csv(<span class="string">'xgbc.csv'</span>,index=<span class="keyword">False</span>)</div><div class="line">print(IDtest.shape)</div><div class="line">print(test_Survived.shape)</div><div class="line">results = pd.concat([IDtest, test_Survived], axis=<span class="number">1</span>)</div><div class="line">results.to_csv(<span class="string">"ensemble_python_voting.csv"</span>, index=<span class="keyword">False</span>)</div><div class="line">results.head()</div></pre></td></tr></table></figure>
+<pre><code>(418,)
+(418,)
+</code></pre><div><br><style scoped><br>    .dataframe tbody tr th:only-of-type {<br>        vertical-align: middle;<br>    }<br><br>    .dataframe tbody tr th {<br>        vertical-align: top;<br>    }<br><br>    .dataframe thead th {<br>        text-align: right;<br>    }<br></style><br><table border="1" class="dataframe"><br>  <thead><br>    <tr style="text-align: right;"><br>      <th></th><br>      <th>PassengerId</th><br>      <th>Survived</th><br>    </tr><br>  </thead><br>  <tbody><br>    <tr><br>      <th>0</th><br>      <td>892</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>1</th><br>      <td>893</td><br>      <td>1</td><br>    </tr><br>    <tr><br>      <th>2</th><br>      <td>894</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>3</th><br>      <td>895</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>4</th><br>      <td>896</td><br>      <td>1</td><br>    </tr><br>  </tbody><br></table><br></div>
+
+<p>最后提交的voting方法的结果得到了0.81339的分数。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、(yassineghouzam’s kernel)[<a href="https://www.kaggle.com/yassineghouzam/titanic-top-4-with-ensemble-modeling" target="_blank" rel="external">https://www.kaggle.com/yassineghouzam/titanic-top-4-with-ensemble-modeling</a>]<br>2、(konstantinmasich’s kernel)[<a href="https://www.kaggle.com/konstantinmasich/titanic-0-82-0-83" target="_blank" rel="external">https://www.kaggle.com/konstantinmasich/titanic-0-82-0-83</a>]<br>3、(pandas document)[<a href="http://pandas.pydata.org/pandas-docs/stable/" target="_blank" rel="external">http://pandas.pydata.org/pandas-docs/stable/</a>]<br>4、(seaborn tutorial)[<a href="https://seaborn.pydata.org/tutorial.html" target="_blank" rel="external">https://seaborn.pydata.org/tutorial.html</a>]</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/机器学习//" class="article-tag-list-link color5">机器学习</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/11/titanic/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-dynamic" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  
+</div>
+
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">st=&gt;start: 开始</div><div class="line">e=&gt;end: 结束</div><div class="line">op=&gt;operation: 操作</div><div class="line">cond=&gt;condition: 确认？</div><div class="line"></div><div class="line">st-&gt;op-&gt;cond</div><div class="line">cond(yes)-&gt;e</div><div class="line">cond(no)-&gt;op</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/17/dynamic/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-what-is-mAP" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -465,234 +970,9 @@ style="background: #4d4d4d"></div>
 
 
   
-    <article id="post-cpp-smart-ptr" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/21/cpp-smart-ptr/">C++中的智能指针笔记</a>
-    </h1>
-  
-
-        
-        <a href="/2018/04/21/cpp-smart-ptr/" class="archive-article-date">
-  	<time datetime="2018-04-21T07:28:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#STL中智能指针"><span class="toc-text">STL中智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-ptr"><span class="toc-text">shared_ptr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr的声明和初始化"><span class="toc-text">shared_ptr的声明和初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#析构策略"><span class="toc-text">析构策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr陷阱"><span class="toc-text">shared_ptr陷阱</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#weak-ptr"><span class="toc-text">weak_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unique-ptr"><span class="toc-text">unique_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Modern-C-中的有关条款"><span class="toc-text">Effective Modern C++ 中的有关条款</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#opencv-中的cv-Ptr"><span class="toc-text">opencv 中的cv::Ptr</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
-</div>
-
-        <p>最近在看opencv的文档时，对cv::Ptr类了解了一些，其与STL中的shared_ptr类似，是一种智能指针，于是又看了《C++标准库》中有关智能指针的章节和《Effective Modern C++》中的有关智能指针的章节，将智能指针所涉及的一些内容总结如下。</p>
-<h1 id="STL中智能指针"><a href="#STL中智能指针" class="headerlink" title="STL中智能指针"></a>STL中智能指针</h1><p>C++中比较棘手的一个问题就是内存的管理，指针在其中扮演了及其重要的作用，但是同时对指针的不当使用会造成很多问题。自C++11起，STL提供了两大类型的智能指针，使得对指针的操作更加安全。其中shared_ptr类实现了共享式拥有概念，而unique_ptr实现了独占式拥有概念。另外还有weak_ptr等辅助类。所有这些指针类都定义在头文件 &lt; memory&gt;中。</p>
-<h2 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h2><p>shared_ptr主要使用一种称为引用计数的方法来管理其所指向的内容。当该指针多指向一个内容时，引用计数加一，少指向一个内容时，引用计数值减1，当引用计数值减到0时，该内容会被自动删除。</p>
-<h3 id="shared-ptr的声明和初始化"><a href="#shared-ptr的声明和初始化" class="headerlink" title="shared_ptr的声明和初始化"></a>shared_ptr的声明和初始化</h3><p>1、<strong>使用构造函数初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div></pre></td></tr></table></figure></p>
-<p>2、<strong>新式初始化语法</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt&#123;<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>)&#125;;</div></pre></td></tr></table></figure></p>
-<p>3、<strong>使用make_shared()初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt=<span class="built_in">std</span>::make_shared&lt;<span class="keyword">int</span>&gt;(<span class="number">1</span>);</div></pre></td></tr></table></figure></p>
-<p>4、<strong>先声明shared pointer，然后使用reset()方法赋值</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt;</div><div class="line">pInt.reset(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div></pre></td></tr></table></figure></p>
-<p><strong>注意不能使用赋值符进行初始化</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
-<p>最常用和可靠的初始化方法是使用make_shared()函数。</p>
-<h3 id="析构策略"><a href="#析构策略" class="headerlink" title="析构策略"></a>析构策略</h3><p>实际上，我们可以声明特化的deleter，可以通过传递一个lambda作为shared_ptr构造函数的第二实参。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pInt(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>),[](<span class="keyword">int</span>* p)&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"delete "</span>&lt;&lt;*p&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">delete</span> p;</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
-<p><strong>注意</strong>：shared_ptr提供的default deleter 调用的是 delete,而不是delete []，所以即便为array建立一个shared_ptr是可以的，但是却有致命错误，解决方法是为其指定delete []作为析构函数，最好不要这样使用shared_ptr。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>]);<span class="comment">//ERROR,能通过编译</span></div><div class="line"><span class="comment">//(《C++标准库》一书中这样写，但是实际测试没有出现问题？)</span></div><div class="line"></div><div class="line"><span class="comment">//解决方案</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>],[](<span class="keyword">int</span>* p)&#123;</div><div class="line">    <span class="keyword">delete</span>[] p;</div><div class="line">    &#125;)</div><div class="line"><span class="comment">//也可以这样</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; pArray(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>],<span class="built_in">std</span>::default_delete&lt;<span class="keyword">int</span>[]&gt;());</div></pre></td></tr></table></figure></p>
-<p><strong>如果析构时不仅仅需要删除内存，还需要 一些其它操作，那么必须指定deleter</strong></p>
-<h3 id="shared-ptr陷阱"><a href="#shared-ptr陷阱" class="headerlink" title="shared_ptr陷阱"></a>shared_ptr陷阱</h3><p><strong>1、cyclic reference问题</strong><br>两个对象使用shared_ptr互相指向对方时，使用shared_ptr无法释放相应的资源，因为每个对象的use_count()至少为1。<br><strong>解决方法</strong>:1、使用普通指针，但是这样又得自行管理资源释放，比较麻烦也更容易出问题。2、其中一方的指向使用weak_ptr，可以完美解决该问题。<br><strong>2、试图访问已被释放的数据</strong><br>也可通过使用weak_ptr解决。<br><strong>3、应该确保某对象只被一组shared_ptr拥有</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* p=<span class="keyword">new</span> <span class="keyword">int</span>;</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp1(p);</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp2(p);<span class="comment">//ERROR 但是可以编译通过 具体在后面有解释</span></div></pre></td></tr></table></figure></p>
-<p>当sp1和sp2丢失p的拥有权时，两者都会试图释放p的资源，即释放资源的操作会执行两次。解决方法是在创建对象和其相应资源的时候直接设立shared_ptr。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp1(<span class="keyword">new</span> <span class="keyword">int</span>);</div><div class="line"><span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sp2(sp1);</div></pre></td></tr></table></figure></p>
-<h2 id="weak-ptr"><a href="#weak-ptr" class="headerlink" title="weak_ptr"></a>weak_ptr</h2><p>weak_ptr是辅助shared_ptr的类，其用来共享但是不拥有对象。</p>
-<h2 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h2><p><strong>概念</strong><br>unique_ptr实现了独占式拥有概念，其可以确保一个对象和其相应的资源在同一时间只能被一个pointer拥有。unique_ptr是其所指向的对象的唯一拥有者。unique_ptr有着与普通指针相同的接口，不同的是：它不提供pointer算术比如++等操作，但是实际上这省去了一些麻烦。<br><strong>转移unique_ptr的拥有权</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* p=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up1(p);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up2(p);<span class="comment">//ERROR,up1和up2拥有相同对象了。</span></div><div class="line"></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up3(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>));</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up4(up3);<span class="comment">//ERROR, 不能对unique_ptr进行拷贝和赋值</span></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up5(<span class="built_in">std</span>::move(up3));<span class="comment">//OK 使用move转移所有权是可以的</span></div><div class="line"></div><div class="line"><span class="comment">//同理</span></div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up6=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">1</span>);</div><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; up7;</div><div class="line">up7=up6;<span class="comment">//ERROR</span></div><div class="line">up7=<span class="built_in">std</span>::move(up6);<span class="comment">//可以</span></div><div class="line"></div><div class="line">up7=<span class="literal">nullptr</span>;<span class="comment">//给unique_ptr赋值nullptr是可以的，和调用reset()方法相同</span></div></pre></td></tr></table></figure></p>
-<p><strong>源头和去处</strong><br>函数可以利用unique_ptr的转移所有权的功能将拥有权转给其他函数。<br><strong>unique_ptr当做当做class内的成员</strong><br>可以避免资源泄漏。</p>
-<h2 id="Effective-Modern-C-中的有关条款"><a href="#Effective-Modern-C-中的有关条款" class="headerlink" title="Effective Modern C++ 中的有关条款"></a>Effective Modern C++ 中的有关条款</h2><p>《Effective Modern C++》一书中有几个关于smart pointer的条款。<br><strong>Item 18: Use std::unique_ptr for exclusive-ownership resource management</strong><br>要点：详见原书 P118<br>1、std::unique_ptr是一种足够小，很快并且只支持move的智能指针，其用来管理独占式资源。默认情况下，std::unique_ptr的大小和raw pointer  是一样的，而且对于大多数包括解引用在内的操作，其都和raw pointer一致。<br>2、默认情况下，其使用delete作为deleter。但是当deleter采用自定义时，std::unique_ptr的大小会变大，其具体大小取决于函数对象的状态。使用lambda表达式作为deleter是比较好的一种选择。<br>3、std::unique_ptr不能进行复制，否则就违反了其只能拥有一个对象的规则。<br>4、std::unique_ptr有两种形式: std::unique_ptr<t>,std::unique_ptr<t[]>。这两种形式所能进行的操作略有不同，对于单对象形式，其没有索引操作，对于数组形式，其没有 解引用操作。<br>5、从std::unique_ptr转型为std::shared_ptr很方便，在不知道指针的具体用途时最好先用unique_ptr，待需要时再转型为shared_ptr。<br><strong>题外话</strong>要想正确调用继承类的析构函数，基类的析构函数必须是虚函数。</t[]></t></p>
-<p><strong>Item 19: Use std::shared_ptr for shared_ownership resource management</strong><br>要点：详见原书 P125<br>1、<strong>关于引用计数</strong><br>通常，构造函数增加引用计数；析构函数减少引用计数；复制赋值操作减少左边所指对象的引用计数，增加右边所指对象的引用计数。<br>2、<strong>引用计数会影响性能</strong><br>主要由以下原因造成：首先，shared_ptr的大小是原始指针的2倍，因为其有1个指针指向所引的对象，1个指针指向引用计数；然后，用于引用计数的内存要动态分配；对于引用计数的增加和减少操作必须是原子性的，这是为了保证其在多线程情况下的安全性。<br>3、<strong>shared_ptr和unique_ptr的区别和联系</strong><br>A、都支持自定义deleter，但是实现有所不同，对于unique_ptr，deleter的类型是智能指针类型的一部分，而对于shared_ptr,deleter的类型不是其一部分。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> loggingDel =[](Type* pc)&#123;</div><div class="line">    makeLogEntry(pt);</div><div class="line">    <span class="keyword">delete</span> pt;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;Type, <span class="keyword">decltype</span>(loggingDel)&gt; upt(<span class="keyword">new</span> Type,loggingDel);</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt(<span class="keyword">new</span> Type,loggingDel);</div></pre></td></tr></table></figure></p>
-<p>所以，对于不同类型的deleter的两个shared_ptr，只要它们的对象类型相同，其就可以相互赋值；而对于unique_ptr则不能，因为deleter也是其类型的一部分，这意味着这两个unique_ptr的类型不同，不能相互转移所有权。<br>B、对于shared_ptr，自定义deleter并不改变shared_ptr的大小，但是对于unique_ptr是有影响的。<br>C、shared_ptr不支持数组类型。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">shared_ptr</span>&lt;T[]&gt; sp;<span class="comment">//不能编译</span></div></pre></td></tr></table></figure></p>
-<p><strong>4、shared_ptr的实现原理</strong><br>其使用control block管理引用计数及其他(包括自定义deleter)数据。<br><img src="shared_ptr.JPG" alt="shared_ptr原理"><br>我们希望某个对象的control block是在初次有指针指该对象时创建。然而当创建shared_ptr指向某一对象时，我们事先并不能知道是否已有其它shared_ptr指向该对象。于是使用以下规则来进行control block的创建：<br><strong>std::make_shared总是创建一个control block</strong><br><strong>当shared_ptr是由unique<em>ptr转型创建时要建立control block</em></strong><br><strong>当用raw pointer构造shared_ptr时要创建control block</strong></p>
-<p>考虑如下语句<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> pt = <span class="keyword">new</span> Type;</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt1(pt,loggingDel);</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt2(pt,loggingDel);</div></pre></td></tr></table></figure></p>
-<p>按照之前的control block创建规则，对于pt指针指向的对象，将会创建2个control block，于是离开作用域时，会尝试对*pt进行两次内存释放操作，这样第二次操作将会造成未定义行为。这是我们不愿意看到的。<br>从以上例子我们可以得到这样的经验：<br><strong>避免向shared_ptr的构造函数传递raw pointer</strong><br>可以采用以下方法<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//对于自定义deleter的情况</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt1(<span class="keyword">new</span> Type,loggingDel);</div><div class="line"><span class="comment">//无自定义deleter时还可使用make_shared</span></div><div class="line"><span class="built_in">std</span>::make_shared&lt;Type&gt;(t);</div></pre></td></tr></table></figure></p>
-<p><strong>5、可使用std::enable_shared_from_this将this指针转型成shared_ptr</strong></p>
-<p><strong>Item 20: Use std::weak_ptr for std::shared_ptr like pointers that can dangle</strong><br>要点：具体看原书P134<br><strong>std::weak_ptr不会影响引用计数值</strong><br>std::weak_ptr的行为和shared_ptr相似，但是其不会影响所指对象的引用计数值，也不能被解引用，其是shared_ptr的辅助。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> spt=<span class="built_in">std</span>::make_shared&lt;Type&gt;();<span class="comment">//ref count=1</span></div><div class="line"><span class="built_in">std</span>::weak_ptr&lt;Type&gt; wpt(spt);<span class="comment">// ref count remains 1</span></div><div class="line">spt=<span class="literal">nullptr</span>;<span class="comment">//ref count=0 and wpt now dangles</span></div><div class="line"><span class="keyword">if</span>(wpt.expired())&#123;&#125; <span class="comment">//test if wpt doesn't point to an object</span></div></pre></td></tr></table></figure></p>
-<p>一个问题就是：在判断weak_ptr仍然指着一个特定对象时，如何访问该对象？这里有几个棘手的问题需要解决：weak_ptr并没有解引用操作，而且即便有解引用操作，在判断是否expired和解引用的语句之间，可能有另一个线程使得最后一个指向该对象的指针失效，使得该对象被destroy，这样解引用操作将会导致未定义行为，即我们无法保证线程安全性。<br>我们需要的是一个原子性的操作检查weak_ptr是否expired，如果没有，那么访问该指针所指对象，这可以通过从weak_ptr构造一个shared_ptr实现。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//第一种形式</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt1=wpt.lock();<span class="comment">//if wpt's expired,spt1 is nullptr</span></div><div class="line"></div><div class="line"><span class="comment">//第二种形式</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt2(wpt);<span class="comment">//if wpt's expired, throw std::bad_weak_ptr</span></div></pre></td></tr></table></figure></p>
-<p><strong>2、weak_ptr的应用场景</strong><br>A、管理缓存时，需要知道cache什么时候会dangle，这样的场景就需要weak_ptr辅助。(P136)<br>B、解决shared_ptr的环形引用问题。<br><strong>3、weak_ptr和shared_ptr</strong><br>从效率的角度讲，weak_ptr的效率和shared_ptr是一样的。其存储和shared_ptr是一样的 ，其大小和shared_ptr也是一样的，它也要使用control block管理对象。<strong>注意</strong>：weak_ptr不是不管理引用计数，而是不拥有对象共享关系，所以不会影响所指对象的引用计数，但是其会管理另外的不同功能的引用计数。</p>
-<p><strong>Item 21: Prefer std::make_unique and std::make_shared to direct use of new</strong><br>要点：具体看原书P139<br><strong>1、使用make函数的优点</strong><br>make_shared是C++11的标准，make_unique是C++14的标准。<br><strong>A、使得代码和编译的目标代码更精简</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">auto upt1(std::make_unique&lt;Type&gt;());</div><div class="line"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;Type&gt; upt2(<span class="keyword">new</span> Type);</div><div class="line"></div><div class="line">auto spt1(std::make_shared&lt;Type&gt;());</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Type&gt; spt2(<span class="keyword">new</span> Type);</div></pre></td></tr></table></figure></p>
-<p><strong>B、使用make函数使得异常安全(exception safety)</strong><br><strong>C、make_shared和allocate_shared函数使得编译器生成更小更快的代码(相比使用new创建)</strong></p>
-<p>原则是优先使用make函数创建只能指针，但是也有make函数不能使用的情况。<br><strong>A</strong>、比如要自定义deleter时，就只能使用new作为参数创建，而不能使用make函数。<br><strong>B</strong>、一些所指对象的初始化细节使得不能使用make函数创建智能指针。<br><strong>C</strong>、一些自定义了new和delete的对象不方便用make函数创建智能指针。<br><strong>D</strong>、对于比较大的对象，不要使用make函数创建智能指针。</p>
-<p><strong>Item 22: When using the Pimpl  Idiom, define special member functions in the implementation file</strong><br>要点：<br><strong>1、Pimpl Idiom通过类客户和类实现之间减少编译依赖来减少构建时间</strong><br><strong>2、对于std::unique_ptr pImpl指针，需要在类头文件中声明特殊成员函数，在实现文件中实现。即便是默认函数实现，也需要声明和定义。</strong><br><strong>3、对于 shared_ptr则没有以上这种限制。主要原因还是在于unique_ptr和shared_ptr中deleter是否是类型的一部分的一个区别。</strong></p>
-<h1 id="opencv-中的cv-Ptr"><a href="#opencv-中的cv-Ptr" class="headerlink" title="opencv 中的cv::Ptr"></a>opencv 中的cv::Ptr</h1><p>其行为和std::shared_ptr类似。用法也基本相同。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、Nicolai M. Josuttis<br> The C++ Standard Library - A Tutorial and Reference, 2nd Edition<br> Addison Wesley Longman, 2012<br>2、Scott Meyers<br>Effective Modern C++ : 42 Specific Ways to Improve Your Use of C++11 and C++14<br>3、<a href="http://en.cppreference.com/w/cpp/memory/shared_ptr" target="_blank" rel="external">std::shared_ptr</a><br>4、<a href="http://en.cppreference.com/w/cpp/memory/weak_ptr" target="_blank" rel="external">std::weak_ptr</a><br>5、<a href="http://en.cppreference.com/w/cpp/memory/unique_ptr" target="_blank" rel="external">std::unique_ptr</a><br>6、<a href="https://docs.opencv.org/3.4.1/d0/de7/structcv_1_1Ptr.html" target="_blank" rel="external">cv::Ptr</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cpp</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/cpp//" class="article-tag-list-link color4">cpp</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/21/cpp-smart-ptr/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-ssd-detailed" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/27/ssd-detailed/">SSD-Single Shot MultiBox Detector</a>
-    </h1>
-  
-
-        
-        <a href="/2018/03/27/ssd-detailed/" class="archive-article-date">
-  	<time datetime="2018-03-27T08:48:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#亮点"><span class="toc-text">亮点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本结构"><span class="toc-text">基本结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本思想"><span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络结构"><span class="toc-text">网络结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现细节"><span class="toc-text">实现细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#prior-box的生成"><span class="toc-text">prior box的生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#匹配策略"><span class="toc-text">匹配策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#loss-function"><span class="toc-text">loss function</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
-</div>
-
-        <p>因为毕设是做关于目标检测的项目，也看了一些目标检测的论文，由于项目对实时性的要求，最后选用了MobilenetV2+SSD作为基础结构，也仔细阅读了SSD的论文，现梳理如下。</p>
-<h2 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h2><p>一步完成检测，同时进行边框回归和类别预测，相对于两步完成的网络在时间上会快很多。结合多个feature maps的特征进行预测。</p>
-<h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p><img src="default_boxes.jpg" alt="feature map"><br>在不同尺度的feature map上指定一系列default boxes。具体来说就是，上图的feature map中，对于每个cell，首先生成k个default boxes，对于每个default box,预测其类别和位置，于是共有(4+cls)个参数。每层的k个default boxes的aspect ratio不同，而不同feature maps上的default boxes的scale不同，这样基本就能适配各种状态下的目标。最后将不同feature maps上的结果综合起来进行训练。这样对于一个输入的大小为mxm的feature map，最后的得到的default boxes个数为 m<em>m</em>k<em>(4+cls),为了达到这样的输出维度，用一个深度为k</em>(4+cls)的3<em>3，stride=1的卷积核即可得到，但是实际上是分为两个不同的卷积来实现，一个深度为4</em>k的loc层，一个深度为k*cls的conf层。</p>
-<h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h3><p><img src="ssd_architecture.jpg" alt="SSD网络结构"><br>SSD的网络结构中包括base部分的特征提取层，以及额外的extra layer用于生成不同尺度的feature map用于default boxes的生成。base部分理论上可以是任何用于classification的卷积网络。在原论文中，作者使用VGG-16作为base网络，feature maps总共有6层，前两层为base 网络中的两个卷积层，后4层feature maps来自extra layers。在6个feature maps上做卷积操作得到综合的输出送入loss层进行回归训练。</p>
-<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><h3 id="prior-box的生成"><a href="#prior-box的生成" class="headerlink" title="prior box的生成"></a>prior box的生成</h3><p>实际上就是解决不同level的feature maps上的default boxes如何与原图上的default boxes相对应的问题，也就是根据default box的4个offset参数，如何找到其在原图上的对应坐标。这就是prior box的生成问题。<br>简单来说就是根据scale以及aspect ratio按照步长生成，步长就相当于feature map中一个像素对应的原图中的像素数，实际上就是原图大小和feature map的比值。论文中生成的坐标格式是[cx,cy,w,h]格式。</p>
-<h3 id="匹配策略"><a href="#匹配策略" class="headerlink" title="匹配策略"></a>匹配策略</h3><p>在确定default box和 groud truth的对应关系时，采用best jaccard overlap方法，对于jaccard overlap高于一个阈值(0.5)的匹配对，我们都认为它们匹配成功。然后利用这些匹配对计算loss，进行回归。</p>
-<h3 id="loss-function"><a href="#loss-function" class="headerlink" title="loss function"></a>loss function</h3><p>loss由loc loss和 conf loss两部分组成，分别表示定位损失和分类损失，具体计算公式在原文中讲的很具体。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://arxiv.org/abs/1512.02325" target="_blank" rel="external">SSD论文</a><br><a href="https://github.com/ShuangXieIrene/ssds.pytorch" target="_blank" rel="external">ssds.pytorch</a><br><a href="http://www.cnblogs.com/xuanyuyt/p/7222867.html" target="_blank" rel="external">SSD阅读笔记</a><br><a href="https://zhuanlan.zhihu.com/p/33544892" target="_blank" rel="external">目标检测|SSD原理与实现</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/paper//" class="article-tag-list-link color1">paper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/27/ssd-detailed/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -824,11 +1104,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -840,11 +1120,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
             
             <div class="clearfix"></div>
