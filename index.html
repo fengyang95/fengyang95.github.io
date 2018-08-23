@@ -162,6 +162,180 @@ style="background: #4d4d4d"></div>
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-titanic-dl" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/23/titanic-dl/">用神经网络解决Titanic问题</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/23/titanic-dl/" class="archive-article-date">
+  	<time datetime="2018-08-23T05:21:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#使用Pytorch搭建模型"><span class="toc-text">使用Pytorch搭建模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据载入和处理"><span class="toc-text">数据载入和处理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用skorch搭建模型"><span class="toc-text">使用skorch搭建模型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p>使用神经网络解决Titanic问题，主要用两种实现，一种是纯pytorch实现神经网络的搭建，另一种是使用skorch包装好的以pytorch为后端的API实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> MinMaxScaler</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> copy</div><div class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</div><div class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</div><div class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</div><div class="line"><span class="keyword">from</span> torch.optim <span class="keyword">import</span> lr_scheduler</div><div class="line"><span class="keyword">import</span> torch.nn.functional</div><div class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset, DataLoader</div><div class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms</div><div class="line"><span class="keyword">import</span> warnings</div><div class="line"><span class="keyword">import</span> torch</div><div class="line">torch.manual_seed(<span class="number">0</span>)</div><div class="line">warnings.filterwarnings(<span class="string">"ignore"</span>)</div><div class="line">print(torch.__version__)</div></pre></td></tr></table></figure>
+<pre><code>0.4.1
+</code></pre><p>读入数据文件，这里省去了特征工程的部分，特征采用之前特征工程提取出的特征。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">train=pd.read_csv(<span class="string">'train_features.csv'</span>)</div><div class="line">test=pd.read_csv(<span class="string">'test_features.csv'</span>)</div><div class="line">train.head()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.info()</div></pre></td></tr></table></figure>
+<pre><code>&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;
+RangeIndex: 891 entries, 0 to 890
+Data columns (total 13 columns):
+PassengerId        891 non-null int64
+Pclass             891 non-null int64
+Sex                891 non-null int64
+Title              891 non-null int64
+Family_size        891 non-null int64
+Family_Survival    891 non-null float64
+FareBin_Code       891 non-null int64
+AgeBin_Code        891 non-null int64
+Embarked_C         891 non-null int64
+Embarked_None      891 non-null int64
+Embarked_Q         891 non-null int64
+Embarked_S         891 non-null int64
+Survived           891 non-null float64
+dtypes: float64(2), int64(11)
+memory usage: 90.6 KB
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.describe()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">X_train=train.drop([<span class="string">'PassengerId'</span>,<span class="string">'Survived'</span>],axis=<span class="number">1</span>).as_matrix()</div><div class="line">Y_train=train[<span class="string">'Survived'</span>].astype(int).as_matrix()</div><div class="line"></div><div class="line">X_test=test.drop([<span class="string">'PassengerId'</span>,<span class="string">'Survived'</span>],axis=<span class="number">1</span>).as_matrix()</div><div class="line">IDtest=test[<span class="string">'PassengerId'</span>]</div><div class="line"></div><div class="line"><span class="comment"># scalar</span></div><div class="line">scaler=MinMaxScaler()</div><div class="line">X_train=scaler.fit_transform(X_train)</div><div class="line">X_test=scaler.transform(X_test)</div></pre></td></tr></table></figure>
+<h1 id="使用Pytorch搭建模型"><a href="#使用Pytorch搭建模型" class="headerlink" title="使用Pytorch搭建模型"></a>使用Pytorch搭建模型</h1><h2 id="数据载入和处理"><a href="#数据载入和处理" class="headerlink" title="数据载入和处理"></a>数据载入和处理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">TitanicFeaturesDataset</span><span class="params">(Dataset)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,X,y=None,transform=None)</span>:</span></div><div class="line">        self.X=X</div><div class="line">        self.y=y</div><div class="line">        self.transform=transform</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.X.shape[<span class="number">0</span>]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self,idx)</span>:</span></div><div class="line">        <span class="keyword">if</span> self.y <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            sample=&#123;<span class="string">'X'</span>:self.X[idx],<span class="string">'y'</span>:self.y[idx]&#125;</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            sample=&#123;<span class="string">'X'</span>:self.X[idx]&#125;</div><div class="line">        <span class="keyword">if</span> self.transform <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            sample=self.transform(sample)</div><div class="line">        <span class="keyword">return</span> sample</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># transform class</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ToTensor</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self,sample)</span>:</span></div><div class="line">        <span class="keyword">if</span> <span class="string">'y'</span> <span class="keyword">in</span> sample.keys():</div><div class="line">            X,y=sample[<span class="string">'X'</span>],sample[<span class="string">'y'</span>]</div><div class="line">            <span class="keyword">return</span> &#123;</div><div class="line">                <span class="string">'X'</span>:torch.from_numpy(X.astype(np.float32)),</div><div class="line">                <span class="string">'y'</span>:torch.squeeze(torch.from_numpy(np.array([y.astype(np.int64)])))</div><div class="line">            &#125;</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            X=sample[<span class="string">'X'</span>]</div><div class="line">            <span class="keyword">return</span> &#123;</div><div class="line">                <span class="string">'X'</span>:torch.from_numpy(X.astype(np.float32))</div><div class="line">            &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Model class</span></div><div class="line"><span class="comment"># 自定义Model需要继承nn.Module</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassifierModule</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,D_in=<span class="number">11</span>,D_out=<span class="number">2</span>,num_units=<span class="number">20</span>,nonlin=F.relu,dropout=<span class="number">0.5</span>)</span>:</span></div><div class="line">        super(ClassifierModule,self).__init__()</div><div class="line">        self.num_units=num_units</div><div class="line">        self.nonlin=nonlin</div><div class="line">        self.dropout=nn.Dropout(dropout)</div><div class="line">        </div><div class="line">        self.linear1=nn.Linear(D_in,num_units)</div><div class="line">        self.linear2=nn.Linear(num_units,<span class="number">10</span>)</div><div class="line">        self.output=nn.Linear(<span class="number">10</span>,<span class="number">2</span>)</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,X)</span>:</span></div><div class="line">        X=self.nonlin(self.linear1(X))</div><div class="line">        X=self.dropout(X)</div><div class="line">        X=self.nonlin(self.linear2(X))</div><div class="line">        X=self.dropout(X)</div><div class="line">        X=F.softmax(self.output(X),dim=<span class="number">-1</span>)</div><div class="line">        <span class="keyword">return</span> X</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># train model</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_model</span><span class="params">(model,criterion,optimiizer,scheduler,dataset_sizes,num_epochs=<span class="number">100</span>,device=<span class="string">'cpu'</span>)</span>:</span></div><div class="line">    start=time.time()</div><div class="line">    best_model_wts=copy.deepcopy(model.state_dict())</div><div class="line">    best_acc=<span class="number">0.0</span></div><div class="line">    </div><div class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(num_epochs):</div><div class="line">        print(<span class="string">'Epoch &#123;&#125;/&#123;&#125;'</span>.format(epoch,num_epochs<span class="number">-1</span>))</div><div class="line">        print(<span class="string">'-'</span>*<span class="number">10</span>)</div><div class="line">        </div><div class="line">        <span class="keyword">for</span> phase <span class="keyword">in</span> [<span class="string">'train'</span>,<span class="string">'val'</span>]:</div><div class="line">            <span class="keyword">if</span> phase == <span class="string">'train'</span>:</div><div class="line">                scheduler.step()</div><div class="line">                model.train()</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                model.eval()</div><div class="line">            running_loss=<span class="number">0.0</span></div><div class="line">            running_corrects=<span class="number">0</span></div><div class="line">            <span class="keyword">for</span> sample_batches <span class="keyword">in</span> dataloaders[phase]:</div><div class="line">                inputs=sample_batches[<span class="string">'X'</span>].to(device)</div><div class="line">                labels=sample_batches[<span class="string">'y'</span>].to(device)</div><div class="line">                </div><div class="line">                optimizer.zero_grad()</div><div class="line">                </div><div class="line">                <span class="keyword">with</span> torch.set_grad_enabled(phase==<span class="string">'train'</span>):</div><div class="line">                    outputs=model(inputs)</div><div class="line">                    _,preds=torch.max(outputs,<span class="number">1</span>)</div><div class="line">                    loss=criterion(outputs,labels)</div><div class="line">                    </div><div class="line">                    <span class="keyword">if</span> phase==<span class="string">'train'</span>:</div><div class="line">                        loss.backward()</div><div class="line">                        optimizer.step()</div><div class="line">                    running_loss+=loss.item()*inputs.size(<span class="number">0</span>)</div><div class="line">                    running_corrects+=torch.sum(preds==labels.data)</div><div class="line">            epoch_loss=running_loss/dataset_sizes[phase]</div><div class="line">            epoch_acc=running_corrects.double()/dataset_sizes[phase]</div><div class="line">            print(<span class="string">'&#123;&#125; loss: &#123;:.4f&#125; Acc: &#123;:.4f&#125;'</span>.format(phase,epoch_loss,epoch_acc))</div><div class="line">            </div><div class="line">            <span class="keyword">if</span> phase==<span class="string">'val'</span> <span class="keyword">and</span> epoch_acc&gt;best_acc:</div><div class="line">                best_acc=epoch_acc</div><div class="line">                best_model_wts=copy.deepcopy(model.state_dict())</div><div class="line">    time_elapsed=time.time()-start</div><div class="line">    print(<span class="string">'Trainning complete in &#123;:.0f&#125;m &#123;:.0f&#125;s'</span>.format(</div><div class="line">            time_elapsed//<span class="number">60</span>,time_elapsed%<span class="number">60</span>))</div><div class="line">    print(<span class="string">'Best val Acc: &#123;:4f&#125;'</span>.format(best_acc))</div><div class="line">    model.load_state_dict(best_model_wts)</div><div class="line">    <span class="keyword">return</span> model</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># load data and train</span></div><div class="line">train_dataset_len=X_train.shape[<span class="number">0</span>]</div><div class="line">train_len=train_dataset_len*<span class="number">4</span>//<span class="number">5</span></div><div class="line"></div><div class="line">transformed_datasets = &#123;</div><div class="line">        <span class="string">'train'</span>: TitanicFeaturesDataset(X_train[:train_len],Y_train[:train_len], transform=transforms.Compose([ToTensor()])),</div><div class="line">        <span class="string">'val'</span>: TitanicFeaturesDataset(X_train[train_len:], Y_train[train_len:], transform=transforms.Compose([ToTensor()])),</div><div class="line">        <span class="string">'test'</span>:TitanicFeaturesDataset(X_test,transform=transforms.Compose([ToTensor()]))</div><div class="line">        &#125;</div><div class="line"></div><div class="line">dataloaders = &#123;x: DataLoader(transformed_datasets[x], batch_size=<span class="number">16</span>,</div><div class="line">                                 shuffle=<span class="keyword">True</span>, num_workers=<span class="number">0</span>)</div><div class="line">                   <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">'train'</span>, <span class="string">'val'</span>]&#125;</div><div class="line">dataloaders[<span class="string">'test'</span>]=DataLoader(transformed_datasets[<span class="string">'test'</span>],batch_size=<span class="number">16</span>,shuffle=<span class="keyword">False</span>,num_workers=<span class="number">0</span>)</div><div class="line"></div><div class="line">dataset_sizes = &#123;x: len(transformed_datasets[x]) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">'train'</span>, <span class="string">'val'</span>,<span class="string">'test'</span>]&#125;</div><div class="line">device = torch.device(<span class="string">'cuda:0'</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">'cpu'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">model=ClassifierModule()</div><div class="line">criterion=nn.CrossEntropyLoss()</div><div class="line">optimizer=optim.SGD(model.parameters(),lr=<span class="number">2e-2</span>,momentum=<span class="number">0.9</span>)</div><div class="line">exp_lr_scheduler=lr_scheduler.StepLR(optimizer,step_size=<span class="number">7</span>,gamma=<span class="number">0.1</span>)</div><div class="line"></div><div class="line">model=train_model(model,criterion,optimizer,exp_lr_scheduler,dataset_sizes,num_epochs=<span class="number">100</span>,device=device)</div></pre></td></tr></table></figure>
+<pre><code>Epoch 0/99
+----------
+train loss: 0.6819 Acc: 0.5674
+val loss: 0.6576 Acc: 0.6425
+Epoch 1/99
+----------
+train loss: 0.6624 Acc: 0.6096
+val loss: 0.6418 Acc: 0.6425
+Epoch 2/99
+----------
+...
+----------
+train loss: 0.5715 Acc: 0.7275
+val loss: 0.5075 Acc: 0.8380
+Epoch 98/99
+----------
+train loss: 0.5675 Acc: 0.7247
+val loss: 0.5075 Acc: 0.8380
+Epoch 99/99
+----------
+train loss: 0.5792 Acc: 0.7430
+val loss: 0.5075 Acc: 0.8380
+Trainning complete in 0m 7s
+Best val Acc: 0.843575
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># save model and reload it</span></div><div class="line">torch.save(model.state_dict(),<span class="string">'pytorch_model.pth'</span>)</div><div class="line">reloaded_model=ClassifierModule()</div><div class="line">reloaded_model.load_state_dict(torch.load(<span class="string">'pytorch_model.pth'</span>))</div><div class="line"><span class="comment"># predicts on  test dataset</span></div><div class="line"></div><div class="line">reloaded_model.eval()</div><div class="line">final_predicts=[]</div><div class="line"><span class="keyword">with</span> torch.no_grad():</div><div class="line">    <span class="keyword">for</span> samples <span class="keyword">in</span> dataloaders[<span class="string">'test'</span>]:</div><div class="line">        inputs=samples[<span class="string">'X'</span>].to(device)</div><div class="line">        outputs=reloaded_model(inputs)</div><div class="line">        _,preds=torch.max(outputs,<span class="number">1</span>)</div><div class="line">        <span class="keyword">for</span> y_predict <span class="keyword">in</span> list(preds.numpy()):</div><div class="line">            final_predicts.append(y_predict)</div><div class="line">final_predicts=np.array(final_predicts).reshape(<span class="number">-1</span>,)</div><div class="line">predict_survived_pytorch=pd.Series(final_predicts,name=<span class="string">'Survived'</span>)</div><div class="line">pytorch_result=pd.concat([IDtest,predict_survived_pytorch],axis=<span class="number">1</span>)</div><div class="line">pytorch_result.to_csv(<span class="string">'pytorch_result.csv'</span>,index=<span class="keyword">False</span>)</div><div class="line">pytorch_result.head()</div></pre></td></tr></table></figure>
+<h1 id="使用skorch搭建模型"><a href="#使用skorch搭建模型" class="headerlink" title="使用skorch搭建模型"></a>使用skorch搭建模型</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> skorch <span class="keyword">import</span> NeuralNetClassifier</div><div class="line"><span class="keyword">from</span> skorch.dataset <span class="keyword">import</span> CVSplit</div><div class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV</div><div class="line"><span class="keyword">import</span> skorch</div><div class="line">print(skorch.__version__)</div><div class="line">model = NeuralNetClassifier(</div><div class="line">        ClassifierModule,</div><div class="line">        max_epochs=<span class="number">200</span>,</div><div class="line">        lr=<span class="number">0.02</span>,</div><div class="line">        train_split=CVSplit(<span class="number">5</span>),</div><div class="line">        <span class="comment">#     device='cuda',  # uncomment this to train with CUDA</span></div><div class="line">    )</div><div class="line">   </div><div class="line"></div><div class="line">X = X_train.astype(np.float32)</div><div class="line">Y = Y_train.astype(np.int64)</div><div class="line"></div><div class="line">params = &#123;</div><div class="line">        <span class="string">'lr'</span>: [<span class="number">0.02</span>],</div><div class="line">        <span class="string">'max_epochs'</span>: [<span class="number">200</span>],</div><div class="line">        <span class="string">'module__num_units'</span>: [<span class="number">20</span>],</div><div class="line">&#125;</div><div class="line">gs = GridSearchCV(model, params, refit=<span class="keyword">True</span>, cv=<span class="number">2</span>, scoring=<span class="string">'accuracy'</span>)</div><div class="line">gs.fit(X, Y)</div><div class="line">print(gs.best_score_, gs.best_params_)</div><div class="line">gs.estimator.set_params(**gs.best_params_).fit(X, Y)</div><div class="line"></div><div class="line">predict_Survived_skorch = pd.Series(gs.predict(X_test.astype(np.float32)), name=<span class="string">'Survived'</span>)</div><div class="line">skorch_result = pd.concat([IDtest, predict_Survived_skorch], axis=<span class="number">1</span>)</div><div class="line">skorch_result.to_csv(<span class="string">'skorch_result.csv'</span>, index=<span class="keyword">False</span>)</div><div class="line">skorch_result.head()</div></pre></td></tr></table></figure>
+<pre><code>0.3.0
+  epoch    train_loss    valid_acc    valid_loss     dur
+-------  ------------  -----------  ------------  ------
+      1        0.7777       0.3596        0.7712  0.0215
+      ...
+
+  epoch    train_loss    valid_acc    valid_loss     dur
+-------  ------------  -----------  ------------  ------
+      1        0.6797       0.6704        0.6408  0.0250
+      2        0.6756       0.6704        0.6409  0.0250
+      3        0.6767       0.6704        0.6409  0.0250
+      ...
+    200        0.5370       0.7709        0.4915  0.0200
+0.7845117845117845 {&apos;lr&apos;: 0.02, &apos;max_epochs&apos;: 200, &apos;module__num_units&apos;: 20}
+  epoch    train_loss    valid_acc    valid_loss     dur
+-------  ------------  -----------  ------------  ------
+      1        0.7113       0.6704        0.6715  0.0190
+      2        0.7007       0.6704        0.6704  0.0264
+    ...
+    199        0.5825       0.7989        0.5358  0.0220
+    200        0.5838       0.7989        0.5350  0.0240
+</code></pre><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、<a href="https://pytorch.org/tutorials/beginner/data_loading_tutorial.html#" target="_blank" rel="external">Pytorch data_loading tutorial</a></p>
+<p>2、<a href="https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html" target="_blank" rel="external">Pytorch_transfer_learning_tutorial</a></p>
+<p>3、<a href="https://nbviewer.jupyter.org/github/dnouri/skorch/blob/master/notebooks/Basic_Usage.ipynb" target="_blank" rel="external">skorch basic usage</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">pytorch</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/23/titanic-dl/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-titanic" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -865,110 +1039,6 @@ SVC
 
 
   
-    <article id="post-cpp-lvalue-and-rvalue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/23/cpp-lvalue-and-rvalue/">C++中的左值和右值以及std::move, std::forward</a>
-    </h1>
-  
-
-        
-        <a href="/2018/04/23/cpp-lvalue-and-rvalue/" class="archive-article-date">
-  	<time datetime="2018-04-23T15:15:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#lvalue-and-rvalue"><span class="toc-text">lvalue and rvalue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Effective-Modern-C-中相关条款笔记总结"><span class="toc-text">Effective Modern C++中相关条款笔记总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-23-Understanding-std-move-and-std-forward"><span class="toc-text">Item 23: Understanding std::move and std::forward</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-24：Distinguish-universal-references-from-rvalue-references"><span class="toc-text">Item 24：Distinguish universal references from rvalue references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><span class="toc-text">Item 25：Use std::move on rvalue references, std::forward on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-26-Avoid-overloading-on-universal-references"><span class="toc-text">Item 26: Avoid overloading on universal references</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><span class="toc-text">Item 27: Familiarize yourself with alternatives to overloading on universal references.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-28-Understand-reference-collapsing"><span class="toc-text">Item 28: Understand reference collapsing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><span class="toc-text">Item 29: Assume that move operations are not present, not cheap, and not used</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><span class="toc-text">Item 30: Familiarize yourself with perfect forwarding failure cases</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
-</div>
-
-        <h1 id="lvalue-and-rvalue"><a href="#lvalue-and-rvalue" class="headerlink" title="lvalue and rvalue"></a>lvalue and rvalue</h1><p> 在概念上,右值对应于从函数返回的临时对象，而左值对应于可以引用的对象，无论是通过名称还是通过跟随指针或左值引用。一种判断表达式是左值还是右值的方法是：如果能得到其地址，那么它是左值，否则其是右值。<br><strong>注意:</strong>一个表达式的类型和这个表达式本身是左值还是右值无关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//一个参数始终是lvalue，即便其类型是一个rvalue reference</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Widget(Widget&amp;&amp; rhs);<span class="comment">//rhs是一个左值，但是其有一个右值引用的类型。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="Effective-Modern-C-中相关条款笔记总结"><a href="#Effective-Modern-C-中相关条款笔记总结" class="headerlink" title="Effective Modern C++中相关条款笔记总结"></a>Effective Modern C++中相关条款笔记总结</h1><h2 id="Item-23-Understanding-std-move-and-std-forward"><a href="#Item-23-Understanding-std-move-and-std-forward" class="headerlink" title="Item 23: Understanding std::move and std::forward"></a>Item 23: Understanding std::move and std::forward</h2><p><strong>要点</strong><br><strong>1、std::move</strong><br>move semantic使得编译器将代价昂贵的copy操作替换为相对代价低的move。move semantics使得move-only类型的创建成为可能，比如std::unique_ptr,std::future,std::thread。<br>实际上std::move并没有移动任何东西。它做的其实是一个类型转换工作。就是将输入转型为rvalue。<br><strong>2、std::forward </strong><br>std::forward和std::move类似，比较大的区别就是std::forward是有条件的类型转换，<br>只有当参数是和rvalue绑定时将其转型为rvalue，否则不做转换。</p>
-<h2 id="Item-24：Distinguish-universal-references-from-rvalue-references"><a href="#Item-24：Distinguish-universal-references-from-rvalue-references" class="headerlink" title="Item 24：Distinguish universal references from rvalue references"></a>Item 24：Distinguish universal references from rvalue references</h2><p><strong>要点</strong><br><strong>1、判断原则</strong><br><strong>A、当函数的模板参数有着T&amp;&amp;的形式，并且有推导类型T，或者一个对象被声明为auto&amp;&amp;，那么它就是一个universal reference。</strong><br><strong>B、如果type的声明的格式并不完全是type&amp;&amp;，或者类型推断没有发生，那么type&amp;&amp;表示的就是rvalue reference。</strong><br><strong>C、对于universal reference，如果它被rvalue初始化，它就是rvalue，与之对应，如果被lvalue初始化，其就是lvalue。</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//实例</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(Widget&amp;&amp; param)</span></span>;<span class="comment">//B rvalue  reference  没有类型推断</span></div><div class="line">Widget&amp;&amp; var1=Widget();<span class="comment">//B rvalue reference 没有类型推断</span></div><div class="line"><span class="keyword">auto</span>&amp;&amp; var2=var1;<span class="comment">//A universal references var2有形式auto&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;&amp;&amp; param)</span></span>; <span class="comment">//B rvalue references param类型不完全是type&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>;<span class="comment">//universal references param有推导类型T，且形式是T&amp;&amp;</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">const</span> T&amp;&amp; param)</span></span>;<span class="comment">//universal reference 因</span></div><div class="line"><span class="comment">//为type的声明格式并不完全是type&amp;&amp;(多了const)</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">class</span> <span class="title">Allocator</span> = <span class="title">allocator</span>&lt;T&gt;&gt;</span></div><div class="line"><span class="class"><span class="title">class</span> <span class="title">vector</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">push_back</span><span class="params">(T&amp;&amp; x)</span><span class="comment">//rvalue reference </span></span></div><div class="line"><span class="function">    <span class="comment">//因为没有类型推断，当vector被初始化时，T的类型就被确定了。</span></span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>,<span class="title">class</span> <span class="title">Allocator</span>=<span class="title">allcator</span>&lt;T&gt;&gt;</span></div><div class="line"><span class="class"><span class="title">class</span> <span class="title">vector</span>&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span>... <span class="title">Args</span>&gt;</span></div><div class="line"><span class="class">    <span class="title">void</span> <span class="title">emplace_back</span>(<span class="title">Args</span>&amp;&amp;... <span class="title">args</span>);</span><span class="comment">//universal </span></div><div class="line">    <span class="comment">//reference，存在类型推断，因为即</span></div><div class="line">    <span class="comment">//便T的类型在vector初始化时确定，但是Args的类型不能确定，需要类型推导。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references"><a href="#Item-25：Use-std-move-on-rvalue-references-std-forward-on-universal-references" class="headerlink" title="Item 25：Use std::move on rvalue references, std::forward on universal references"></a>Item 25：Use std::move on rvalue references, std::forward on universal references</h2><p><strong>要点</strong><br><strong>1、当将rvalue reference转发给其它函数时，其应该被无条件转型为rvalue，即用std::move，因为它总是被rvalues限制，而将universal referencies转发给其它函数时，应该有条件地转型，即使用std::forward,因为它可能是lvalues。</strong><br><strong>注意1</strong>为什么不在任何情况下都使用std::forward？尽管使用std::forward对于rvalue references也能产生正确的行为，但是这样源代码冗长也容易出错。<br><strong>注意2</strong>对universal references使用std::move会对lvalues造成意外的修改，更应该避免。<br><strong>2、当一个函数按值返回时，如果是返回一个与 universal reference或者rvalue reference绑定的对象，那么在返回时可以对其施加std::forward或者std::move操作，这样效率更高</strong><br><strong>注意:</strong>即便该对象不支持move操作也没有任何副作用，因为如果不支持的话会自动调用该对象的拷贝构造函数完成copy。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Matrix </div><div class="line"><span class="keyword">operator</span>+(Matrix&amp;&amp; lhs,<span class="keyword">const</span> Matrix&amp; rhs)&#123;</div><div class="line">    lhs+=rhs;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::move(lhs);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>3、不要将std::move或者std::forward应用到local  object</strong><br>原因详见P174，和编译器的返回值优化有关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">Widget <span class="title">makeWidget</span><span class="params">()</span></span>&#123;</div><div class="line">    Widget w;</div><div class="line">    ...</div><div class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::move(w);<span class="comment">//避免这样做</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Item-26-Avoid-overloading-on-universal-references"><a href="#Item-26-Avoid-overloading-on-universal-references" class="headerlink" title="Item 26: Avoid overloading on universal references"></a>Item 26: Avoid overloading on universal references</h2><p><strong>要点</strong>看原书比较清楚(没太看懂。)<br><strong>1、对通用引用进行重载往往导致其被调用的次数比预期要多很多。</strong><br><strong>2、完美转发的构造函数特别有问题，因为它们通常比拷贝构造函数更适合非常量lvalue，并且它们可以劫持派生类调用到其基类的拷贝和移动构造函数</strong></p>
-<h2 id="Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references"><a href="#Item-27-Familiarize-yourself-with-alternatives-to-overloading-on-universal-references" class="headerlink" title="Item 27: Familiarize yourself with alternatives to overloading on universal references."></a>Item 27: Familiarize yourself with alternatives to overloading on universal references.</h2><h2 id="Item-28-Understand-reference-collapsing"><a href="#Item-28-Understand-reference-collapsing" class="headerlink" title="Item 28: Understand reference collapsing"></a>Item 28: Understand reference collapsing</h2><p><strong>要点</strong><br><strong>1、</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment">根据传入param是lvalue或者rvalue，T的推导类型会有不同。param是lvalue，则T推导为lvalue reference，当param是rvalue，T推导为non-reference。</span></div><div class="line"><span class="comment">*/</span></div></pre></td></tr></table></figure></p>
-<p><strong>2、在C++中引用的引用是违法的</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> x;</div><div class="line">...</div><div class="line"><span class="keyword">auto</span>&amp; &amp; rx=x;<span class="comment">//ERROR</span></div></pre></td></tr></table></figure></p>
-<p><strong>3、但是当lvalue传入一个以universal reference为类型的模板时</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span></span>;</div><div class="line"></div><div class="line">Widget w;</div><div class="line">func(w);<span class="comment">//w是一个lvalue，那么T推导为Widget&amp;</span></div><div class="line"><span class="comment">//则模板应该被实例化为以下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; &amp;&amp; param)</span></span>;</div><div class="line"><span class="comment">//实际上这时一种叫做reference collapsing的机制，使得模板的最终实例化如下：</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Widget&amp; param)</span></span>;<span class="comment">//这与之前所说的以lvalue初始化universal </span></div><div class="line"><span class="comment">//reference，其结果为lvalue  reference一致。</span></div></pre></td></tr></table></figure></p>
-<p><strong>4、reference collapsing规则</strong><br>在允许reference collapsing的情况下，如果两个reference中，任一个是lvalue reference，则结果是lvalue reference，否则结果是rvalue reference。<br>实际上，std::forward就是根据这个机制实现的。<br><strong>5、深入理解universal reference</strong><br>实际上，universal reference不是一种新引用，它是rvalue reference在以下条件满足时的一种特殊情况：<br><strong>条件1</strong>类型推导区分左值和右值。类型T的左值推导为类型 T&amp;，类型T的右值推导为类型 T。<br><strong>条件2</strong>发生了reference collapsing。<br><strong>6、reference collapsing发生的情况</strong><br><strong>情况1</strong>模板实例化<br><strong>情况2</strong>auto类型生成<br><strong>情况3</strong>生成、使用typedef 和 使用别名声明<br><strong>情况4</strong>使用decltype</p>
-<h2 id="Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used"><a href="#Item-29-Assume-that-move-operations-are-not-present-not-cheap-and-not-used" class="headerlink" title="Item 29: Assume that move operations are not present, not cheap, and not used"></a>Item 29: Assume that move operations are not present, not cheap, and not used</h2><p><strong>要点</strong><br><strong>1、在以下情况下，std::move不会带来任何好处。</strong><br><strong>No move operations</strong><br><strong>Move not faster</strong><br><strong>Move not usable</strong><br><strong>Source object is lvalue</strong><br><strong>2、最好假设move操作不存在，不高效，没用过。只有在类型明确或者支持move语义时不需要这个假设。</strong></p>
-<h2 id="Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases"><a href="#Item-30-Familiarize-yourself-with-perfect-forwarding-failure-cases" class="headerlink" title="Item 30: Familiarize yourself with perfect forwarding failure cases"></a>Item 30: Familiarize yourself with perfect forwarding failure cases</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、Scott Meyers<br>Effective Modern C++ : 42 Specific Ways to Improve Your Use of C++11 and C++14</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cpp</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/cpp//" class="article-tag-list-link color4">cpp</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/23/cpp-lvalue-and-rvalue/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1067,11 +1137,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1079,11 +1149,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1103,19 +1173,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">cv</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">dl</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1123,7 +1181,23 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">dl</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">dl pytorch skorch</a>
               </li>
              
               <li class="article-tag-list-item">
