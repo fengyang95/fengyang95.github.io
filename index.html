@@ -269,6 +269,7 @@ Best val Acc: 0.843575
 </code></pre><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、<a href="https://pytorch.org/tutorials/beginner/data_loading_tutorial.html#" target="_blank" rel="external">Pytorch data_loading tutorial</a></p>
 <p>2、<a href="https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html" target="_blank" rel="external">Pytorch_transfer_learning_tutorial</a></p>
 <p>3、<a href="https://nbviewer.jupyter.org/github/dnouri/skorch/blob/master/notebooks/Basic_Usage.ipynb" target="_blank" rel="external">skorch basic usage</a></p>
+<p>4、<a href="https://github.com/wwdguu/wwdguu.github.io/tree/master/2018/08/23/titanic-dl/titanic-dl.ipynb" target="_blank" rel="external">notebook</a></p>
 
       
 
@@ -434,136 +435,7 @@ Name           : 1307
 Ticket         : 929 
  [&apos;A/5 21171&apos; &apos;PC 17599&apos; &apos;STON/O2. 3101282&apos; &apos;113803&apos; &apos;373450&apos; &apos;330877&apos;
  &apos;17463&apos; &apos;349909&apos; &apos;347742&apos; &apos;237736&apos; &apos;PP 9549&apos; &apos;113783&apos; &apos;A/5. 2151&apos;
- &apos;347082&apos; &apos;350406&apos; &apos;248706&apos; &apos;382652&apos; &apos;244373&apos; &apos;345763&apos; &apos;2649&apos; &apos;239865&apos;
- &apos;248698&apos; &apos;330923&apos; &apos;113788&apos; &apos;347077&apos; &apos;2631&apos; &apos;19950&apos; &apos;330959&apos; &apos;349216&apos;
- &apos;PC 17601&apos; &apos;PC 17569&apos; &apos;335677&apos; &apos;C.A. 24579&apos; &apos;PC 17604&apos; &apos;113789&apos; &apos;2677&apos;
- &apos;A./5. 2152&apos; &apos;345764&apos; &apos;2651&apos; &apos;7546&apos; &apos;11668&apos; &apos;349253&apos; &apos;SC/Paris 2123&apos;
- &apos;330958&apos; &apos;S.C./A.4. 23567&apos; &apos;370371&apos; &apos;14311&apos; &apos;2662&apos; &apos;349237&apos; &apos;3101295&apos;
- &apos;A/4. 39886&apos; &apos;PC 17572&apos; &apos;2926&apos; &apos;113509&apos; &apos;19947&apos; &apos;C.A. 31026&apos; &apos;2697&apos;
- &apos;C.A. 34651&apos; &apos;CA 2144&apos; &apos;2669&apos; &apos;113572&apos; &apos;36973&apos; &apos;347088&apos; &apos;PC 17605&apos; &apos;2661&apos;
- &apos;C.A. 29395&apos; &apos;S.P. 3464&apos; &apos;3101281&apos; &apos;315151&apos; &apos;C.A. 33111&apos; &apos;S.O.C. 14879&apos;
- &apos;2680&apos; &apos;1601&apos; &apos;348123&apos; &apos;349208&apos; &apos;374746&apos; &apos;248738&apos; &apos;364516&apos; &apos;345767&apos;
- &apos;345779&apos; &apos;330932&apos; &apos;113059&apos; &apos;SO/C 14885&apos; &apos;3101278&apos; &apos;W./C. 6608&apos;
- &apos;SOTON/OQ 392086&apos; &apos;343275&apos; &apos;343276&apos; &apos;347466&apos; &apos;W.E.P. 5734&apos; &apos;C.A. 2315&apos;
- &apos;364500&apos; &apos;374910&apos; &apos;PC 17754&apos; &apos;PC 17759&apos; &apos;231919&apos; &apos;244367&apos; &apos;349245&apos;
- &apos;349215&apos; &apos;35281&apos; &apos;7540&apos; &apos;3101276&apos; &apos;349207&apos; &apos;343120&apos; &apos;312991&apos; &apos;349249&apos;
- &apos;371110&apos; &apos;110465&apos; &apos;2665&apos; &apos;324669&apos; &apos;4136&apos; &apos;2627&apos; &apos;STON/O 2. 3101294&apos;
- &apos;370369&apos; &apos;PC 17558&apos; &apos;A4. 54510&apos; &apos;27267&apos; &apos;370372&apos; &apos;C 17369&apos; &apos;2668&apos;
- &apos;347061&apos; &apos;349241&apos; &apos;SOTON/O.Q. 3101307&apos; &apos;A/5. 3337&apos; &apos;228414&apos; &apos;C.A. 29178&apos;
- &apos;SC/PARIS 2133&apos; &apos;11752&apos; &apos;7534&apos; &apos;PC 17593&apos; &apos;2678&apos; &apos;347081&apos;
- &apos;STON/O2. 3101279&apos; &apos;365222&apos; &apos;231945&apos; &apos;C.A. 33112&apos; &apos;350043&apos; &apos;230080&apos;
- &apos;244310&apos; &apos;S.O.P. 1166&apos; &apos;113776&apos; &apos;A.5. 11206&apos; &apos;A/5. 851&apos; &apos;Fa 265302&apos;
- &apos;PC 17597&apos; &apos;35851&apos; &apos;SOTON/OQ 392090&apos; &apos;315037&apos; &apos;CA. 2343&apos; &apos;371362&apos;
- &apos;C.A. 33595&apos; &apos;347068&apos; &apos;315093&apos; &apos;363291&apos; &apos;113505&apos; &apos;PC 17318&apos; &apos;111240&apos;
- &apos;STON/O 2. 3101280&apos; &apos;17764&apos; &apos;350404&apos; &apos;4133&apos; &apos;PC 17595&apos; &apos;250653&apos; &apos;LINE&apos;
- &apos;SC/PARIS 2131&apos; &apos;230136&apos; &apos;315153&apos; &apos;113767&apos; &apos;370365&apos; &apos;111428&apos; &apos;364849&apos;
- &apos;349247&apos; &apos;234604&apos; &apos;28424&apos; &apos;350046&apos; &apos;PC 17610&apos; &apos;368703&apos; &apos;4579&apos; &apos;370370&apos;
- &apos;248747&apos; &apos;345770&apos; &apos;3101264&apos; &apos;2628&apos; &apos;A/5 3540&apos; &apos;347054&apos; &apos;2699&apos; &apos;367231&apos;
- &apos;112277&apos; &apos;SOTON/O.Q. 3101311&apos; &apos;F.C.C. 13528&apos; &apos;A/5 21174&apos; &apos;250646&apos;
- &apos;367229&apos; &apos;35273&apos; &apos;STON/O2. 3101283&apos; &apos;243847&apos; &apos;11813&apos; &apos;W/C 14208&apos;
- &apos;SOTON/OQ 392089&apos; &apos;220367&apos; &apos;21440&apos; &apos;349234&apos; &apos;19943&apos; &apos;PP 4348&apos; &apos;SW/PP 751&apos;
- &apos;A/5 21173&apos; &apos;236171&apos; &apos;347067&apos; &apos;237442&apos; &apos;C.A. 29566&apos; &apos;W./C. 6609&apos; &apos;26707&apos;
- &apos;C.A. 31921&apos; &apos;28665&apos; &apos;SCO/W 1585&apos; &apos;367230&apos; &apos;W./C. 14263&apos;
- &apos;STON/O 2. 3101275&apos; &apos;2694&apos; &apos;19928&apos; &apos;347071&apos; &apos;250649&apos; &apos;11751&apos; &apos;244252&apos;
- &apos;362316&apos; &apos;113514&apos; &apos;A/5. 3336&apos; &apos;370129&apos; &apos;2650&apos; &apos;PC 17585&apos; &apos;110152&apos;
- &apos;PC 17755&apos; &apos;230433&apos; &apos;384461&apos; &apos;110413&apos; &apos;112059&apos; &apos;382649&apos; &apos;C.A. 17248&apos;
- &apos;347083&apos; &apos;PC 17582&apos; &apos;PC 17760&apos; &apos;113798&apos; &apos;250644&apos; &apos;PC 17596&apos; &apos;370375&apos;
- &apos;13502&apos; &apos;347073&apos; &apos;239853&apos; &apos;C.A. 2673&apos; &apos;336439&apos; &apos;347464&apos; &apos;345778&apos;
- &apos;A/5. 10482&apos; &apos;113056&apos; &apos;349239&apos; &apos;345774&apos; &apos;349206&apos; &apos;237798&apos; &apos;370373&apos;
- &apos;19877&apos; &apos;11967&apos; &apos;SC/Paris 2163&apos; &apos;349236&apos; &apos;349233&apos; &apos;PC 17612&apos; &apos;2693&apos;
- &apos;113781&apos; &apos;19988&apos; &apos;9234&apos; &apos;367226&apos; &apos;226593&apos; &apos;A/5 2466&apos; &apos;17421&apos; &apos;PC 17758&apos;
- &apos;P/PP 3381&apos; &apos;PC 17485&apos; &apos;11767&apos; &apos;PC 17608&apos; &apos;250651&apos; &apos;349243&apos;
- &apos;F.C.C. 13529&apos; &apos;347470&apos; &apos;29011&apos; &apos;36928&apos; &apos;16966&apos; &apos;A/5 21172&apos; &apos;349219&apos;
- &apos;234818&apos; &apos;345364&apos; &apos;28551&apos; &apos;111361&apos; &apos;113043&apos; &apos;PC 17611&apos; &apos;349225&apos; &apos;7598&apos;
- &apos;113784&apos; &apos;248740&apos; &apos;244361&apos; &apos;229236&apos; &apos;248733&apos; &apos;31418&apos; &apos;386525&apos;
- &apos;C.A. 37671&apos; &apos;315088&apos; &apos;7267&apos; &apos;113510&apos; &apos;2695&apos; &apos;2647&apos; &apos;345783&apos; &apos;237671&apos;
- &apos;330931&apos; &apos;330980&apos; &apos;SC/PARIS 2167&apos; &apos;2691&apos; &apos;SOTON/O.Q. 3101310&apos; &apos;C 7076&apos;
- &apos;110813&apos; &apos;2626&apos; &apos;14313&apos; &apos;PC 17477&apos; &apos;11765&apos; &apos;3101267&apos; &apos;323951&apos; &apos;C 7077&apos;
- &apos;113503&apos; &apos;2648&apos; &apos;347069&apos; &apos;PC 17757&apos; &apos;2653&apos; &apos;STON/O 2. 3101293&apos; &apos;349227&apos;
- &apos;27849&apos; &apos;367655&apos; &apos;SC 1748&apos; &apos;113760&apos; &apos;350034&apos; &apos;3101277&apos; &apos;350052&apos; &apos;350407&apos;
- &apos;28403&apos; &apos;244278&apos; &apos;240929&apos; &apos;STON/O 2. 3101289&apos; &apos;341826&apos; &apos;4137&apos; &apos;315096&apos;
- &apos;28664&apos; &apos;347064&apos; &apos;29106&apos; &apos;312992&apos; &apos;349222&apos; &apos;394140&apos; &apos;STON/O 2. 3101269&apos;
- &apos;343095&apos; &apos;28220&apos; &apos;250652&apos; &apos;28228&apos; &apos;345773&apos; &apos;349254&apos; &apos;A/5. 13032&apos; &apos;315082&apos;
- &apos;347080&apos; &apos;A/4. 34244&apos; &apos;2003&apos; &apos;250655&apos; &apos;364851&apos; &apos;SOTON/O.Q. 392078&apos;
- &apos;110564&apos; &apos;376564&apos; &apos;SC/AH 3085&apos; &apos;STON/O 2. 3101274&apos; &apos;13507&apos; &apos;C.A. 18723&apos;
- &apos;345769&apos; &apos;347076&apos; &apos;230434&apos; &apos;65306&apos; &apos;33638&apos; &apos;113794&apos; &apos;2666&apos; &apos;113786&apos;
- &apos;65303&apos; &apos;113051&apos; &apos;17453&apos; &apos;A/5 2817&apos; &apos;349240&apos; &apos;13509&apos; &apos;17464&apos;
- &apos;F.C.C. 13531&apos; &apos;371060&apos; &apos;19952&apos; &apos;364506&apos; &apos;111320&apos; &apos;234360&apos; &apos;A/S 2816&apos;
- &apos;SOTON/O.Q. 3101306&apos; &apos;113792&apos; &apos;36209&apos; &apos;323592&apos; &apos;315089&apos; &apos;SC/AH Basle 541&apos;
- &apos;7553&apos; &apos;31027&apos; &apos;3460&apos; &apos;350060&apos; &apos;3101298&apos; &apos;239854&apos; &apos;A/5 3594&apos; &apos;4134&apos;
- &apos;11771&apos; &apos;A.5. 18509&apos; &apos;65304&apos; &apos;SOTON/OQ 3101317&apos; &apos;113787&apos; &apos;PC 17609&apos;
- &apos;A/4 45380&apos; &apos;36947&apos; &apos;C.A. 6212&apos; &apos;350035&apos; &apos;315086&apos; &apos;364846&apos; &apos;330909&apos;
- &apos;4135&apos; &apos;26360&apos; &apos;111427&apos; &apos;C 4001&apos; &apos;382651&apos; &apos;SOTON/OQ 3101316&apos; &apos;PC 17473&apos;
- &apos;PC 17603&apos; &apos;349209&apos; &apos;36967&apos; &apos;C.A. 34260&apos; &apos;226875&apos; &apos;349242&apos; &apos;12749&apos;
- &apos;349252&apos; &apos;2624&apos; &apos;2700&apos; &apos;367232&apos; &apos;W./C. 14258&apos; &apos;PC 17483&apos; &apos;3101296&apos;
- &apos;29104&apos; &apos;2641&apos; &apos;2690&apos; &apos;315084&apos; &apos;113050&apos; &apos;PC 17761&apos; &apos;364498&apos; &apos;13568&apos;
- &apos;WE/P 5735&apos; &apos;2908&apos; &apos;693&apos; &apos;SC/PARIS 2146&apos; &apos;244358&apos; &apos;330979&apos; &apos;2620&apos;
- &apos;347085&apos; &apos;113807&apos; &apos;11755&apos; &apos;345572&apos; &apos;372622&apos; &apos;349251&apos; &apos;218629&apos;
- &apos;SOTON/OQ 392082&apos; &apos;SOTON/O.Q. 392087&apos; &apos;A/4 48871&apos; &apos;349205&apos; &apos;2686&apos;
- &apos;350417&apos; &apos;S.W./PP 752&apos; &apos;11769&apos; &apos;PC 17474&apos; &apos;14312&apos; &apos;A/4. 20589&apos; &apos;358585&apos;
- &apos;243880&apos; &apos;2689&apos; &apos;STON/O 2. 3101286&apos; &apos;237789&apos; &apos;13049&apos; &apos;3411&apos; &apos;237565&apos;
- &apos;13567&apos; &apos;14973&apos; &apos;A./5. 3235&apos; &apos;STON/O 2. 3101273&apos; &apos;A/5 3902&apos; &apos;364848&apos;
- &apos;SC/AH 29037&apos; &apos;248727&apos; &apos;2664&apos; &apos;349214&apos; &apos;113796&apos; &apos;364511&apos; &apos;111426&apos;
- &apos;349910&apos; &apos;349246&apos; &apos;113804&apos; &apos;SOTON/O.Q. 3101305&apos; &apos;370377&apos; &apos;364512&apos;
- &apos;220845&apos; &apos;31028&apos; &apos;2659&apos; &apos;11753&apos; &apos;350029&apos; &apos;54636&apos; &apos;36963&apos; &apos;219533&apos;
- &apos;349224&apos; &apos;334912&apos; &apos;27042&apos; &apos;347743&apos; &apos;13214&apos; &apos;112052&apos; &apos;237668&apos;
- &apos;STON/O 2. 3101292&apos; &apos;350050&apos; &apos;349231&apos; &apos;13213&apos; &apos;S.O./P.P. 751&apos; &apos;CA. 2314&apos;
- &apos;349221&apos; &apos;8475&apos; &apos;330919&apos; &apos;365226&apos; &apos;349223&apos; &apos;29751&apos; &apos;2623&apos; &apos;5727&apos; &apos;349210&apos;
- &apos;STON/O 2. 3101285&apos; &apos;234686&apos; &apos;312993&apos; &apos;A/5 3536&apos; &apos;19996&apos; &apos;29750&apos;
- &apos;F.C. 12750&apos; &apos;C.A. 24580&apos; &apos;244270&apos; &apos;239856&apos; &apos;349912&apos; &apos;342826&apos; &apos;4138&apos;
- &apos;330935&apos; &apos;6563&apos; &apos;349228&apos; &apos;350036&apos; &apos;24160&apos; &apos;17474&apos; &apos;349256&apos; &apos;2672&apos;
- &apos;113800&apos; &apos;248731&apos; &apos;363592&apos; &apos;35852&apos; &apos;348121&apos; &apos;PC 17475&apos; &apos;36864&apos; &apos;350025&apos;
- &apos;223596&apos; &apos;PC 17476&apos; &apos;PC 17482&apos; &apos;113028&apos; &apos;7545&apos; &apos;250647&apos; &apos;348124&apos; &apos;34218&apos;
- &apos;36568&apos; &apos;347062&apos; &apos;350048&apos; &apos;12233&apos; &apos;250643&apos; &apos;113806&apos; &apos;315094&apos; &apos;36866&apos;
- &apos;236853&apos; &apos;STON/O2. 3101271&apos; &apos;239855&apos; &apos;28425&apos; &apos;233639&apos; &apos;349201&apos; &apos;349218&apos;
- &apos;16988&apos; &apos;376566&apos; &apos;STON/O 2. 3101288&apos; &apos;250648&apos; &apos;113773&apos; &apos;335097&apos; &apos;29103&apos;
- &apos;392096&apos; &apos;345780&apos; &apos;349204&apos; &apos;350042&apos; &apos;29108&apos; &apos;363294&apos; &apos;SOTON/O2 3101272&apos;
- &apos;2663&apos; &apos;347074&apos; &apos;112379&apos; &apos;364850&apos; &apos;8471&apos; &apos;345781&apos; &apos;350047&apos; &apos;S.O./P.P. 3&apos;
- &apos;2674&apos; &apos;29105&apos; &apos;347078&apos; &apos;383121&apos; &apos;36865&apos; &apos;2687&apos; &apos;113501&apos; &apos;W./C. 6607&apos;
- &apos;SOTON/O.Q. 3101312&apos; &apos;374887&apos; &apos;3101265&apos; &apos;12460&apos; &apos;PC 17600&apos; &apos;349203&apos;
- &apos;28213&apos; &apos;17465&apos; &apos;349244&apos; &apos;2685&apos; &apos;2625&apos; &apos;347089&apos; &apos;347063&apos; &apos;112050&apos;
- &apos;347087&apos; &apos;248723&apos; &apos;3474&apos; &apos;28206&apos; &apos;364499&apos; &apos;112058&apos; &apos;STON/O2. 3101290&apos;
- &apos;S.C./PARIS 2079&apos; &apos;C 7075&apos; &apos;315098&apos; &apos;19972&apos; &apos;368323&apos; &apos;367228&apos; &apos;2671&apos;
- &apos;347468&apos; &apos;2223&apos; &apos;PC 17756&apos; &apos;315097&apos; &apos;392092&apos; &apos;11774&apos; &apos;SOTON/O2 3101287&apos;
- &apos;2683&apos; &apos;315090&apos; &apos;C.A. 5547&apos; &apos;349213&apos; &apos;347060&apos; &apos;PC 17592&apos; &apos;392091&apos;
- &apos;113055&apos; &apos;2629&apos; &apos;350026&apos; &apos;28134&apos; &apos;17466&apos; &apos;233866&apos; &apos;236852&apos;
- &apos;SC/PARIS 2149&apos; &apos;PC 17590&apos; &apos;345777&apos; &apos;349248&apos; &apos;695&apos; &apos;345765&apos; &apos;2667&apos;
- &apos;349212&apos; &apos;349217&apos; &apos;349257&apos; &apos;7552&apos; &apos;C.A./SOTON 34068&apos; &apos;SOTON/OQ 392076&apos;
- &apos;211536&apos; &apos;112053&apos; &apos;111369&apos; &apos;370376&apos; &apos;330911&apos; &apos;363272&apos; &apos;240276&apos; &apos;315154&apos;
- &apos;7538&apos; &apos;330972&apos; &apos;2657&apos; &apos;349220&apos; &apos;694&apos; &apos;21228&apos; &apos;24065&apos; &apos;233734&apos; &apos;2692&apos;
- &apos;STON/O2. 3101270&apos; &apos;2696&apos; &apos;C 17368&apos; &apos;PC 17598&apos; &apos;2698&apos; &apos;113054&apos;
- &apos;C.A. 31029&apos; &apos;13236&apos; &apos;2682&apos; &apos;342712&apos; &apos;315087&apos; &apos;345768&apos; &apos;113778&apos;
- &apos;SOTON/O.Q. 3101263&apos; &apos;237249&apos; &apos;STON/O 2. 3101291&apos; &apos;PC 17594&apos; &apos;370374&apos;
- &apos;13695&apos; &apos;SC/PARIS 2168&apos; &apos;SC/A.3 2861&apos; &apos;349230&apos; &apos;348122&apos; &apos;349232&apos; &apos;237216&apos;
- &apos;347090&apos; &apos;334914&apos; &apos;F.C.C. 13534&apos; &apos;330963&apos; &apos;2543&apos; &apos;382653&apos; &apos;349211&apos;
- &apos;3101297&apos; &apos;PC 17562&apos; &apos;359306&apos; &apos;11770&apos; &apos;248744&apos; &apos;368702&apos; &apos;19924&apos; &apos;349238&apos;
- &apos;240261&apos; &apos;2660&apos; &apos;330844&apos; &apos;A/4 31416&apos; &apos;364856&apos; &apos;347072&apos; &apos;345498&apos; &apos;376563&apos;
- &apos;13905&apos; &apos;350033&apos; &apos;STON/O 2. 3101268&apos; &apos;347471&apos; &apos;A./5. 3338&apos; &apos;11778&apos;
- &apos;365235&apos; &apos;347070&apos; &apos;330920&apos; &apos;383162&apos; &apos;3410&apos; &apos;248734&apos; &apos;237734&apos; &apos;330968&apos;
- &apos;PC 17531&apos; &apos;329944&apos; &apos;2681&apos; &apos;13050&apos; &apos;367227&apos; &apos;392095&apos; &apos;368783&apos; &apos;350045&apos;
- &apos;211535&apos; &apos;342441&apos; &apos;STON/OQ. 369943&apos; &apos;113780&apos; &apos;2621&apos; &apos;349226&apos; &apos;350409&apos;
- &apos;2656&apos; &apos;248659&apos; &apos;SOTON/OQ 392083&apos; &apos;17475&apos; &apos;SC/A4 23568&apos; &apos;113791&apos; &apos;349255&apos;
- &apos;3701&apos; &apos;350405&apos; &apos;S.O./P.P. 752&apos; &apos;347469&apos; &apos;110489&apos; &apos;SOTON/O.Q. 3101315&apos;
- &apos;335432&apos; &apos;220844&apos; &apos;343271&apos; &apos;237393&apos; &apos;PC 17591&apos; &apos;17770&apos; &apos;7548&apos;
- &apos;S.O./P.P. 251&apos; &apos;2670&apos; &apos;2673&apos; &apos;233478&apos; &apos;7935&apos; &apos;239059&apos; &apos;S.O./P.P. 2&apos;
- &apos;A/4 48873&apos; &apos;28221&apos; &apos;111163&apos; &apos;235509&apos; &apos;347465&apos; &apos;347066&apos; &apos;C.A. 31030&apos;
- &apos;65305&apos; &apos;C.A. 34050&apos; &apos;F.C. 12998&apos; &apos;9232&apos; &apos;28034&apos; &apos;PC 17613&apos; &apos;349250&apos;
- &apos;SOTON/O.Q. 3101308&apos; &apos;347091&apos; &apos;113038&apos; &apos;330924&apos; &apos;32302&apos; &apos;SC/PARIS 2148&apos;
- &apos;342684&apos; &apos;W./C. 14266&apos; &apos;350053&apos; &apos;PC 17606&apos; &apos;350054&apos; &apos;370368&apos; &apos;242963&apos;
- &apos;113795&apos; &apos;3101266&apos; &apos;330971&apos; &apos;350416&apos; &apos;2679&apos; &apos;250650&apos; &apos;112377&apos; &apos;3470&apos;
- &apos;SOTON/O2 3101284&apos; &apos;13508&apos; &apos;7266&apos; &apos;345775&apos; &apos;C.A. 42795&apos; &apos;AQ/4 3130&apos;
- &apos;363611&apos; &apos;28404&apos; &apos;345501&apos; &apos;350410&apos; &apos;C.A. 34644&apos; &apos;349235&apos; &apos;112051&apos;
- &apos;C.A. 49867&apos; &apos;A. 2. 39186&apos; &apos;315095&apos; &apos;368573&apos; &apos;2676&apos; &apos;SC 14888&apos; &apos;CA 31352&apos;
- &apos;W./C. 14260&apos; &apos;315085&apos; &apos;364859&apos; &apos;A/5 21175&apos; &apos;SOTON/O.Q. 3101314&apos; &apos;2655&apos;
- &apos;A/5 1478&apos; &apos;PC 17607&apos; &apos;382650&apos; &apos;2652&apos; &apos;345771&apos; &apos;349202&apos; &apos;113801&apos; &apos;347467&apos;
- &apos;347079&apos; &apos;237735&apos; &apos;315092&apos; &apos;383123&apos; &apos;112901&apos; &apos;315091&apos; &apos;2658&apos; &apos;LP 1588&apos;
- &apos;368364&apos; &apos;AQ/3. 30631&apos; &apos;28004&apos; &apos;350408&apos; &apos;347075&apos; &apos;2654&apos; &apos;244368&apos; &apos;113790&apos;
- &apos;SOTON/O.Q. 3101309&apos; &apos;236854&apos; &apos;PC 17580&apos; &apos;2684&apos; &apos;349229&apos; &apos;110469&apos;
- &apos;244360&apos; &apos;2675&apos; &apos;2622&apos; &apos;C.A. 15185&apos; &apos;350403&apos; &apos;348125&apos; &apos;237670&apos; &apos;2688&apos;
- &apos;248726&apos; &apos;F.C.C. 13540&apos; &apos;113044&apos; &apos;1222&apos; &apos;368402&apos; &apos;315083&apos; &apos;112378&apos;
- &apos;SC/PARIS 2147&apos; &apos;28133&apos; &apos;248746&apos; &apos;315152&apos; &apos;29107&apos; &apos;680&apos; &apos;366713&apos; &apos;330910&apos;
- &apos;SC/PARIS 2159&apos; &apos;349911&apos; &apos;244346&apos; &apos;364858&apos; &apos;C.A. 30769&apos; &apos;371109&apos; &apos;347065&apos;
- &apos;21332&apos; &apos;17765&apos; &apos;SC/PARIS 2166&apos; &apos;28666&apos; &apos;334915&apos; &apos;365237&apos; &apos;347086&apos;
+    ...
  &apos;A.5. 3236&apos; &apos;SOTON/O.Q. 3101262&apos; &apos;359309&apos;]
 </code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#对object特征分组</span></div><div class="line"><span class="comment">#处理Name属性</span></div><div class="line">data_all[<span class="string">'Title'</span>] = data_all[<span class="string">'Name'</span>]</div><div class="line"><span class="comment"># Cleaning name and extracting Title</span></div><div class="line"><span class="keyword">for</span> name_string <span class="keyword">in</span> data_all[<span class="string">'Name'</span>]:</div><div class="line">    data_all[<span class="string">'Title'</span>] = data_all[<span class="string">'Name'</span>].str.extract(<span class="string">'([A-Za-z]+)\.'</span>, expand=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="comment"># Replacing rare titles with more common ones</span></div><div class="line">mapping = &#123;<span class="string">'Mlle'</span>: <span class="string">'Miss'</span>, <span class="string">'Major'</span>: <span class="string">'Mr'</span>, <span class="string">'Col'</span>: <span class="string">'Mr'</span>, <span class="string">'Sir'</span>: <span class="string">'Mr'</span>, <span class="string">'Don'</span>: <span class="string">'Mr'</span>, <span class="string">'Mme'</span>: <span class="string">'Miss'</span>,</div><div class="line">               <span class="string">'Jonkheer'</span>: <span class="string">'Mr'</span>, <span class="string">'Lady'</span>: <span class="string">'Mrs'</span>, <span class="string">'Capt'</span>: <span class="string">'Mr'</span>, <span class="string">'Countess'</span>: <span class="string">'Mrs'</span>, <span class="string">'Ms'</span>: <span class="string">'Miss'</span>, <span class="string">'Dona'</span>: <span class="string">'Mrs'</span>&#125;</div><div class="line">data_all.replace(&#123;<span class="string">'Title'</span>: mapping&#125;, inplace=<span class="keyword">True</span>)</div><div class="line"></div><div class="line">g = sns.factorplot(x=<span class="string">"Title"</span>, y=<span class="string">"Survived"</span>,  data=data_all.iloc[:train_len,:],</div><div class="line">                   size=<span class="number">6</span>, kind=<span class="string">"bar"</span>, palette=<span class="string">"muted"</span>)</div><div class="line">g.despine(left=<span class="keyword">True</span>)</div><div class="line">g = g.set_ylabels(<span class="string">"survival probability"</span>)</div><div class="line"><span class="comment"># 分析得出女人小孩确实生存率更高</span></div></pre></td></tr></table></figure>
 <p><img src="output_10_0.png" alt="png"></p>
@@ -717,7 +589,7 @@ SVC
 <pre><code>(418,)
 (418,)
 </code></pre><p>最后提交的voting方法的结果得到了0.81339的分数,还有一定的提升空间，其中超参数调整应该还会带来一定的效果提升。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、<a href="https://www.kaggle.com/yassineghouzam/titanic-top-4-with-ensemble-modeling" target="_blank" rel="external">yassineghouzam’s kernel</a><br>2、<a href="https://www.kaggle.com/konstantinmasich/titanic-0-82-0-83" target="_blank" rel="external">konstantinmasich’s kernel</a><br>3、<a href="http://pandas.pydata.org/pandas-docs/stable/" target="_blank" rel="external">pandas document</a><br>4、<a href="https://seaborn.pydata.org/tutorial.html" target="_blank" rel="external">seaborn tutorial</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、<a href="https://www.kaggle.com/yassineghouzam/titanic-top-4-with-ensemble-modeling" target="_blank" rel="external">yassineghouzam’s kernel</a><br>2、<a href="https://www.kaggle.com/konstantinmasich/titanic-0-82-0-83" target="_blank" rel="external">konstantinmasich’s kernel</a><br>3、<a href="http://pandas.pydata.org/pandas-docs/stable/" target="_blank" rel="external">pandas document</a><br>4、<a href="https://seaborn.pydata.org/tutorial.html" target="_blank" rel="external">seaborn tutorial</a><br>5、<a href="https://github.com/wwdguu/wwdguu.github.io/tree/master/2018/08/11/titanic/titanic.ipynb" target="_blank" rel="external">notebook</a></p>
 
       
 
@@ -1137,6 +1009,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
@@ -1145,15 +1021,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">cpp</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1173,11 +1045,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">cv</a>
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color3">cv</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1185,7 +1057,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1194,10 +1066,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">dl pytorch skorch</a>
               </li>
              
               <li class="article-tag-list-item">
