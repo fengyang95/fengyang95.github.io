@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
@@ -31,7 +31,7 @@
     #container.show {
       background: linear-gradient(200deg,#a0cfe4,#e8c37e);
     }
-  </style>
+  </style><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
   
@@ -39,7 +39,7 @@
 </head>
 
 <body>
-  <div id="container" q-class="show:isCtnShow">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
@@ -161,6 +161,218 @@ style="background: #4d4d4d"></div>
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-install-netcdf4-python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/30/install-netcdf4-python/">Linux下安装netCDF4过程记录</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/30/install-netcdf4-python/" class="archive-article-date">
+  	<time datetime="2018-08-30T14:01:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HDF5安装"><span class="toc-text">HDF5安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#netCDF-4-C-library-安装"><span class="toc-text">netCDF-4 C library 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装netCDF4-python包"><span class="toc-text">安装netCDF4 python包</span></a></li></ol>
+</div>
+
+        <p><a href="http://unidata.github.io/netcdf4-python/" target="_blank" rel="external">netCDF4官方指南</a></p>
+<h2 id="HDF5安装"><a href="#HDF5安装" class="headerlink" title="HDF5安装"></a>HDF5安装</h2><p><a href="https://www.hdfgroup.org/downloads/hdf5/source-code/" target="_blank" rel="external">HDF5网站</a><br><a href="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/unpacked/hdf5-1.10.3/release_docs/INSTALL" target="_blank" rel="external">INSTALL FILE</a><br><strong>1、在HDF5网站上下载hdf5-1.10.3.tar.gz源码</strong><br><strong>2、在Ubuntu16.04上安装HDF5</strong><br>使用以下安装脚本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">tar zxf hdf5-1.10.3.tar.gz</div><div class="line"><span class="built_in">cd</span> hdf5-1.10.3</div><div class="line">./configure --prefix=/usr/<span class="built_in">local</span>/hdf5  --<span class="built_in">enable</span>-hl --<span class="built_in">enable</span>-shared</div><div class="line">make</div><div class="line">make check                <span class="comment"># run test suite.</span></div><div class="line">make install</div><div class="line">make check-install        <span class="comment"># verify installation.</span></div></pre></td></tr></table></figure></p>
+<p>如果遇到安装失败，可能需要sudo make</p>
+<h2 id="netCDF-4-C-library-安装"><a href="#netCDF-4-C-library-安装" class="headerlink" title="netCDF-4 C library 安装"></a>netCDF-4 C library 安装</h2><p><a href="https://github.com/Unidata/netcdf-c" target="_blank" rel="external">netCDF-4 C github repo</a><br><a href="https://www.unidata.ucar.edu/software/netcdf/docs/getting_and_building_netcdf.html" target="_blank" rel="external">Build Instruction</a><br>1、下载netcdf-c-4.6.1.tar.gz<br>2、安装<br>使用以下脚本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Build and install netCDF-4</span></div><div class="line">tar zxf netcdf-c-4.6.1.tar.gz</div><div class="line"><span class="built_in">cd</span> netcdf-c-4.6.1</div><div class="line">NCDIR=/usr/<span class="built_in">local</span></div><div class="line">H5DIR=/usr/<span class="built_in">local</span>/hdf5</div><div class="line">CPPFLAGS=-I<span class="variable">$&#123;H5DIR&#125;</span>/include LDFLAGS=-L<span class="variable">$&#123;H5DIR&#125;</span>/lib ./configure --prefix=<span class="variable">$&#123;NCDIR&#125;</span> --<span class="built_in">enable</span>-netcdf-4 --<span class="built_in">enable</span>-shared</div><div class="line">sudo make check</div><div class="line">sudo make install  <span class="comment"># or sudo make install</span></div></pre></td></tr></table></figure></p>
+<p>3、遇到问题：使用git clone下来的源码，没有configure，无法build。</p>
+<h2 id="安装netCDF4-python包"><a href="#安装netCDF4-python包" class="headerlink" title="安装netCDF4 python包"></a>安装netCDF4 python包</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">USE_SETUPCFG=0 HDF5_INCDIR=/usr/include/hdf5/serial HDF5_LIBDIR=/usr/lib/x86_64-linux-gnu/hdf5/serial pip3 install netCDF4</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/30/install-netcdf4-python/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-HOMLWSLATF-ch3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/30/HOMLWSLATF-ch3/">Chapter 3. Classification</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/30/HOMLWSLATF-ch3/" class="archive-article-date">
+  	<time datetime="2018-08-30T13:41:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MNIST"><span class="toc-text">MNIST</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Training-a-Binary-Classifier"><span class="toc-text">Training a Binary Classifier</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Performance-Measures"><span class="toc-text">Performance Measures</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-利用交叉验证-Cross-Validation-来验证模型"><span class="toc-text">3.1 利用交叉验证(Cross-Validation)来验证模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-混淆矩阵-Confusion-Matrix"><span class="toc-text">3.2 混淆矩阵(Confusion Matrix)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-准确率和召回率"><span class="toc-text">3.3 准确率和召回率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-Precision-Recall-Tradeoff"><span class="toc-text">3.4 Precision/Recall Tradeoff</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-The-ROC-Curve"><span class="toc-text">3.5 The ROC Curve</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-总结"><span class="toc-text">3.5 总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multiclass-classification"><span class="toc-text">Multiclass classification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Error-Analysis"><span class="toc-text">Error Analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multilabel-Classification"><span class="toc-text">Multilabel Classification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multioutput-Classiffication"><span class="toc-text">Multioutput Classiffication</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p>《 Hands-On Machine Learning with Scikit-Learn and TensorFlow》笔记</p>
+<h2 id="MNIST"><a href="#MNIST" class="headerlink" title="MNIST"></a>MNIST</h2><p>MNIST数据集介绍及载入</p>
+<h2 id="Training-a-Binary-Classifier"><a href="#Training-a-Binary-Classifier" class="headerlink" title="Training a Binary Classifier"></a>Training a Binary Classifier</h2><p>使用sklearn包训练二分类器<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">y_train_5 = (y_train == <span class="number">5</span>)</div><div class="line">y_test_5 = (y_test == <span class="number">5</span>)</div><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> SGDClassifier</div><div class="line">sgd_clf = SGDClassifier(random_state=<span class="number">42</span>)</div><div class="line">sgd_clf.fit(X_train, y_train_5)</div><div class="line"></div><div class="line">&gt;&gt; sgd_clf.predict([some_digit])</div><div class="line">array([<span class="keyword">True</span>], dtype=bool)</div></pre></td></tr></table></figure></p>
+<h2 id="Performance-Measures"><a href="#Performance-Measures" class="headerlink" title="Performance Measures"></a>Performance Measures</h2><h3 id="3-1-利用交叉验证-Cross-Validation-来验证模型"><a href="#3-1-利用交叉验证-Cross-Validation-来验证模型" class="headerlink" title="3.1 利用交叉验证(Cross-Validation)来验证模型"></a>3.1 利用<strong>交叉验证</strong>(Cross-Validation)来验证模型</h3><p>有用函数: sklearn包中的<strong>cross_val_score</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score</div><div class="line">cross_val_score(sgd_clf, X_train, y_train_5, cv=<span class="number">3</span>, scoring=<span class="string">'accuracy'</span>)</div></pre></td></tr></table></figure></p>
+<h3 id="3-2-混淆矩阵-Confusion-Matrix"><a href="#3-2-混淆矩阵-Confusion-Matrix" class="headerlink" title="3.2 混淆矩阵(Confusion Matrix)"></a>3.2 混淆矩阵(Confusion Matrix)</h3><p>使用函数 <strong>cross_val_predict</strong>和<strong>confusion_matrix</strong>计算混淆矩阵<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_predict</div><div class="line">y_train_pred=cross_val_predict(sgd_clf, X_train, y_train_5, cv=<span class="number">3</span>)</div><div class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix</div><div class="line">cm=confusion_matrix(y_train_5,y_train_pred)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>cm</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>array([[<span class="number">53272</span>, <span class="number">1307</span>],</div><div class="line">    [<span class="number">1077</span>, <span class="number">4344</span>]])</div></pre></td></tr></table></figure></p>
+<h3 id="3-3-准确率和召回率"><a href="#3-3-准确率和召回率" class="headerlink" title="3.3 准确率和召回率"></a>3.3 准确率和召回率</h3><p><strong>准确率(Precision)</strong> $$precision=\frac{TP}{TP + FP}$$<br><strong>召回率(Recall)</strong> $$recall=\frac{TP}{TP + FN}$$<br><strong>F1分数(F1 score)</strong>$$F_1=\frac{2}{\frac{1}{precision}+\frac{1}{recall}}=2 \times \frac{precision \cdot recall}{precision + recall} =  \frac {TP}{TP+\frac{FN + FP}{2}}$$<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_score, recall_score,f1_score</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>precision_score(y_train_5, y_pred)</div><div class="line"><span class="number">0.768</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>recall_score(y_train_5,y_train_pred)</div><div class="line"><span class="number">0.791</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>f1_score(y_train_5, y_pred)</div><div class="line"><span class="number">0.784</span></div></pre></td></tr></table></figure></p>
+<p>F1 score favors classifiers that have similar precision and recall.</p>
+<h3 id="3-4-Precision-Recall-Tradeoff"><a href="#3-4-Precision-Recall-Tradeoff" class="headerlink" title="3.4 Precision/Recall Tradeoff"></a>3.4 Precision/Recall Tradeoff</h3><p>分类器在做预测时根据预测的分数来决定时属于正类还是反类,我们需要设定一个分数<strong>阈值(threshold)</strong>来作为划分,低阈值的选取对应高的recall和低的precision,而高阈值的选取对应了高的precision和低的recall。<br>实践中我们可以使用sklearn中的<strong>decsion_function</strong>获得分数，并指定分类阈值。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>y_scores = sgd_clf.decision_function([some_digit])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>y_scores</div><div class="line">array([<span class="number">161855.555</span>])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>threshold = <span class="number">0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>y_some_digit_pred = (y_scores &gt; threshold)</div><div class="line">array([ <span class="keyword">True</span>], dtype=bool)</div></pre></td></tr></table></figure></p>
+<p>还可以使用<strong>precision_recall_curve</strong>计算recall、precision曲线。<br>根据recall、precision曲线，我们就可以按照特定的场景需求来合理选择阈值。</p>
+<h3 id="3-5-The-ROC-Curve"><a href="#3-5-The-ROC-Curve" class="headerlink" title="3.5 The ROC Curve"></a>3.5 The ROC Curve</h3><p>和准确率/召回率曲线类似，其是衡量 <em>true positive rate</em>(TPR) 和<em>false negative rate</em>的关系.<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_curve</div><div class="line">fpr, tpr, thresholds = roc_curve(y_train_5, y_scores)</div></pre></td></tr></table></figure></p>
+<p> 该曲线包围的面积(<em>area under the curve(AUC)</em>)越大,说明分类器越好.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_auc_score</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>roc_auc_score(y_train_5, y_scores)</div><div class="line"><span class="number">0.9706</span></div></pre></td></tr></table></figure></p>
+<h3 id="3-5-总结"><a href="#3-5-总结" class="headerlink" title="3.5 总结"></a>3.5 总结</h3><p>训练二分类器的一般流程如下:<br>1、选择合适的metrics作为评价指标<br>2、 使用交叉验证训练模型<br>3、取得precision/recall的平衡来满足需求<br>4、利用ROC curves和ROC AUC scores来比较不同模型的性能</p>
+<h2 id="Multiclass-classification"><a href="#Multiclass-classification" class="headerlink" title="Multiclass classification"></a>Multiclass classification</h2><p>一些算法可以直接进行多分类，如随机森林、朴素贝叶斯等，而另外一些算法只能进行二分类，如支持向量机、线性分类器等。<br>有很多策略可以将二分类算法推广到多分类任务中：<br><em>one-versus-all</em>(<strong>OvA</strong>): 训练N个二分类器，每个二分类器负责预测一个label。<br><em>one-versus-one</em>(<strong>OvO</strong>):训练N*(N-1)个二分类器，每个二分类器负责预测一对label。<br>对于SVM来说，使用OvO策略更好，对于绝大多数算法，更推荐使用OvA策略。<br>sklearn包针对多分类任务自动选择OvA策略(SVM例外)。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>sgd_clf.fit(X_train, y_train)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>sgd_clf.predict([some_digit])</div><div class="line">array([<span class="number">5.</span>])</div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>some_digit_scores = sgd_clf.decision_function([some_digit])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>some_digit_scores</div><div class="line">array([[...</div><div class="line">]])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>np.argmax(some_digit_scores)</div><div class="line"><span class="number">5</span></div></pre></td></tr></table></figure></p>
+<p>也可以使用<strong>OneVsOneClassifier</strong>或者<strong>OneVsRestClassifier</strong>类自定义策略。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.multiclass <span class="keyword">import</span> OneVsOneClassifier</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>ovo_clf = OneVsOneClassifier(SGDClassifier(random_state=<span class="number">42</span>))</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>ovo_clf.fit(X_train,y_train)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>onv_clf.predict([some_digit])</div><div class="line">array([<span class="number">5.</span>])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>len(ovo_clf.estimators_)</div><div class="line"><span class="number">45</span></div></pre></td></tr></table></figure></p>
+<p>对于随机森林等可以直接进行多分类，不需要使用OvO或者OvA策略。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>forest_clf.fit(X_train, y_train)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>forest_clf.predict([some_digit])</div><div class="line">array([<span class="number">5.</span>])</div><div class="line"><span class="comment"># 可以使用predict_proba方法得到预测各类的概率</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>forest_clf.predict_proba([some_digit])</div><div class="line">array([[<span class="number">0.1</span>, <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.1</span>, <span class="number">0.</span>, <span class="number">0.8</span>, ...]])</div></pre></td></tr></table></figure></p>
+<h2 id="Error-Analysis"><a href="#Error-Analysis" class="headerlink" title="Error Analysis"></a>Error Analysis</h2><p>找到合适的模型之后，我们想要更进一步的提升，对错误的分析就很有必要。<br><strong>分析混淆矩阵</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>y_train_pred = cross_val_predict(sgd_clf, X_train, y_train, cv=<span class="number">3</span> )</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>conf_mx = confusion_matrix(y_train, y_train_pred)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>conf_mx</div><div class="line">array([[<span class="number">5725</span>, <span class="number">3</span>, <span class="number">24</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">49</span>, <span class="number">50</span>, <span class="number">10</span>, <span class="number">39</span>, <span class="number">4</span>],</div><div class="line">        [<span class="number">2</span>, <span class="number">6493</span>, <span class="number">43</span>, ...],</div><div class="line">        ...])</div></pre></td></tr></table></figure></p>
+<p>对混淆矩阵进行一些可视化的操作之后，我们可以方便看出一些错误原因，并针对这些错误原因做进一步的优化。具体的分析方法根据实际情况而异。</p>
+<h2 id="Multilabel-Classification"><a href="#Multilabel-Classification" class="headerlink" title="Multilabel Classification"></a>Multilabel Classification</h2><p>有时我们需要为一个实例输出多个标签，这就需要用到<strong>Multilabel Classification</strong>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 简单例子</span></div><div class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</div><div class="line">y_train_large = (y_train &gt;= <span class="number">7</span>)</div><div class="line">y_train_odd = (y_train % <span class="number">2</span> == <span class="number">1</span>)</div><div class="line">y_multilabel = np.c_[y_train_large, y_train_odd]</div><div class="line"></div><div class="line">knn_clf = KNeighborsClassifier()</div><div class="line">knn_clf.fit(X_train, y_multilabel)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>knn_clf.predict([some_digit])</div><div class="line">array([[<span class="keyword">False</span>, <span class="keyword">True</span>]], dtype=bool)</div></pre></td></tr></table></figure></p>
+<p>有多种方法可以验证多标签的分类器，一种方法是对于每个标签计算它的F1分数，然后取平均来评价。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>y_train_knn_pred = cross_val_predict(knn_clf, X_train, y_train, cv=<span class="number">3</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>f1_score(y_train, y_train_knn_pred, average=<span class="string">'macro'</span>)</div><div class="line"><span class="number">0.9684</span></div></pre></td></tr></table></figure></p>
+<p>以上这种方法是建立在每个标签重要性相同的前提下的，然而实际情况可能并非如此。可以改变average参数来设置各个标签的权重。具体参考sklearn的文档。</p>
+<h2 id="Multioutput-Classiffication"><a href="#Multioutput-Classiffication" class="headerlink" title="Multioutput Classiffication"></a>Multioutput Classiffication</h2><p><strong>举例</strong><br>图片去噪问题，输入是一张含有噪声的图像，输出是去噪了的图像，这算是一个<strong>Multioutput Classification</strong>问题。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">noise_train = rnd.randint(<span class="number">0</span>,<span class="number">100</span>,(len(X_train), <span class="number">784</span>))</div><div class="line">noise_test = rnd.randint(<span class="number">0</span>,<span class="number">100</span>,(len(X_test), <span class="number">784</span>))</div><div class="line">X_train_mod = X_train + noise_train</div><div class="line">X_test_mod = X_test + noise_test</div><div class="line">y_train_mod = X_train</div><div class="line">y_test_mod = X_test</div><div class="line"></div><div class="line">knn_clf.fit(X_train_mod, y_train_mod)</div><div class="line">clean_digit=knn_clf.predict([X_test_mod[some_index]])</div><div class="line">plot_digit(clean_digit)</div></pre></td></tr></table></figure></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1、Hands-On Machine Learning with Scikit-Learn and TensorFlow by Aurélien Géron (O’Reilly). Copyright 2017 Aurélien Géron, 978-1-491-96229-9</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">sklearn</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/sklearn//" class="article-tag-list-link color3">sklearn</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/30/HOMLWSLATF-ch3/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
   
     <article id="post-titanic-dl" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -713,205 +925,6 @@ SVC
 
 
   
-    <article id="post-what-is-mAP" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/04/what-is-mAP/">mAP详解</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/04/what-is-mAP/" class="archive-article-date">
-  	<time datetime="2018-05-04T03:14:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#mean-average-precise"><span class="toc-text">mean average precise</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
-</div>
-
-        <h1 id="mean-average-precise"><a href="#mean-average-precise" class="headerlink" title="mean average precise"></a>mean average precise</h1><p><strong>1、precise and recall</strong><br><img src="pr.jpg" alt=""><br><img src="precise_recall.jpg" alt="precise and recall"><br>如上图所示：<br>precise=true_positive/(true_positive+false_positive)<br>recall=true_positive/(true_positive+false_negative)<br>precise表示预测正确的占所有预测的百分比。<br>recall表示预测的某一类正确的占该类总数的百分比。<br><strong>2、average precise</strong><br>根据 precise recall曲线计算得到。<br>关键在于理解precise recall 曲线怎么得到？<br>具体详见参考1。<br>即对每个recall对应的precise取平均。<br><strong>3、mean average precise</strong><br>上面average precise是针对每一类的情况。再对所有类的ap取平均即可得到mAP。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1、<a href="http://blog.sina.com.cn/s/blog_9db078090102whzw.html" target="_blank" rel="external">多标签图像分类任务的评价方法-mAP</a><br>2、<a href="https://www.zhihu.com/question/41540197" target="_blank" rel="external">mean average precision（MAP）在计算机视觉中是如何计算和应用的？</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">cv</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/cv//" class="article-tag-list-link color3">cv</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/04/what-is-mAP/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-normalization-in-deeplearning" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/01/normalization-in-deeplearning/">深度学习中的Normalization方法</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/01/normalization-in-deeplearning/" class="archive-article-date">
-  	<time datetime="2018-05-01T06:12:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Batch-Normalization"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Feature-Scaling"><span class="toc-text">Feature Scaling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Internal-Convariate-Shift"><span class="toc-text">Internal Convariate Shift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Batch-Normalization-1"><span class="toc-text">Batch Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要加gamma，beta参数"><span class="toc-text">为什么要加gamma，beta参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#forward"><span class="toc-text">forward</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#backward"><span class="toc-text">backward</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#benefit"><span class="toc-text">benefit</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Other-Normalization"><span class="toc-text">Other Normalization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Layer-Normalization"><span class="toc-text">Layer Normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Group-Normalization"><span class="toc-text">Group Normalization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Local-Response-Normalization"><span class="toc-text">Local Response Normalization</span></a></li></ol></li></ol>
-</div>
-
-        <p>总结深度学习中常用的Normalization方法，包括BatchNormalization,LayerNormalization,GroupNormalization以及LocalResponseNorm。</p>
-<h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><h2 id="Feature-Scaling"><a href="#Feature-Scaling" class="headerlink" title="Feature Scaling"></a>Feature Scaling</h2><p>是指对不同的feature做归一化，使得其有着相同的scaling。<br><img src="feature_scaling.jpg" alt="Feature Scaling"><br>从上图可以看出，输入的两个维度x1,x2相差比较大，如果想要得到比较好的学习效果，需要针对不同维度采用不同learning rate，但是操作起来困难。进行feature scaling可以解决这个问题。<br>如何做：<br><img src="how_to_scaling.jpg" alt="如何做scaling"></p>
-<h2 id="Internal-Convariate-Shift"><a href="#Internal-Convariate-Shift" class="headerlink" title="Internal Convariate Shift"></a>Internal Convariate Shift</h2><p><strong>We define Internal Covariate Shift as the change in the distribution of network activations due to the change in network parameters during training</strong><br>减少Internal Convariate Shift有助于训练。<br><img src="internal_convariate_shift.jpg" alt="Internal Convariate Shift"><br>对于deeplearning 网络来说，可以对每个layer做feature scaling。<br>然而如果只是上面提到的简单的feature scaling的话会带来一个问题：<br>在训练过程中，中间的每一层的参数都是在变化的，那么其每层的output也会随之改变，则mean和std也在不断变化。我们将难以简单计算出mean和std来进行feature scaling。Batch Normalization则可以用来解决这个问题，因为其将normalization加入训练过程中。</p>
-<h2 id="Batch-Normalization-1"><a href="#Batch-Normalization-1" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h2><p><img src="bn.jpg" alt="Batch Normalization"></p>
-<h3 id="为什么要加gamma，beta参数"><a href="#为什么要加gamma，beta参数" class="headerlink" title="为什么要加gamma，beta参数"></a>为什么要加gamma，beta参数</h3><p>gamma，beta参数的加入使得整个BN过程可训练，使得其与普通的预处理归一化操作区别开。??<br><strong>为了保证模型的表达能力不因为规范化而下降</strong><br><a href="https://zhuanlan.zhihu.com/p/33173246" target="_blank" rel="external">详解深度学习中的Normalization，不只是BN</a></p>
-<h3 id="forward"><a href="#forward" class="headerlink" title="forward"></a>forward</h3><p>针对每一个batch做归一化操作。<br><strong>training</strong><br><img src="training_bn.jpg" alt="训练"><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">sample_mean=np.mean(x,axis=<span class="number">0</span>)</div><div class="line">sample_var=np.var(x,axis=<span class="number">0</span>)</div><div class="line">x_hat=(x-sample_mean)/np.sqrt(sample_var+eps)</div><div class="line">out=gamma*x_hat+beta</div><div class="line"></div><div class="line"><span class="comment"># move average mean</span></div><div class="line">running_mean=momentum*running_mean+(<span class="number">1</span>-momentum)*sample_mean</div><div class="line"><span class="comment"># move average var</span></div><div class="line">running_var=momentum*running_var+(<span class="number">1</span>-momentum)*sample_mean</div></pre></td></tr></table></figure></p>
-<p><strong>test</strong><br>存在一个问题：我们无法知道batch的信息，所以没法算mean和std。<br>解决方法：<br><strong>1</strong>ideal solution: Computing mean and std using the whole training dataset<br><strong>2</strong>practical solution: computing  the moving average of mean and std of the batches during training</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">temp=(x-running_mean)/np.sqrt(running_var+eps)</div><div class="line">out=gamma*temp+beta</div></pre></td></tr></table></figure>
-<h3 id="backward"><a href="#backward" class="headerlink" title="backward"></a>backward</h3><p><a href="http://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html" target="_blank" rel="external">Understanding the backward pass through Batch Normalization Layer</a></p>
-<h3 id="benefit"><a href="#benefit" class="headerlink" title="benefit"></a>benefit</h3><p><strong>1、BN通过减少Internal Convariate Shift使得我们可以使用更高的learning rate来让训练更快速。</strong><br><strong>2、BN对解决梯度爆炸和梯度消失有作用，特别是对tanh、sigmoid等激活函数。</strong><br>    原因：因为BN确保了数据都在0附近斜率比较大的地方，不会出现梯度爆炸和消失的问题。<br><strong>3、使得参数初始化对训练的影响不大</strong><br><img src="init.jpg" alt="参数初始化"><br><strong>4、BN也有regularization的作用，防止overfitting</strong></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1、<a href="https://www.quora.com/Why-does-batch-normalization-help" target="_blank" rel="external">Why-does-batch-normalization-help</a><br>2、<a href="http://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html" target="_blank" rel="external">Understanding the backward pass through Batch Normalization Layer</a><br>3、<a href="https://www.youtube.com/watch?v=BZh1ltr5Rkg&amp;t=21s" target="_blank" rel="external">李宏毅老师讲BN(图片都来自该视频截图)</a><br>4、<a href="http://pytorch.org/docs/master/nn.html#batchnorm2d" target="_blank" rel="external">pytorch doc</a><br>5、<a href="https://arxiv.org/abs/1502.03167" target="_blank" rel="external">BN论文</a><br>6、<a href="https://zhuanlan.zhihu.com/p/33173246" target="_blank" rel="external">详解深度学习中的Normalization，不只是BN</a></p>
-<h1 id="Other-Normalization"><a href="#Other-Normalization" class="headerlink" title="Other Normalization"></a>Other Normalization</h1><h2 id="Layer-Normalization"><a href="#Layer-Normalization" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h2><p>Layer Normalization和BN的区别在于：LN是对每个单独的数据做归一化，BN是对mini-batch的数据做归一化。</p>
-<h2 id="Group-Normalization"><a href="#Group-Normalization" class="headerlink" title="Group Normalization"></a>Group Normalization</h2><p><strong>GN divides the channels into groups and computes within each group the mean and variance for normalization. GN’s computation is independent of batch sizes, and its accuracy is stable in a wide range of batch sizes.</strong><br>其可以用于在batch_size较小时对BN的替代。<br><img src="gn_tf.jpg" alt="GN implement"></p>
-<h2 id="Local-Response-Normalization"><a href="#Local-Response-Normalization" class="headerlink" title="Local Response Normalization"></a>Local Response Normalization</h2>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">dl</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/dl//" class="article-tag-list-link color3">dl</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/01/normalization-in-deeplearning/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1010,6 +1023,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">sklearn</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
@@ -1022,11 +1039,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1058,11 +1075,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1224,6 +1241,23 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
     </div>
 
 </div>
-  </div>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 </body>
 </html>

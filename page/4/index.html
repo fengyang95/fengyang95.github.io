@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
@@ -31,7 +31,7 @@
     #container.show {
       background: linear-gradient(200deg,#a0cfe4,#e8c37e);
     }
-  </style>
+  </style><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
   
@@ -39,7 +39,7 @@
 </head>
 
 <body>
-  <div id="container" q-class="show:isCtnShow">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
@@ -161,6 +161,216 @@ style="background: #4d4d4d"></div>
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-mobilenet-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/06/mobilenet-notes/">MobileNets论文笔记</a>
+    </h1>
+  
+
+        
+        <a href="/2018/03/06/mobilenet-notes/" class="archive-article-date">
+  	<time datetime="2018-03-06T13:08:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MobileNetV1"><span class="toc-text">MobileNetV1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MobileNetV2"><span class="toc-text">MobileNetV2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现-1"><span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p>MobileNets论文笔记，包括MobileNetV1和MobileNetV2。</p>
+<h1 id="MobileNetV1"><a href="#MobileNetV1" class="headerlink" title="MobileNetV1"></a>MobileNetV1</h1><p>MobileNet的主要贡献在于损失少量精度的前提下减少计算量和参数数量，使得网络可以在移动设备上高效部署。<br>其重要的一个结构就是Depthwise Separable Convolution，其将普通卷积分解成depthwise卷积和pointwise卷积，以达到减少计算量和参数的目的。<br><img src="https://wwdguu.github.io/2018/03/06/mobilenet-notes/dsc.png" alt="Depthwise Separable Convolution"><br>关于参数减少计算：<br><img src="compute.jpg" alt="参数减少量计算"></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p><strong>网络结构定义</strong><br><img src="mobilenet_v1.JPG" alt="MobilenetV1网络结构"><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># MobilenetV1 base </span></div><div class="line">Conv = namedtuple(<span class="string">'Conv'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>])</div><div class="line">DepthSepConv = namedtuple(<span class="string">'DepthSepConv'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>])</div><div class="line">MOBILENT_CONV_DEFS = [</div><div class="line">    Conv(stride=<span class="number">2</span>, depth=<span class="number">32</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">64</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">128</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">128</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">256</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">256</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">512</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">2</span>, depth=<span class="number">1024</span>),</div><div class="line">    DepthSepConv(stride=<span class="number">1</span>, depth=<span class="number">1024</span>)</div><div class="line">]</div></pre></td></tr></table></figure></p>
+<h1 id="MobileNetV2"><a href="#MobileNetV2" class="headerlink" title="MobileNetV2"></a>MobileNetV2</h1><p>MobileNetV2在MobileNetV1的基础上做了一些改进，其实我更感兴趣的是作者提出SSDLite，将MobileNetV2用于目标检测，其精度和速度都超过了YOLOv2。</p>
+<h2 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h2><p><strong>网络结构</strong><br><img src="mobilenet_v2.JPG" alt="MobilenetV2结构"><br><strong>微结构单元</strong><br>注意stride=1时有残差结构，stride=2时无残差结构。<br><img src="inverted_residual.JPG" alt="Inverted Residual"><br><strong>结构定义</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">InvertedResidual = namedtuple(<span class="string">'InvertedResidual'</span>, [<span class="string">'stride'</span>, <span class="string">'depth'</span>, <span class="string">'num'</span>, <span class="string">'t'</span>])</div><div class="line">MOBILENET_V2_CONV_DEFS = [</div><div class="line">    Conv(stride=<span class="number">2</span>, depth=<span class="number">32</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">16</span>, num=<span class="number">1</span>, t=<span class="number">1</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">24</span>, num=<span class="number">2</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">32</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">64</span>, num=<span class="number">4</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">96</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">2</span>, depth=<span class="number">160</span>, num=<span class="number">3</span>, t=<span class="number">6</span>),</div><div class="line">    InvertedResidual(stride=<span class="number">1</span>, depth=<span class="number">320</span>, num=<span class="number">1</span>, t=<span class="number">6</span>),</div><div class="line">]</div></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://arxiv.org/abs/1704.04861" target="_blank" rel="external">MobileNetV1 paper</a><br><a href="https://arxiv.org/abs/1801.04381" target="_blank" rel="external">MobileNetV2 paper</a><br><a href="http://cuijiahua.com/blog/2018/02/dl_6.html" target="_blank" rel="external">MobileNets详解</a><br><a href="https://github.com/ShuangXieIrene/ssds.pytorch/blob/master/lib/modeling/nets/mobilenet.py" target="_blank" rel="external">Mobilenet pytorch实现</a><br><a href="https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.py" target="_blank" rel="external">tensorflow mobilenet_v1</a><br><a href="https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v2.py" target="_blank" rel="external">tensorflow mobilenet_v2</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">paper</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/paper//" class="article-tag-list-link color1">paper</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/03/06/mobilenet-notes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-tensorflow-programming-eager-execution" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/29/tensorflow-programming-eager-execution/">Tensorflow Programming -- Eager Execution</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/29/tensorflow-programming-eager-execution/" class="archive-article-date">
+  	<time datetime="2018-01-28T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Eager-Execution"><span class="toc-text">Eager Execution</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#计算图的优点"><span class="toc-text">计算图的优点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#优化的"><span class="toc-text">优化的</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#自动缓冲区重用"><span class="toc-text">自动缓冲区重用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#不断折叠"><span class="toc-text">不断折叠</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#操作间并行性"><span class="toc-text">操作间并行性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#计算和内存之间的自动权衡"><span class="toc-text">计算和内存之间的自动权衡</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可部署"><span class="toc-text">可部署</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#图就是模型的中间表示"><span class="toc-text">图就是模型的中间表示</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可重写"><span class="toc-text">可重写</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#尝试自动设备放置或-量化"><span class="toc-text">尝试自动设备放置或 量化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算图的缺点"><span class="toc-text">计算图的缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#难以调试"><span class="toc-text">难以调试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#计算图构建之后会报告错误"><span class="toc-text">计算图构建之后会报告错误</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#执行不能用pdb或者打印语句来调试"><span class="toc-text">执行不能用pdb或者打印语句来调试</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Un-Pythonic"><span class="toc-text">Un-Pythonic</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#编写一个Tensorflow程序是元编程的练习"><span class="toc-text">编写一个Tensorflow程序是元编程的练习</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#控制流-如-tf-while-loop-与Python不同"><span class="toc-text">控制流(如  tf.while_loop)与Python不同</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#不能轻松地将计算图构建与自定义数据结构混合"><span class="toc-text">不能轻松地将计算图构建与自定义数据结构混合</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eager-Execution-1"><span class="toc-text">Eager Execution</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Eager-Execution的优点"><span class="toc-text">Eager Execution的优点</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#与Python调试工具兼容"><span class="toc-text">与Python调试工具兼容</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#提供即时的错误报告"><span class="toc-text">提供即时的错误报告</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#允许使用Python数据结构"><span class="toc-text">允许使用Python数据结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启用Pythonic控制流程"><span class="toc-text">启用Pythonic控制流程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Eager-Execution可以简化代码"><span class="toc-text">Eager Execution可以简化代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Tensors和NumPy数组的行为相似"><span class="toc-text">Tensors和NumPy数组的行为相似</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#梯度"><span class="toc-text">梯度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linear-Regression-in-Eager"><span class="toc-text">Linear Regression in Eager</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-Collection-of-Operations"><span class="toc-text">A Collection of Operations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#什么情况下使用eager-execution"><span class="toc-text">什么情况下使用eager execution?</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#作为研究人员希望一个灵活的框架"><span class="toc-text">作为研究人员希望一个灵活的框架</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#需要开发一个新的模型"><span class="toc-text">需要开发一个新的模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#刚接触TensorFlow"><span class="toc-text">刚接触TensorFlow</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=406730941&auto=1&height=66"></iframe></p>
+<h2 id="Eager-Execution"><a href="#Eager-Execution" class="headerlink" title="Eager Execution"></a>Eager Execution</h2><p>目前使用TensorFlow时，需要编写一个Python程序，首先构建一个表示计算的图，然后调用Session.run()将这个计算图交给C++运行库执行，从这个意义上说，Tensorflow提供了一个声明式编程模型，其计算图的构建和实际的执行是分离的。</p>
+<h3 id="计算图的优点"><a href="#计算图的优点" class="headerlink" title="计算图的优点"></a>计算图的优点</h3><p>TensorFlow从某种意义上说是一种编程语言和一种用于机器学习模型的编译器，其将机器学习模型作为输入，编码成一个名为Graph的低级表示，然后将其重写为优化的可执行形式，沿途使用类似编译器的优化。这种模式有许多好处：<br>1、优化可以减少训练模型或运行推理的挂钟时间和内存占用时间<br>2、计算图作为平台不可知的中间表示，简化了部署。<br>3、重写图形的能力使得我们可以尝试像自动设备放置和重量量化这样的策略。 </p>
+<h4 id="优化的"><a href="#优化的" class="headerlink" title="优化的"></a>优化的</h4><h5 id="自动缓冲区重用"><a href="#自动缓冲区重用" class="headerlink" title="自动缓冲区重用"></a>自动缓冲区重用</h5><h5 id="不断折叠"><a href="#不断折叠" class="headerlink" title="不断折叠"></a>不断折叠</h5><h5 id="操作间并行性"><a href="#操作间并行性" class="headerlink" title="操作间并行性"></a>操作间并行性</h5><h5 id="计算和内存之间的自动权衡"><a href="#计算和内存之间的自动权衡" class="headerlink" title="计算和内存之间的自动权衡"></a>计算和内存之间的自动权衡</h5><h4 id="可部署"><a href="#可部署" class="headerlink" title="可部署"></a>可部署</h4><h5 id="图就是模型的中间表示"><a href="#图就是模型的中间表示" class="headerlink" title="图就是模型的中间表示"></a>图就是模型的中间表示</h5><h4 id="可重写"><a href="#可重写" class="headerlink" title="可重写"></a>可重写</h4><h5 id="尝试自动设备放置或-量化"><a href="#尝试自动设备放置或-量化" class="headerlink" title="尝试自动设备放置或 量化"></a>尝试自动设备放置或 量化</h5><h3 id="计算图的缺点"><a href="#计算图的缺点" class="headerlink" title="计算图的缺点"></a>计算图的缺点</h3><p>尽管计算图的表示方法有很多优点，但是其缺点也不小。声明式范例导致难以调试的程序，因为在构建计算图之后会报告错误。而且由于计算图执行是由Session管理的，所以不能够使用pdb甚至是打印语句来调试模型。构建图形就像使用汇编语言进行编码-原则上我们可以使用计算图来实现我们所需要的任何机器学习模型，但是这样做可能比较困难。编写一个TensorFlow程序是元编程的一个练习: 使用Python用TensorFlow图形语言编写程序。因此，我们不能使用本地Python控制流结构，而必须依赖它们在TensorFlow中的等价物。而且，不能轻易地将图形构造与自定义数据混合在一起，我们可能想要使用Python类来表示结构化数据，但是无法传递类，无法沿着图的边缘流动。总结下来就是如下缺点：</p>
+<h4 id="难以调试"><a href="#难以调试" class="headerlink" title="难以调试"></a>难以调试</h4><h5 id="计算图构建之后会报告错误"><a href="#计算图构建之后会报告错误" class="headerlink" title="计算图构建之后会报告错误"></a>计算图构建之后会报告错误</h5><h5 id="执行不能用pdb或者打印语句来调试"><a href="#执行不能用pdb或者打印语句来调试" class="headerlink" title="执行不能用pdb或者打印语句来调试"></a>执行不能用pdb或者打印语句来调试</h5><h4 id="Un-Pythonic"><a href="#Un-Pythonic" class="headerlink" title="Un-Pythonic"></a>Un-Pythonic</h4><h5 id="编写一个Tensorflow程序是元编程的练习"><a href="#编写一个Tensorflow程序是元编程的练习" class="headerlink" title="编写一个Tensorflow程序是元编程的练习"></a>编写一个Tensorflow程序是元编程的练习</h5><h5 id="控制流-如-tf-while-loop-与Python不同"><a href="#控制流-如-tf-while-loop-与Python不同" class="headerlink" title="控制流(如  tf.while_loop)与Python不同"></a>控制流(如  tf.while_loop)与Python不同</h5><h5 id="不能轻松地将计算图构建与自定义数据结构混合"><a href="#不能轻松地将计算图构建与自定义数据结构混合" class="headerlink" title="不能轻松地将计算图构建与自定义数据结构混合"></a>不能轻松地将计算图构建与自定义数据结构混合</h5><h3 id="Eager-Execution-1"><a href="#Eager-Execution-1" class="headerlink" title="Eager Execution"></a>Eager Execution</h3><p>我们可以直接从Python执行TensorFlow操作吗？实际上，我们不能将任何给定的计算图打破到它的组件操作并直接从Python中调用它们。<br>Eager Execution是用于计算的类Numpy库，支持GPU加速和自动分化，以及灵活的机器学习研究和实验平台。<br>使用Eager的例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$python</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf <span class="comment"># version &gt;= 1.50</span></div><div class="line"><span class="keyword">import</span> tensorflow.contrib.eager <span class="keyword">as</span> tfe</div><div class="line">tfe.enable_eager_execution()</div></pre></td></tr></table></figure></p>
+<h4 id="Eager-Execution的优点"><a href="#Eager-Execution的优点" class="headerlink" title="Eager Execution的优点"></a>Eager Execution的优点</h4><h5 id="与Python调试工具兼容"><a href="#与Python调试工具兼容" class="headerlink" title="与Python调试工具兼容"></a>与Python调试工具兼容</h5><h5 id="提供即时的错误报告"><a href="#提供即时的错误报告" class="headerlink" title="提供即时的错误报告"></a>提供即时的错误报告</h5><h5 id="允许使用Python数据结构"><a href="#允许使用Python数据结构" class="headerlink" title="允许使用Python数据结构"></a>允许使用Python数据结构</h5><p>例如用于结构化输入。</p>
+<h5 id="启用Pythonic控制流程"><a href="#启用Pythonic控制流程" class="headerlink" title="启用Pythonic控制流程"></a>启用Pythonic控制流程</h5><h4 id="Eager-Execution可以简化代码"><a href="#Eager-Execution可以简化代码" class="headerlink" title="Eager Execution可以简化代码"></a>Eager Execution可以简化代码</h4><p>我们不再需要担心以下这些问题:<br>1、placeholders<br>下面是一个程序，它将一个矩阵与自身相乘。我们首先用一个占位符定义一个计算图，并将矩阵提供给平方。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">x = tf.placeholder(tf.float32, shape=[<span class="number">1</span>,<span class="number">1</span>])</div><div class="line">m = tf.matmul(x, x)</div><div class="line"></div><div class="line">print(m)</div><div class="line"><span class="comment"># Tensor("MatMul:0",shape=(1, 1),dtype=float32)</span></div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    m_out = sess.run(m, feed_dict=&#123;x:[[<span class="number">2.0</span>]]&#125;)</div><div class="line">print(m_out)</div><div class="line"><span class="comment"># [[4.0]]</span></div></pre></td></tr></table></figure></p>
+<p>而如果使用了Eager Execution，下面三行代码提供了相同的效果。没有Session，没有placeholder和matmul操作，立即得出运算结果。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = [[<span class="number">2.</span>]] <span class="comment"># No need for placeholders!</span></div><div class="line">m = tf.matmul(x,x)</div><div class="line">print(m) <span class="comment"># No sessions!</span></div><div class="line"><span class="comment"># tf.Tensor([[4.]], shape=(1,1), dtype=float32)</span></div></pre></td></tr></table></figure></p>
+<p>2、sessions<br>3、control dependencies<br>4、”lazy loading”<br>Eager Execution还有利于避免元编程的一些缺点。例如，以下的代码就是在程序中间快速破解分析Tensor X的代码。循环的每一次迭代都是将操作添加到计算图的内存中表示。在这种情况下，每次调用session.run()都会执行random_uniform操作，所以这里的代码片段并没有打印Tensor的一致快照。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x = tf.random_uniform([<span class="number">2</span>, <span class="number">2</span>])</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(x.shape[<span class="number">0</span>]):</div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(x.shape[<span class="number">1</span>]):</div><div class="line">            print(sess.run(x[i,j]))</div></pre></td></tr></table></figure></p>
+<p>而当在Eager Execution的情况下，没有一个计算图的概念或者一个操作的重复执行，所以最明显的做法是很好的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = tf.random_uniform([<span class="number">2</span>,<span class="number">2</span>])</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(x.shape[<span class="number">0</span>]):</div><div class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(x.shape[<span class="number">1</span>]):</div><div class="line">        print(x[i,j])</div></pre></td></tr></table></figure></p>
+<p>5、{name, variable, op} scopes</p>
+<h4 id="Tensors和NumPy数组的行为相似"><a href="#Tensors和NumPy数组的行为相似" class="headerlink" title="Tensors和NumPy数组的行为相似"></a>Tensors和NumPy数组的行为相似</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">x = tf.constant([<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>])</div><div class="line"><span class="comment"># Tensors are backed by Numpy arrays</span></div><div class="line"><span class="keyword">assert</span> type(x.numpy()) == np.ndarray</div><div class="line">squared = np.square(x) <span class="comment"># Tensors are compatible with Numpy functions</span></div><div class="line"><span class="comment"># Tensors are iterable </span></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> x:</div><div class="line">    print(i)</div></pre></td></tr></table></figure>
+<h4 id="梯度"><a href="#梯度" class="headerlink" title="梯度"></a>梯度</h4><p>自动梯度求解已经加入到eager execution中。当启用eager execution时，执行的操作将在一个”tape”中进行追踪，以回放计算梯度。如果熟悉autograd包的话，这个API非常相似。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">square</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">return</span> x**<span class="number">2</span></div><div class="line"></div><div class="line">grad = tfe.gradients_function(square)</div><div class="line"></div><div class="line">print(square(<span class="number">3.</span>)) <span class="comment"># tf.Tensor(9., shape=(), dtype=float32)</span></div><div class="line">print(grad(<span class="number">3.</span>)) <span class="comment"># tf.Tensor(6., shape=(), dtype=float32)</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">x = tfe.Variable(<span class="number">2.0</span>)</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">loss</span><span class="params">(y)</span>:</span></div><div class="line">    <span class="keyword">return</span> (y - x ** <span class="number">2</span>) ** <span class="number">2</span></div><div class="line">grad = tfe.implicit_gradients(loss)</div><div class="line"></div><div class="line">print(loss(<span class="number">7.</span>)) <span class="comment"># tf.Tensor(9., shape=(), dtype=float32)</span></div><div class="line">print(grad(<span class="number">7.</span>)) <span class="comment"># [(&lt;tf.Tensor: -24.0, shape=(), dtype=float32&gt;, </span></div><div class="line">                <span class="comment">#    &lt;tf.Variable 'Variable:0' shape=()                </span></div><div class="line">                <span class="comment">#     dtype=float32, numpy=2.0&gt;)]</span></div></pre></td></tr></table></figure>
+<p>即便eager execution没被允许，计算梯度的API依然有效。<br>tfe.gradients_function()<br>tfe.value_and_gradients_function()<br>tfe.implicit_gradients()<br>tfe.implicit_value_and_gradients()<br>详情可参考：<br><a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/eager/python/g3doc/guide.md" target="_blank" rel="external">eager execution document</a></p>
+<h2 id="Linear-Regression-in-Eager"><a href="#Linear-Regression-in-Eager" class="headerlink" title="Linear Regression in Eager"></a>Linear Regression in Eager</h2><h3 id="A-Collection-of-Operations"><a href="#A-Collection-of-Operations" class="headerlink" title="A Collection of Operations"></a>A Collection of Operations</h3><p>TensorFlow = Operation Kernels + Execution<br>Graph construction: 使用Session来执行操作的组合<br>Eager execution: 用Python执行操作的组合。<br>观察TensorFlow的一种方式是作为一系列操作：数学，线性代数，图像处理，Tensorboard可视化的总结生成等以及执行构成它们的计算的手段。Session提供了一种方法来执行这些操作，在执行的时候，Python是执行组合的方法，但是底层的操作保持不变，结果，API表面的大部分也保持不变。<br>不管eager execution是否被允许，大多数TensorFlow API都可以工作，但是当eager exectution允许时，有一些特殊情况需要注意：<br>1、在eager execution模式下最好使用tfe.Variable<br>2、管理好自己的变量存储，变量集合是不被允许的。<br>3、使用 tf.contrib.summary<br>4、使用tfe.Iterator 进行数据迭代<br>5、最好使用面向对象的层(比如 tf.layers.Dense)<br>6、使用tfe.py_func 代替 tf.py_func</p>
+<h3 id="什么情况下使用eager-execution"><a href="#什么情况下使用eager-execution" class="headerlink" title="什么情况下使用eager execution?"></a>什么情况下使用eager execution?</h3><h4 id="作为研究人员希望一个灵活的框架"><a href="#作为研究人员希望一个灵活的框架" class="headerlink" title="作为研究人员希望一个灵活的框架"></a>作为研究人员希望一个灵活的框架</h4><p>python控制流和数据结构使得实验成为可能</p>
+<h4 id="需要开发一个新的模型"><a href="#需要开发一个新的模型" class="headerlink" title="需要开发一个新的模型"></a>需要开发一个新的模型</h4><p>即时的错误报告简化了调试</p>
+<h4 id="刚接触TensorFlow"><a href="#刚接触TensorFlow" class="headerlink" title="刚接触TensorFlow"></a>刚接触TensorFlow</h4><p>eager execution使得我们方便在Python REPL中学习TF API。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/04%20Eager%20Execution%20%2B%20word2vec.pdf" target="_blank" rel="external">04_eager_execution slides</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/04_Lecture%20note_%20Eager%20execution%20and%20interface.pdf" target="_blank" rel="external">04_eager_execution notes</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/29/tensorflow-programming-eager-execution/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
   
     <article id="post-effective-java-classes-and-interfaces" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -465,223 +675,6 @@ style="background: #4d4d4d"></div>
 
 
   
-    <article id="post-paper-and-notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/21/paper-and-notes/">资料和文章备份</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/21/paper-and-notes/" class="archive-article-date">
-  	<time datetime="2018-01-21T05:14:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cs20si-2017-notes-and-slides"><span class="toc-text">cs20si 2017 notes and slides</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、Overview-Of-Tensorflow"><span class="toc-text">1、Overview Of Tensorflow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、Operations"><span class="toc-text">2、Operations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、Linear-and-Logistic-Regression"><span class="toc-text">3、Linear and Logistic Regression</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、Structure-Your-Tensorflow-Model"><span class="toc-text">4、Structure Your Tensorflow Model</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、Manage-Experiments-and-Process-Data"><span class="toc-text">5、Manage Experiments and Process Data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Computer-Vision"><span class="toc-text">Computer Vision</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-Detection"><span class="toc-text">Object Detection</span></a></li></ol></li></ol>
-</div>
-
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1141564&auto=1&height=66"></iframe><br>一些资料的备份。</p>
-<h2 id="cs20si-2017-notes-and-slides"><a href="#cs20si-2017-notes-and-slides" class="headerlink" title="cs20si 2017 notes and slides"></a>cs20si 2017 notes and slides</h2><h3 id="1、Overview-Of-Tensorflow"><a href="#1、Overview-Of-Tensorflow" class="headerlink" title="1、Overview Of Tensorflow"></a>1、Overview Of Tensorflow</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_01.pdf" target="_blank" rel="external">notes_01</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_01.pdf" target="_blank" rel="external">slides_01</a></p>
-<h3 id="2、Operations"><a href="#2、Operations" class="headerlink" title="2、Operations"></a>2、Operations</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_02.pdf" target="_blank" rel="external">notes_02</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_02.pdf" target="_blank" rel="external">slides_02</a></p>
-<h3 id="3、Linear-and-Logistic-Regression"><a href="#3、Linear-and-Logistic-Regression" class="headerlink" title="3、Linear and Logistic Regression"></a>3、Linear and Logistic Regression</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_03.pdf" target="_blank" rel="external">notes_03</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_03.pdf" target="_blank" rel="external">slides_03</a></p>
-<h3 id="4、Structure-Your-Tensorflow-Model"><a href="#4、Structure-Your-Tensorflow-Model" class="headerlink" title="4、Structure Your Tensorflow Model"></a>4、Structure Your Tensorflow Model</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_04.pdf" target="_blank" rel="external">notes_04</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_04.pdf" target="_blank" rel="external">slides_04</a></p>
-<h3 id="5、Manage-Experiments-and-Process-Data"><a href="#5、Manage-Experiments-and-Process-Data" class="headerlink" title="5、Manage Experiments and Process Data"></a>5、Manage Experiments and Process Data</h3><p><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/notes_05.pdf" target="_blank" rel="external">notes_05</a><br><a href="https://github.com/wwdguu/wwdguu.github.io/blob/master/2018/01/21/paper-and-notes/cs20si/slides_05.pdf" target="_blank" rel="external">slides_05</a></p>
-<h2 id="Computer-Vision"><a href="#Computer-Vision" class="headerlink" title="Computer Vision"></a>Computer Vision</h2><h3 id="Object-Detection"><a href="#Object-Detection" class="headerlink" title="Object Detection"></a>Object Detection</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">link</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/link//" class="article-tag-list-link color5">link</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/21/paper-and-notes/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
-    <article id="post-tensorflow-programming-manage-your-experiments-in-tf" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/">How to Manage Your Experiments in TensorFlow</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/" class="archive-article-date">
-  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#tf-train-Saver"><span class="toc-text">tf.train.Saver()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tf-summary"><span class="toc-text">tf.summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Control-Randomization"><span class="toc-text">Control Randomization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在操作级别设置随机种子。-所有的随机张量都允许你在初始化时传入种子值。"><span class="toc-text">在操作级别设置随机种子。 所有的随机张量都允许你在初始化时传入种子值。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在计算图级别用tf-Graph-seed设置随机种子"><span class="toc-text">在计算图级别用tf.Graph.seed设置随机种子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reading-Data-in-Tensorflow"><span class="toc-text">Reading Data in Tensorflow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#从队列读取数据。"><span class="toc-text">从队列读取数据。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Threads-和-Queues"><span class="toc-text">Threads 和  Queues</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
-</div>
-
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=31134197&auto=1&height=66"></iframe><br>主要介绍TensorFlow提供的一系列用来管理实验的优秀的工具。包括tf.train.Saver类，<br>TensorFlow的随机种子和NumPy的随机状态，并可视化我们的训练过程。</p>
-<h2 id="tf-train-Saver"><a href="#tf-train-Saver" class="headerlink" title="tf.train.Saver()"></a>tf.train.Saver()</h2><p>tf.train.Saver()类使得我们能够用二进制文件保存计算图的变量。这样使得我们可以在若干步训练过后保存参数并随时重新加载参数进行训练。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tf.train.Saver.save(sess, save_path, global_step=<span class="keyword">None</span>, lastest_filename=<span class="keyword">None</span>,</div><div class="line">                meta_graph_suffix=<span class="string">'meta'</span>, write_meta_graph=<span class="keyword">True</span>, write_state=<span class="keyword">True</span>)</div></pre></td></tr></table></figure></p>
-<p>例如我们想每训练1000步保存一次参数，我们可以这样做：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">saver = tf.train.Saver()</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> range(trianing_steps):</div><div class="line">        sess.run([optimizer])</div><div class="line">        <span class="keyword">if</span> (step + <span class="number">1</span>) % <span class="number">1000</span> == <span class="number">0</span>：</div><div class="line">            saver.save(sess, <span class="string">'checkpoint_directory/model_name'</span>,</div><div class="line">            global_step=model.global_step)</div></pre></td></tr></table></figure></p>
-<p>在TensorFlow术语中，保存图形变量的步骤称为检查点。由于我们将创建多个检查点，因此将模型所经历的训练步骤的数量附加到名为global_step的变量中会很有帮助。 在TensorFlow程序中看到这是一个非常常见的变量。 我们首先需要创建它，将其初始化为0，并将其设置为不可训练，因为我们不希望TensorFlow对其进行优化。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.global_step = tf.Variable(<span class="number">0</span>, dtype=tf.int32, trainable=<span class="keyword">False</span>, name=<span class="string">'global_step'</span>)</div></pre></td></tr></table></figure></p>
-<p>我们需要将global_step作为参数传递到optimizer中，使得它能够每训练一步加一。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.optimizer = tf.train.GradientDescentOptimizer(self.lr).minimize(self.loss, global_step=self.global_step)</div></pre></td></tr></table></figure></p>
-<p>为了在名为“checkpoints”的文件夹保存检查点，我们这样操作：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">saver.save(sess, <span class="string">'checkpoints/skip-gram'</span>, global_step=model.global_step)</div></pre></td></tr></table></figure></p>
-<p>于是整个word2vec的训练过程大概如下:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">self.global_step = tf.Variable(<span class="number">0</span>, dtype=tf.int32, trainable=<span class="keyword">False</span>, name=<span class="string">'global_step'</span>)</div><div class="line">self.optimizer = tf.train.GradientDescentOptimizer(self.lr).minimize(self.loss,global_step=self.global_step)</div><div class="line">saver = tf.train.Saver()</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variables_initializer())</div><div class="line">    average_loss = <span class="number">0.0</span></div><div class="line">    writer = tf.summary.FileWriter(<span class="string">'./improved_graph'</span>,sess.graph)</div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> range(num_train_steps):</div><div class="line">        batch = batch.gen_next()</div><div class="line">        loss_batch, _ = sess.run([model.loss,model.optimizer],</div><div class="line">            feed_dict=&#123;model.center_words: batch[<span class="number">0</span>],</div><div class="line">                      model.target_words: batch[<span class="number">1</span>]&#125;)</div><div class="line">        average_loss += loss_batch</div><div class="line">        <span class="keyword">if</span> (index + <span class="number">1</span>) % <span class="number">1000</span> == <span class="number">0</span>:</div><div class="line">            saver.save(sess, <span class="string">'checkpoints/skip-gram'</span>,global_step=model.global_step)</div></pre></td></tr></table></figure></p>
-<p>这时检查点文件都在文件夹checkpoints中。<br>如果想要恢复某个检查点，可以用以下语句：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">saver.restore(sess, <span class="string">'checkpoints/skip-gram-1000'</span>)</div></pre></td></tr></table></figure></p>
-<p>值得注意的是，我们只能恢复已经存在的checkpoints文件，所以在恢复时，需要先检查文件的有效性，可以这样做：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ckpt = tf.train.get_checkpoint_state(os.path.dirname(<span class="string">'checkpoints/checkpoint'</span>))</div><div class="line"><span class="keyword">if</span> ckpt <span class="keyword">and</span> ckpt.model_checkpoint_path:</div><div class="line">    saver.restore(sess, ckept.model_checkpoint_path)</div></pre></td></tr></table></figure></p>
-<p>默认情况下，saver.save()保存图中的所有变量，而且也是推荐这么做的。但是，但是也可以通过以下方法只保存部分变量的值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">v1 = tf.Variable(..., name=<span class="string">'v1'</span>)</div><div class="line">v2 = tf.Variable(..., name=<span class="string">'v2'</span>)</div><div class="line"></div><div class="line"><span class="comment"># pass the variables as a dict:</span></div><div class="line">saver = tf.train.Saver(&#123;<span class="string">'v1'</span>: v1, <span class="string">'v2'</span>: v2&#125;)</div><div class="line"></div><div class="line"><span class="comment"># pass them as a list</span></div><div class="line">saver =tf.train.Saver([v1,v2])</div><div class="line"></div><div class="line"><span class="comment"># passing a list is equivalent to passing a dict with the variable op names </span></div><div class="line">saver = tf.train.Saver(&#123;v.op.name: v <span class="keyword">for</span> v <span class="keyword">in</span> [v1, v2]&#125;)</div></pre></td></tr></table></figure></p>
-<p>注意：savers只是保存了变量的值，并没有保存整个计算图，所以我们需要自己创建计算图，然后载入变量。检查点文件指定了从变量到tensor的映射方式。人们通常不只是保存上一次迭代的参数，还保存迄今为止效果最好的参数，以便可以根据最佳参数评估模型。</p>
-<h2 id="tf-summary"><a href="#tf-summary" class="headerlink" title="tf.summary"></a>tf.summary</h2><p>我们可以使用Tensorboard可视化训练数据，包括loss, average loss, accuracy等。可以将它们可视化为点，直方图，甚至是图像。所以我们建立一个新的name scope来管理所有这类操作。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_create_summaries</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'summaries'</span>):</div><div class="line">        tf.summary.scalar(<span class="string">'loss'</span>, self.loss)</div><div class="line">        tf.summary.scalar(<span class="string">'accuracy'</span>, self.accuracy)</div><div class="line">        tf.summary.histogram(<span class="string">'histogram loss'</span>, self.loss)</div><div class="line">        <span class="comment"># because you have several summaries, you should merge them all</span></div><div class="line">        <span class="comment"># into one op to make it easier to manage</span></div><div class="line">        self.summary_op = tf.summary.merge_all()</div></pre></td></tr></table></figure></p>
-<p>然后用 sess.run()来执行。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">loss_batch, _, summary = sess.run([model.loss, model.optimizer, model.summary_op], feed_dict=feed_dict)</div></pre></td></tr></table></figure></p>
-<p>接着我们需要用用于可视化计算图的FileWriter对象来将这些summary写入文件。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">writer.add_summary(summary, global_step=step)</div></pre></td></tr></table></figure></p>
-<p>然后我们就可以得到一些可视化结果。<br>值得注意的是，如果我们将summary数据保存在graph文件夹的不同子文件夹，就可以对不同超参数的训练结果进行比较。<br>我们也可以使用tf.summary.image将结果可视化为图片。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.summary.image(name, tensor, max_output=<span class="number">3</span>, collections=<span class="keyword">None</span>)</div></pre></td></tr></table></figure></p>
-<h2 id="Control-Randomization"><a href="#Control-Randomization" class="headerlink" title="Control Randomization"></a>Control Randomization</h2><p>我们往往必须控制随机化过程才能为实验获得稳定的结果。NumPy以随机种子和随机状态获得随机数。但是TensorFlow不允许我们以numpy的方式获得随机状态，但它确实可以让我们通过以下两种方式获得稳定的随机结果：</p>
-<h3 id="在操作级别设置随机种子。-所有的随机张量都允许你在初始化时传入种子值。"><a href="#在操作级别设置随机种子。-所有的随机张量都允许你在初始化时传入种子值。" class="headerlink" title="在操作级别设置随机种子。 所有的随机张量都允许你在初始化时传入种子值。"></a>在操作级别设置随机种子。 所有的随机张量都允许你在初始化时传入种子值。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">my_var = tf.Variable(tf.trucated_normal((<span class="number">-1.0</span>,<span class="number">1.0</span>), stddev=<span class="number">0.1</span>, seed=<span class="number">0</span>))</div></pre></td></tr></table></figure>
-<p>注意每个新会话都会重新开始随机状态。例如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57492</span></div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; -5.97319</span></div></pre></td></tr></table></figure></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57493</span></div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57493</span></div></pre></td></tr></table></figure>
-<p>随着操作级别的随机种子，每个操作保持自己的种子。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line">d = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>, seed=<span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c)) <span class="comment"># &gt;&gt; 3.57493</span></div><div class="line">    print(sess.run(d)) <span class="comment"># &gt;&gt; 3.57493</span></div></pre></td></tr></table></figure></p>
-<h3 id="在计算图级别用tf-Graph-seed设置随机种子"><a href="#在计算图级别用tf-Graph-seed设置随机种子" class="headerlink" title="在计算图级别用tf.Graph.seed设置随机种子"></a>在计算图级别用tf.Graph.seed设置随机种子</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.set_random_seed(seed)</div></pre></td></tr></table></figure>
-<p>如果你不关心图中每个操作的随机化，而只是希望能够在另一个图上复制结果（以便其他人可以在你自己的图上复制你的结果），你可以使用tf.set_random_seed。设置当前的TensorFlow随机种子只影响当前的默认图形。<br>例如，有两个模型 a.py 和 b.py，它们有相同的代码。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line">tf.set_random_seed(<span class="number">2</span>)</div><div class="line">c = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>)</div><div class="line">d = tf.random_uniform([], <span class="number">-10</span>, <span class="number">10</span>)</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c))</div><div class="line">    print(sess.run(d))</div></pre></td></tr></table></figure></p>
-<p>当没有设置图级别的随机种子时，两个代码文件会运行得到不同的结果。而如果设置了，则会得到相同的结果。</p>
-<h2 id="Reading-Data-in-Tensorflow"><a href="#Reading-Data-in-Tensorflow" class="headerlink" title="Reading Data in Tensorflow"></a>Reading Data in Tensorflow</h2><p>将数据加载到TensorFlow图中有两种主要的方法：一种是通过我们熟悉的feed_dict，另一种是通过读者使我们直接从文件中读取张量。当然，第三种方法是使用常量加载数据，但是这会造成图严重臃肿且无法运行。为了明白为什么我们需要比feed_dict更多的东西，我们需要看看feed_dict是如何工作的。Feed_dict将首先将数据从存储系统发送到客户端，然后从客户端发送到工作进程。这会导致数据变慢，特别是如果客户端与工作进程不在同一台机器上。TensorFlow有readers可以直接将数据加载到工作进程中。当我们不在分布式系统或者当我们的数据集很小的时候，这种改进将不会被注意到，但是它仍然值得研究。 TensorFlow有几个内置读卡器来满足您的阅读需求。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">tf.TextLineReader</div><div class="line"><span class="comment"># Outputs the lines of a file delimited by newlines</span></div><div class="line"><span class="comment"># E.g. text files, CSV files</span></div><div class="line">tf.FixedLengthRecordReader</div><div class="line"><span class="comment"># Outputs the entire file when all files have same fixed lengths</span></div><div class="line"><span class="comment"># E.g. each MNIST file has 28 x 28 pixels, CIFAR-10 32 x 32 x 3</span></div><div class="line">tf.WholeFileReader</div><div class="line"><span class="comment"># Outputs the entire file content</span></div><div class="line">tf.TFRecordReader</div><div class="line"><span class="comment"># Reads samples from TensorFlow's own binary format (TFRecord)</span></div><div class="line">tf.ReaderBase</div><div class="line"><span class="comment"># Allows you to create your own readers</span></div></pre></td></tr></table></figure></p>
-<h3 id="从队列读取数据。"><a href="#从队列读取数据。" class="headerlink" title="从队列读取数据。"></a>从队列读取数据。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">filename_queue = tf.train.string_input_producer([<span class="string">'file0.csv'</span>, <span class="string">'file1.csv'</span>])</div><div class="line">reader = tf.TextLineReader()</div><div class="line">key , value = reader.read(filename_queue)</div></pre></td></tr></table></figure>
-<h3 id="Threads-和-Queues"><a href="#Threads-和-Queues" class="headerlink" title="Threads 和  Queues"></a>Threads 和  Queues</h3><p>我们可以使用tf.Coordinator 和 tf.QueueRunner 来管理队列。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    <span class="comment"># start populating the filename queue</span></div><div class="line">    coord = tf.train.Coordinator()</div><div class="line">    threads = tf.train.start_queue_runners(coord=coord)</div></pre></td></tr></table></figure></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://web.stanford.edu/class/cs20si/2017/lectures/notes_05.pdf" target="_blank" rel="external">notes_05</a><br><a href="https://web.stanford.edu/class/cs20si/2017/lectures/slides_05.pdf" target="_blank" rel="external">slides_05</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tensorflow</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/tensorflow//" class="article-tag-list-link color1">tensorflow</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
@@ -780,6 +773,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">sklearn</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
@@ -792,11 +789,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -828,11 +825,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
+                <a href="javascript:void(0)" class="js-tag color5">link</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">link</a>
+                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -994,6 +991,23 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
     </div>
 
 </div>
-  </div>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 </body>
 </html>
