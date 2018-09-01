@@ -169,7 +169,7 @@ style="background: #4d4d4d"></div>
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/01/HOMLWSLATF-ch4/">Chapter4 Training Models</a>
+      <a class="article-title" href="/2018/09/01/HOMLWSLATF-ch4/">Chapter 4. Training Models</a>
     </h1>
   
 
@@ -203,8 +203,15 @@ style="background: #4d4d4d"></div>
 <h3 id="2-2-Stochastic-Gradient-Descent"><a href="#2-2-Stochastic-Gradient-Descent" class="headerlink" title="2.2 Stochastic Gradient Descent"></a>2.2 Stochastic Gradient Descent</h3><p>Batch Gradient Descent的一个缺点就是它将训练集作为整体进行训练，当训练集太大时，速度会很慢。随机梯度下降则在训练时随机选择一个实例对其计算梯度，然后进行优化，这样速度很快，当然，由于其每次只用一个实例进行训练，它并不能做到每次迭代都使loss减小，并且即便函数到达全局最优，它还是可以继续运算下去，所以它只能得到一个近似的最优解。它的特点就是可以跳过局部最优，但是同时这也就意味着它也能跳过全局最优。一种解决方案是逐渐减小学习率，叫做<strong>simulated annealing</strong><br><strong>实现</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">n_epochs = <span class="number">50</span></div><div class="line">t0, t1 = <span class="number">5</span>, <span class="number">50</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">learning_schedule</span><span class="params">(t)</span>:</span></div><div class="line">    <span class="keyword">return</span> t0 / (t + t1)</div><div class="line"></div><div class="line">theta = np.random.randn(<span class="number">2</span>,<span class="number">1</span>)</div><div class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(n_epochs):</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</div><div class="line">        random_index = np.random.randint(m)</div><div class="line">        xi = X_b[random_index:random_index+<span class="number">1</span>]</div><div class="line">        yi = y[random_index:random_index+<span class="number">1</span>]</div><div class="line">        gradients = <span class="number">2</span> * xi.T.dot(xi.dot(theta) - yi)</div><div class="line">        eta = learning_schedule(epoch * m + i)</div><div class="line">        theta = theta - eta * gradients</div></pre></td></tr></table></figure></p>
 <p>最后计算得到<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>theta</div><div class="line">array([[<span class="number">4.21076011</span>],</div><div class="line">    [<span class="number">2.74856079</span>]])</div></pre></td></tr></table></figure></p>
 <p>使用sklearn实现如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> SGDRegressor</div><div class="line">sgd_reg = SGDRegressor(n_iter=<span class="number">50</span>, penalty=<span class="keyword">None</span>, eta0=<span class="number">0.1</span>)</div><div class="line">sgd_reg.fit(X,y.ravel())</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>sgd_reg.inercept_,sgd_reg.coef_</div><div class="line">(array([<span class="number">4.18380366</span>]), array([<span class="number">2.74285299</span>]))</div></pre></td></tr></table></figure></p>
-<h3 id="2-3-Mini-batch-Gradient-Descent"><a href="#2-3-Mini-batch-Gradient-Descent" class="headerlink" title="2.3 Mini-batch Gradient Descent"></a>2.3 Mini-batch Gradient Descent</h3><p>Mini-batch是前两种方式的折中，不过多笔记了。<br><strong>几种训练方法比较</strong><br>| Algorithm | Large m| Out-of-core support | Large n | Hyperparams | Scaling required | Scikit-Learn |<br>|—-|—-|—-|—-|—-|—-|—-|<br>| Normal Equation | Fast | No | Slow | 0 | No | LinearRegression |<br>| Batch GD | Slow | No | Fast | 2 | Yes | n/a |<br>| SGD | Fast | Yes | Fast | &gt;=2 | Yes | SGDRegressor |<br>| Mini-batch GD | Fast | Yes | Fast | &gt;=2 | Yes | n/a |</p>
-<h2 id="3-Polynomial-Regression"><a href="#3-Polynomial-Regression" class="headerlink" title="3 Polynomial Regression"></a>3 Polynomial Regression</h2><p>多项式回归<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">m = <span class="number">100</span></div><div class="line">X = <span class="number">6</span> * np.random.rand(m,<span class="number">1</span>) - <span class="number">3</span></div><div class="line">y = <span class="number">0.5</span> * X**<span class="number">2</span> + X + <span class="number">2</span> + np.random.randn(m,<span class="number">1</span>)</div><div class="line"></div><div class="line"><span class="comment">#使用sklearn包进行拟合</span></div><div class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</div><div class="line">poly_features = PolynomialFeatures(degree=<span class="number">2</span>, include_bias=<span class="keyword">False</span>)</div><div class="line">X_poly = poly_features.fit_transform(X)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>X[<span class="number">0</span>]</div><div class="line">array([<span class="number">-0.75275929</span>])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>X_poly[<span class="number">0</span>]</div><div class="line">array([<span class="number">-0.75275929</span>, <span class="number">0.56664654</span>])</div><div class="line"></div><div class="line"><span class="comment"># 下面进行线性回归</span></div><div class="line">lin_reg = LinearRegression()</div><div class="line">lin_reg.fit(X_poly, y)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>lin_reg.intercept_,lin_reg.coef_</div><div class="line">(array([<span class="number">1.78134581</span>]),array([[<span class="number">0.93366893</span>, <span class="number">0.56456263</span>]]))</div></pre></td></tr></table></figure></p>
+<h3 id="2-3-Mini-batch-Gradient-Descent"><a href="#2-3-Mini-batch-Gradient-Descent" class="headerlink" title="2.3 Mini-batch Gradient Descent"></a>2.3 Mini-batch Gradient Descent</h3><p>Mini-batch是前两种方式的折中，不过多笔记了。<br><strong>几种训练方法比较</strong></p>
+<script type="math/tex; mode=display">\begin{array}{c|lcr}
+\tiny
+\text{Algorithm} & \text{Large m} & \text{Out-of-core support} & \text{Large n} & \text{Hyperparams} &\text{Scaling required} &\text{Scikit-Learn} \\\\
+Normal &Equation &Fast &No &Slow &0 &No &LinearRegression \\\\
+Batch GD & Slow & No & Fast & 2 & Yes & n/a \\\\
+SGD & Fast & Yes & Fast & >=2 & Yes & SGDRegressor \\\\
+Mini-batch GD & Fast & Yes & Fast & >=2 & Yes & n/a \\\\
+\end{array}</script><h2 id="3-Polynomial-Regression"><a href="#3-Polynomial-Regression" class="headerlink" title="3 Polynomial Regression"></a>3 Polynomial Regression</h2><p>多项式回归<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">m = <span class="number">100</span></div><div class="line">X = <span class="number">6</span> * np.random.rand(m,<span class="number">1</span>) - <span class="number">3</span></div><div class="line">y = <span class="number">0.5</span> * X**<span class="number">2</span> + X + <span class="number">2</span> + np.random.randn(m,<span class="number">1</span>)</div><div class="line"></div><div class="line"><span class="comment">#使用sklearn包进行拟合</span></div><div class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</div><div class="line">poly_features = PolynomialFeatures(degree=<span class="number">2</span>, include_bias=<span class="keyword">False</span>)</div><div class="line">X_poly = poly_features.fit_transform(X)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>X[<span class="number">0</span>]</div><div class="line">array([<span class="number">-0.75275929</span>])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>X_poly[<span class="number">0</span>]</div><div class="line">array([<span class="number">-0.75275929</span>, <span class="number">0.56664654</span>])</div><div class="line"></div><div class="line"><span class="comment"># 下面进行线性回归</span></div><div class="line">lin_reg = LinearRegression()</div><div class="line">lin_reg.fit(X_poly, y)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>lin_reg.intercept_,lin_reg.coef_</div><div class="line">(array([<span class="number">1.78134581</span>]),array([[<span class="number">0.93366893</span>, <span class="number">0.56456263</span>]]))</div></pre></td></tr></table></figure></p>
 <h2 id="4-Learning-Curves"><a href="#4-Learning-Curves" class="headerlink" title="4 Learning Curves"></a>4 Learning Curves</h2><p>可以通过绘制训练集和验证集的学习曲线来判断模型的拟合情况。<br><strong>some tricks</strong><br><strong>1</strong> 如果模型在训练集上是欠拟合的，添加更多训练数据并没有用，我们需要做的是使用更复杂的模型或者是利用更多的features。<br><strong>2</strong> 提升一个过拟合模型的性能的一种有效方法是添加更多的训练数据，直到训练误差接近验证误差。<br><strong>The Bias/Variance Tradeoff</strong><br>泛化误差的三个主要组成部分：<br><strong>Bias</strong>：来源于错误的假设，比如数据是线性的，假设为二次多项式造成的泛化误差。<br><strong>Variance</strong>：来源于训练过程中，模型对数据中微小变化的敏感性。<br><strong>Irreducible error</strong>：来源于数据的噪声。解决方法只能是数据清洗，如去除outliners等。</p>
 <h2 id="5-Regularized-Linear-Models"><a href="#5-Regularized-Linear-Models" class="headerlink" title="5 Regularized Linear Models"></a>5 Regularized Linear Models</h2><p>介绍线性模型中的一些正则化方法，来抑制过拟合。</p>
 <h3 id="5-1-Ridge-Regression"><a href="#5-1-Ridge-Regression" class="headerlink" title="5.1 Ridge Regression"></a>5.1 Ridge Regression</h3><p>在损失函数中添加正则项：</p>
@@ -1124,19 +1131,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">cs231n</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">sql</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">sql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1176,11 +1183,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
+                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+                <a href="javascript:void(0)" class="js-tag color3">pytorch</a>
               </li>
              
               <li class="article-tag-list-item">
