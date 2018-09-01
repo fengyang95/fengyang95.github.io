@@ -6,20 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wwdguu.github.io">
-  <title>一些Java编码规范条款 | Fengyang</title>
+  <title>Archives: 2018/9 | Fengyang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录一些Java编码条款，方便查看Effective Java（3rd Edition）中的编码条款Create and Destroying ObjectsItem1: Consider static factory methods instead of constructorsItem2: Consider a builder when faced with many constructors">
-<meta name="keywords" content="Java">
-<meta property="og:type" content="article">
-<meta property="og:title" content="一些Java编码规范条款">
-<meta property="og:url" content="https://wwdguu.github.io/2018/01/13/effective-java-notes/index.html">
+  <meta name="description" content="CV  python  C++  Java  Machine Learning">
+<meta name="keywords" content="CV  python  C++  Java  Machine Learning">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fengyang">
+<meta property="og:url" content="https://wwdguu.github.io/archives/2018/09/index.html">
 <meta property="og:site_name" content="Fengyang">
-<meta property="og:description" content="记录一些Java编码条款，方便查看Effective Java（3rd Edition）中的编码条款Create and Destroying ObjectsItem1: Consider static factory methods instead of constructorsItem2: Consider a builder when faced with many constructors">
+<meta property="og:description" content="CV  python  C++  Java  Machine Learning">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-14T14:43:06.855Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一些Java编码规范条款">
-<meta name="twitter:description" content="记录一些Java编码条款，方便查看Effective Java（3rd Edition）中的编码条款Create and Destroying ObjectsItem1: Consider static factory methods instead of constructorsItem2: Consider a builder when faced with many constructors">
+<meta name="twitter:title" content="Fengyang">
+<meta name="twitter:description" content="CV  python  C++  Java  Machine Learning">
   
     <link rel="alternative" href="/atom.xml" title="Fengyang" type="application/atom+xml">
   
@@ -161,201 +160,71 @@ style="background: #4d4d4d"></div>
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-effective-java-notes" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      一些Java编码规范条款
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2018" class="archive-year">2018</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2018/09/01/HOMLWSLATF-ch4/" class="archive-article-date">
+  	<time datetime="2018-09-01T05:21:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-01</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2018/09/01/HOMLWSLATF-ch4/">Chapter4 Training Models</a>
     </h1>
   
 
-        
-        <a href="/2018/01/13/effective-java-notes/" class="archive-article-date">
-  	<time datetime="2018-01-13T02:22:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#记录一些Java编码条款，方便查看"><span class="toc-text">记录一些Java编码条款，方便查看</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java（3rd-Edition）中的编码条款"><span class="toc-text">Effective Java（3rd Edition）中的编码条款</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-and-Destroying-Objects"><span class="toc-text">Create and Destroying Objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mothods-Common-to-All-Objects"><span class="toc-text">Mothods Common to All Objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Classes-and-Interfaces"><span class="toc-text">Classes and Interfaces</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generics"><span class="toc-text">Generics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Enums-and-Annotations"><span class="toc-text">Enums and Annotations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambdas-and-Streams"><span class="toc-text">Lambdas and Streams</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Methods"><span class="toc-text">Methods</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#General-Programming"><span class="toc-text">General Programming</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exceptions"><span class="toc-text">Exceptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Concurrency"><span class="toc-text">Concurrency</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Serialization"><span class="toc-text">Serialization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
-</div>
-
-        <h1 id="记录一些Java编码条款，方便查看"><a href="#记录一些Java编码条款，方便查看" class="headerlink" title="记录一些Java编码条款，方便查看"></a>记录一些Java编码条款，方便查看</h1><h2 id="Effective-Java（3rd-Edition）中的编码条款"><a href="#Effective-Java（3rd-Edition）中的编码条款" class="headerlink" title="Effective Java（3rd Edition）中的编码条款"></a>Effective Java（3rd Edition）中的编码条款</h2><h3 id="Create-and-Destroying-Objects"><a href="#Create-and-Destroying-Objects" class="headerlink" title="Create and Destroying Objects"></a>Create and Destroying Objects</h3><p><a href="">Item1: Consider static factory methods instead of constructors</a><br><a href="">Item2: Consider a builder when faced with many constructors</a><br><a href="">Item3: Enforce the singleton property with a private constructor or an enum type</a><br><a href="">Item4: Enforce noninstantiability with a private constructor</a><br><a href="">Item5: Prefer dependency injection to hardwiring resources</a><br><a href="">Item6: Avoid creating unnecessary objects</a><br><a href="">Item7: Eliminate absolete object references</a><br><a href="">Item8: Avoid finalizers and cleaners</a><br><a href="">Item9: Prefer try-with-resources to try-finally</a></p>
-<h3 id="Mothods-Common-to-All-Objects"><a href="#Mothods-Common-to-All-Objects" class="headerlink" title="Mothods Common to All Objects"></a>Mothods Common to All Objects</h3><p><a href="">Item10: Obey the general construct when overriding equals</a><br><a href="">Item11: Always override hashCode when you override equals</a><br><a href="">Item12: Always override toString</a><br><a href="">Item13: Override clone judiciously</a><br><a href="">Item14: Consider implementing Comparable</a></p>
-<h3 id="Classes-and-Interfaces"><a href="#Classes-and-Interfaces" class="headerlink" title="Classes and Interfaces"></a>Classes and Interfaces</h3><p><a href="">Item15: Minimize the accessibility of classes and members</a><br><a href="">Item16: In public classes, use accessor methods, not public fields</a><br><a href="">Item17: Minimize mutability</a><br><a href="">Item18: Favor composition over inheritance</a><br><a href="">Item19: Design and document for inheritance or else prohibit it</a><br><a href="">Item20: Prefer interfaces to abstract classes</a><br><a href="">Item21: Design interfaces for posterity</a><br><a href="">Item22: Use interfaces only to define types</a><br><a href="">Item23: Prefer class hierarchies to tagged classes</a><br><a href="">Item24: Favor static member classes over nonstatic</a><br><a href="">Item25: Limit source fields to a single top-level class</a></p>
-<h3 id="Generics"><a href="#Generics" class="headerlink" title="Generics"></a>Generics</h3><p><a href="">Item26: Don’t use raw types</a><br><a href="">Item27: Eliminate unchecked warnings</a><br><a href="">Item28: Prefer lists to arrays</a><br><a href="">Item29: Favor generic types</a><br><a href="">Item30: Favor generic methods</a><br><a href="">Item31: Use bounded wildcards to increase API flexibility</a><br><a href="">Item32: Combine generics and varargs judiciously</a><br><a href="">Item33: Consider typesafe heterogeneous containers</a></p>
-<h3 id="Enums-and-Annotations"><a href="#Enums-and-Annotations" class="headerlink" title="Enums and Annotations"></a>Enums and Annotations</h3><p><a href="">Item34: Use enums instead of int constants</a><br><a href="">Item35: Use instance fields instead of ordinals</a><br><a href="">Item36: Use EnumSet instead of bit fields</a><br><a href="">Item37: Use EnumMap instead of ordinal indexing</a><br><a href="">Item38: Emulate extensible enums with interfaces</a><br><a href="">Item39: Prefer annotations to naming patterns</a><br><a href="">Item40: Consistently use the Override annotation</a><br><a href="">Item41: Use marker interfaces to define types</a></p>
-<h3 id="Lambdas-and-Streams"><a href="#Lambdas-and-Streams" class="headerlink" title="Lambdas and Streams"></a>Lambdas and Streams</h3><p><a href="">Item42: Prefer lambdas to anonymous classes</a><br><a href="">Item43: Prefer method reference to lambdas</a><br><a href="">Item44: Favor the use of standard functional interfaces</a><br><a href="">Item45: Use streams judiciously</a><br><a href="">Item46: Prefer side-effect-free functions in streams</a><br><a href="">Item47: Prefer Collections to Stream as a return type</a><br><a href="">Item48: Use caution when making streams parallel</a></p>
-<h3 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h3><p><a href="">Item49: Check parameters for validity</a><br><a href="">Item50: Make defensive copies when needed</a><br><a href="">Item51: Design method signatures carefully</a><br><a href="">Item52: Use overloading judiciously</a><br><a href="">Item53: Use varargs</a><br><a href="">Item54: Return empty collections or arrays, not nulls</a><br><a href="">Item55: Return optionals judiciously</a><br><a href="">Item56: Write doc comments for all exposed API elements</a></p>
-<h3 id="General-Programming"><a href="#General-Programming" class="headerlink" title="General Programming"></a>General Programming</h3><p><a href="">Item57: Minimize the scope of local variables</a><br><a href="">Item58: Prefer for-each loops to traditional for loops</a><br><a href="">Item59: Know and use the libraries</a><br><a href="">Item60: Avoid float and double if exact answers are required</a><br><a href="">Item61: Prefer primitive types to boxed primitives</a><br><a href="">Item62: Avoid strings where other types are more appropriate</a><br><a href="">Item63: Beware the performance of string concatenation</a><br><a href="">Item64: Refer to objects by their interfaces</a><br><a href="">Item65: Prefer interfaces to reflection</a><br><a href="">Item66: Use native methods judiciously</a><br><a href="">Item67: Optimize judiciously</a><br><a href="">Item68: Adhere to generally accepted naming conventions</a></p>
-<h3 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h3><p><a href="">Item69: Use exceptions only for exceptional conditions</a><br><a href="">Item70: Use checked exceptions for recoverable conditions and runtime exceptions for programming errors</a><br><a href="">Item71: Avoid unnecessary use of checked exceptions</a><br><a href="">Item72: Favor the use of standard exceptions</a><br><a href="">Item73: Throw exceptions appropriate to the abstraction</a><br><a href="">Item74: Document all exceptions thrown by each method</a><br><a href="">Item75: Include failure-capture information in detail messages</a><br><a href="">Item76: Strive for failure atomicity</a><br><a href="">Item77: Don’t ignore exceptions</a></p>
-<h3 id="Concurrency"><a href="#Concurrency" class="headerlink" title="Concurrency"></a>Concurrency</h3><p><a href="">Item78: Synchronize access to shared mutable data</a><br><a href="">Item79: Avoid excessive synchronization</a><br><a href="">Item80: Prefer executors, tasks, and streams to threads</a><br><a href="">Item81: Prefer concurrency utilities to wait and notify</a><br><a href="">Item82: Document thread safety</a><br><a href="">Item83: Use lazy initialization judiciously</a><br><a href="">Item84: Don’t depend on the thread scheduler</a></p>
-<h3 id="Serialization"><a href="#Serialization" class="headerlink" title="Serialization"></a>Serialization</h3><p><a href="">Item85: Prefer alternatives to Java serialization</a><br><a href="">Item86: Implement Serializable with great caution</a><br><a href="">Item87: Consider using a custom serialized form</a><br><a href="">Item88: Write readObject methods defensively</a><br><a href="">Item89: For instance control, prefer enum types to readResolve</a><br><a href="">Item90: Consider serialization proxies instead of serialized instances</a></p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><pre><code>Effective Java, Third Edition
-</code></pre>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">sklearn</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        			<a href="/categories/sklearn//" class="article-tag-list-link color3">sklearn</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://wwdguu.github.io/2018/01/13/effective-java-notes/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2018/01/13/effective-java-lambdas-and-streams/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Effective Java-- Lambdas and Streams
-        
-      </div>
-    </a>
   
   
-    <a href="/2018/01/10/java-settings/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">java-settings</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-    <section id="comments">
-      <div id="disqus_thread"></div>
-        <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'wwdguu'; // required: replace example with your forum shortname
-
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function() {
-          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-      </script>
-      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </section>
-  
-
-  
-
-
-
+    
 
 
           </div>
@@ -379,8 +248,8 @@ style="background: #4d4d4d"></div>
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
