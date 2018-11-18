@@ -162,6 +162,418 @@ style="background: #4d4d4d"></div>
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-dehaze" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/18/dehaze/">Implement of &#34;Single Image Haze Removal Using Dark Channel Prior&#34;</a>
+    </h1>
+  
+
+        
+        <a href="/2018/11/18/dehaze/" class="archive-article-date">
+  	<time datetime="2018-11-18T02:59:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#compute-dark-channel"><span class="toc-text">compute dark channel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#compute-atmosphere"><span class="toc-text">compute atmosphere</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Estimate-the-Transmission-and-Soft-Matting"><span class="toc-text">Estimate the Transmission and Soft Matting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Recovering-the-Scene-Radiance"><span class="toc-text">Recovering the Scene Radiance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol>
+</div>
+
+        <h2 id="compute-dark-channel"><a href="#compute-dark-channel" class="headerlink" title="compute dark channel"></a>compute dark channel</h2><script type="math/tex; mode=display">
+J^{dark}(x)=min_{c\in{\{r,g,b\}}}(min_{y\in{\Omega (x)}}(J^c(y)))</script><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> cv2</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line">%matplotlib inline</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">src=cv2.imread(<span class="string">'haze_img/9.jpg'</span>)</div><div class="line">plt.title(<span class="string">'src'</span>)</div><div class="line">plt.axis(<span class="string">'off'</span>)</div><div class="line">plt.imshow(src[:,:,::<span class="number">-1</span>])</div></pre></td></tr></table></figure>
+<p><img src="output_3_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_dark_channel</span><span class="params">(img,patch_size=<span class="number">15</span>)</span>:</span></div><div class="line">    h,w=img.shape[:<span class="number">2</span>]</div><div class="line">    b, g, r = cv2.split(img)</div><div class="line">    bgr_min_img = cv2.min(cv2.min(b, g), r)</div><div class="line">    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (patch_size,patch_size))</div><div class="line">    dark_channel_img = cv2.erode(bgr_min_img, kernel)</div><div class="line">    <span class="keyword">return</span> dark_channel_img</div><div class="line"></div><div class="line">dark_channel_img=compute_dark_channel(src,patch_size=<span class="number">15</span>)</div><div class="line">plt.title(<span class="string">'dark_channel_img'</span>)</div><div class="line">plt.axis(<span class="string">'off'</span>)</div><div class="line">plt.imshow(dark_channel_img,cmap=<span class="string">'gray'</span>)</div></pre></td></tr></table></figure>
+<p><img src="output_4_1.png" alt="png"></p>
+<h2 id="compute-atmosphere"><a href="#compute-atmosphere" class="headerlink" title="compute atmosphere"></a>compute atmosphere</h2><p>We first pick the top 0.1% brightest pixels in the dark channel. Among these pixels, the pixels with highest intensity in the input image I is selected as the atmospheric light.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_atmosphere_light</span><span class="params">(img,dark_channel_img)</span>:</span></div><div class="line">    h,w=dark_channel_img.shape[:<span class="number">2</span>]</div><div class="line">    num_of_candiate=int(<span class="number">0.001</span>*h*w)</div><div class="line">    dark_channel=dark_channel_img.reshape(<span class="number">-1</span>,<span class="number">1</span>)[:,<span class="number">0</span>]</div><div class="line">    arg_sorted=np.argsort(dark_channel)[::<span class="number">-1</span>]</div><div class="line">    img=img.astype(np.float32)</div><div class="line">    atmosphere_light=np.zeros((<span class="number">3</span>,))</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_of_candiate):</div><div class="line">        index=arg_sorted[i]</div><div class="line">        row_index=index//w</div><div class="line">        col_index=index%w</div><div class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">            atmosphere_light[c]=max(atmosphere_light[c],img[row_index,col_index][c])</div><div class="line">    <span class="keyword">return</span> atmosphere_light</div><div class="line"></div><div class="line">atmosphere_light=compute_atmosphere_light(src,dark_channel_img)</div><div class="line">print(atmosphere_light)</div></pre></td></tr></table></figure>
+<pre><code>[255. 252. 249.]
+</code></pre><h2 id="Estimate-the-Transmission-and-Soft-Matting"><a href="#Estimate-the-Transmission-and-Soft-Matting" class="headerlink" title="Estimate the Transmission and Soft Matting"></a>Estimate the Transmission and Soft Matting</h2><script type="math/tex; mode=display">
+t(x)=1-\omega min_c(min_{y\in\Omega(x)} \frac{I^c(y)}{A^c})</script><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">guied_filter</span><span class="params">(I,P,radius,epsilon)</span>:</span></div><div class="line">    window_size=<span class="number">2</span>*radius+<span class="number">1</span></div><div class="line">    meanI=cv2.blur(I,(window_size,window_size))</div><div class="line">    meanP=cv2.blur(P,(window_size,window_size))</div><div class="line">    II=I**<span class="number">2</span></div><div class="line">    IP=I*P</div><div class="line">    corrI=cv2.blur(II,(window_size,window_size))</div><div class="line">    corrIP=cv2.blur(IP,(window_size,window_size))</div><div class="line">    varI=corrI-meanI**<span class="number">2</span></div><div class="line">    covIP=corrIP-meanI*meanP</div><div class="line">    a=covIP/(varI+epsilon)</div><div class="line">    b=meanP-a*meanI</div><div class="line">    meanA=cv2.blur(a,(window_size,window_size))</div><div class="line">    meanB=cv2.blur(b,(window_size,window_size))</div><div class="line">    transmission_rate=meanA*I+meanB</div><div class="line">    <span class="keyword">return</span> transmission_rate</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_transmission_rate</span><span class="params">(img,atmosphere_light_max,dark_channel_img,omega=<span class="number">0.95</span>,guided_filter_radius=<span class="number">50</span>,epsilon=<span class="number">0.0001</span>)</span>:</span></div><div class="line">    h,w=img.shape[:<span class="number">2</span>]</div><div class="line">    img_gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)</div><div class="line">    zero_mat=np.zeros((h,w))</div><div class="line">    transmition_rate_est=cv2.max(zero_mat,np.ones_like(zero_mat)-omega*dark_channel_img/atmosphere_light_max)</div><div class="line">    <span class="comment">#transmission_rate = guied_filter(img_gray,transmition_rate_est, guided_filter_radius, epsilon)</span></div><div class="line">    transmission_rate=cv2.ximgproc.guidedFilter(img_gray.astype(np.float32),transmition_rate_est.astype(np.float32),guided_filter_radius,epsilon)</div><div class="line">    <span class="keyword">return</span> transmission_rate</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">transmission_rate=compute_transmission_rate(src,np.max(atmosphere_light),dark_channel_img)</div><div class="line">plt.title(<span class="string">'transmission_rate'</span>)</div><div class="line">plt.axis(<span class="string">'off'</span>)</div><div class="line">plt.imshow(transmission_rate,cmap=<span class="string">'gray'</span>)</div></pre></td></tr></table></figure>
+<p><img src="output_10_1.png" alt="png"></p>
+<h2 id="Recovering-the-Scene-Radiance"><a href="#Recovering-the-Scene-Radiance" class="headerlink" title="Recovering the Scene Radiance"></a>Recovering the Scene Radiance</h2><script type="math/tex; mode=display">
+J(x)=\frac{I(x)-A}{max(t(x),t_0)}+A</script><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">min_transmission=<span class="number">0.1</span></div><div class="line">transmission_rate[transmission_rate&lt;min_transmission]=min_transmission</div><div class="line">dehaze_img=np.zeros_like(src,dtype=np.uint8)</div><div class="line"><span class="keyword">for</span> c <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">    dehaze_img[:,:,c]=(src[:,:,c]-atmosphere_light[c])/transmission_rate+atmosphere_light[c]</div><div class="line">dehaze_img[dehaze_img&gt;<span class="number">255</span>]=<span class="number">255</span></div><div class="line">dehaze_img[dehaze_img&lt;<span class="number">0</span>]=<span class="number">0</span></div><div class="line">plt.title(<span class="string">'dehaze'</span>)</div><div class="line">plt.axis(<span class="string">'off'</span>)</div><div class="line">plt.imshow(dehaze_img[:,:,::<span class="number">-1</span>])</div></pre></td></tr></table></figure>
+<p><img src="output_12_1.png" alt="png"></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] He K, Sun J, Tang X. Single image haze removal using dark channel prior[C]// Computer Vision and Pattern Recognition, 2009. CVPR 2009. IEEE Conference on. IEEE, 2009:1956-1963.<br>[2] He K, Sun J, Tang X. Guided Image Filtering[M]// Computer Vision – ECCV 2010. Springer Berlin Heidelberg, 2010:1397-1409.</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/cv//" class="article-tag-list-link color3">cv</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/11/18/dehaze/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-GeoMAN" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/16/GeoMAN/">GeoMAN</a>
+    </h1>
+  
+
+        
+        <a href="/2018/09/16/GeoMAN/" class="archive-article-date">
+  	<time datetime="2018-09-16T15:00:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#GeoMAN-Multi-level-Attention-Networks-for-Geo-sensory-Time-Series-Predicti-on-论文笔记"><span class="toc-text">GeoMAN:Multi-level Attention Networks for Geo-sensory Time Series Predicti on 论文笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#论文亮点"><span class="toc-text">论文亮点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Attention细节"><span class="toc-text">Attention细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spatio-Attention"><span class="toc-text">Spatio Attention</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Local-Attention"><span class="toc-text">Local Attention</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Global-Attention"><span class="toc-text">Global Attention</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Tempral-Attention"><span class="toc-text">Tempral Attention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#External-Attention"><span class="toc-text">External Attention</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Encoder-Decoder结构"><span class="toc-text">Encoder-Decoder结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Encoder阶段"><span class="toc-text">Encoder阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Decoder阶段"><span class="toc-text">Decoder阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验结果"><span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码阅读及实现"><span class="toc-text">源码阅读及实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#官方tensorflow-实现学习"><span class="toc-text">官方tensorflow 实现学习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pytorch-实现"><span class="toc-text">pytorch 实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol></li></ol>
+</div>
+
+        <h1 id="GeoMAN-Multi-level-Attention-Networks-for-Geo-sensory-Time-Series-Predicti-on-论文笔记"><a href="#GeoMAN-Multi-level-Attention-Networks-for-Geo-sensory-Time-Series-Predicti-on-论文笔记" class="headerlink" title="GeoMAN:Multi-level Attention Networks for Geo-sensory Time Series Predicti on 论文笔记"></a>GeoMAN:Multi-level Attention Networks for Geo-sensory Time Series Predicti on 论文笔记</h1><h2 id="论文亮点"><a href="#论文亮点" class="headerlink" title="论文亮点"></a>论文亮点</h2><p>在encoder阶段加入两种类型的attention机制，包括local attention和global attention，分别学到同一sensor内各个特征之间的关系，以及不同sensor之间的关系。Decoder阶段的temporal attention机制学习到序列时序之间的关系。加入外部因子融合模块。<br>总的来说：GeoMAN的网络结构以Encoder-Decoder作为基础结构，Encoder阶段加入了spatio attention（包括local attention和global attention),Decoder阶段加入了tempral attention和external attention。</p>
+<h2 id="Attention细节"><a href="#Attention细节" class="headerlink" title="Attention细节"></a>Attention细节</h2><p>文中用到的符号：$Y=(y^1,y^2,…,y^{N_g})\in R^{N_g \times  T}$表示所有sensor测量到的在T时间序列内的数据。其中$y^i\in R^T$表示sensor i的测量值。使用$X^i=(x^{i,1},x^{i,2},…,x^{i,N_l})^{T}=(x_1^i,x_2^i,…,x_T^i)\in R^{N_l\times T}$表示sensor i的local features。将所有sensor的local feature组合在一起，得到global feature,$\chi={X^1,X^2,…,X^{N_g}}$以此作为sensor i的global 特征。</p>
+<h3 id="Spatio-Attention"><a href="#Spatio-Attention" class="headerlink" title="Spatio Attention"></a>Spatio Attention</h3><h4 id="Local-Attention"><a href="#Local-Attention" class="headerlink" title="Local Attention"></a><strong>Local Attention</strong></h4><p>Local Attention的目的是找出同一个sensor之间不同特征的权重关系，遵循以下方法来进行：<br>$e_t^k=v_l^T tanh(W_l[h_{t-1};s_{t-1}]+U_lx^{i,k}+b_l)$<br>根据$\alpha_t^k=\frac{exp(e_t^k)}{\sum_{j=1}^{N_l}exp(e_t^j)}$计算特征k的权重，这里其实就是一个softmax函数。<br>最后得到：<br>$x_t^{local}=(\alpha_t^1x_t^{i,1},\alpha_t^2x_t^{i,2},…,\alpha_t^{N_l}x_t^{i,N_l})^T$<br>上述公式中，$v_l,b_l\in R^T$,$W_l\in R^{T\times 2m}$,$U_l\in R^{T\times T}$</p>
+<h4 id="Global-Attention"><a href="#Global-Attention" class="headerlink" title="Global Attention"></a><strong>Global Attention</strong></h4><p>主要目的是找到不同sensor测量的特征之间的关系。<br>对于目标sensor i和另一个sensor l,通过以下式子计算attention的权重。<br>$g_t^l=v_g^T tanh(W_g[h_{t-1};s_{t-1}]+U_gy^l+W_g’X^lu_g+b_g)$<br>其中，$v_g,u_g,b_g \in R^T$,$W_g \in R^{T\times 2m}$,$U_g\in R^{T\times T}$,$W_g’\in R^{T\times N_l}$都是需要学习的参数。<br>另外还加入一个矩阵$P\in R^{N_g\times N_g}$来表征地理空间的相似性。<br>最后，和local attention机制类似，将权重用softmax整合起来。<br>$\beta _t^l=\frac{exp((1-\lambda)g_t^l+\lambda P_{i,l})}{\sum _{j=1}^{N_g}exp((1-\lambda)g_t^j+\lambda P_{i,j})}$<br>然后$x_t^{global}=(\beta_t^1y_t^1,\beta_t^2y_t^2,…,\beta_t^{N_g}y_t^{N_g})^T$</p>
+<h3 id="Tempral-Attention"><a href="#Tempral-Attention" class="headerlink" title="Tempral Attention"></a><strong>Tempral Attention</strong></h3><p>解决时序过长时，Encoder-Decoder性能下降的问题。<br>$u_{t’}^o=v_d^Ttanh(W_d’[d_{t’-1};s_{t’-1}’]+W_dh_o+b_d)$<br>$\gamma_{t’}^o=\frac{exp(u_{t’}^o)}{\sum_{j=1}^{T}exp(u_{t’}^j)}$<br>$c_{t’}=\sum_{o=1}^{T}\gamma_{t’}^oh_o$<br>其中$W_d\in R^{m\times m}$,$W_d’\in R^{m\times 2n}$,$v_d,b_d\in R_m$是可以学习的参数。</p>
+<h3 id="External-Attention"><a href="#External-Attention" class="headerlink" title="External Attention"></a><strong>External Attention</strong></h3><p>将各种外界的影响因素，embedding起来。<br>$ex_{t’}\in R^{N_e}$,其中t’是decoder中的未来时间点。</p>
+<h2 id="Encoder-Decoder结构"><a href="#Encoder-Decoder结构" class="headerlink" title="Encoder-Decoder结构"></a>Encoder-Decoder结构</h2><h3 id="Encoder阶段"><a href="#Encoder阶段" class="headerlink" title="Encoder阶段"></a><strong>Encoder阶段</strong></h3><p>将local attention和global attention的结果concat起来作为Encoder的输入。<br>$x_t=[x_t^{local};x_t^{global}]$,其中$x_t\in R^{N_l+N_g}$,然后根据$h_t=f_e(h_{t-1},x_t)$更新hiddent state，其中$f_e$是LSTM单元。</p>
+<h3 id="Decoder阶段"><a href="#Decoder阶段" class="headerlink" title="Decoder阶段"></a><strong>Decoder阶段</strong></h3><p>在Decoder阶段，根据t’时刻的加权求和的上下文向量$c_{t’}$，加上$ex_{t’}$和$y_{t’-1}^i$来更新decoder的hidden state，$d_{t’}=f_d(d_{t’-1},[y_{t’-1}^i;ex_{t’};c_{t’}])$,其中$f_d$是decoder中使用的LSTM单元。然后使用下式得到$y_{t’}^i$,$y_{t’}^i=v_y^T(W_m[c_{t’};d_{t’}]+b_m)+b_y$其中$W_m\in R^{n\times (              m+n)}$,$b_m\in{R^n}$将$[c_{t’};d_{t’}]\in R^{m+n}$映射到hidden state的尺度。最后用线性变换产生最后的预测输出。</p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p>使用MSE作为损失函数，最后的实验结果详见原论文。在其所用数据集上达到了state-of-the-art。</p>
+<h2 id="源码阅读及实现"><a href="#源码阅读及实现" class="headerlink" title="源码阅读及实现"></a>源码阅读及实现</h2><h3 id="官方tensorflow-实现学习"><a href="#官方tensorflow-实现学习" class="headerlink" title="官方tensorflow 实现学习"></a>官方tensorflow 实现学习</h3><h3 id="pytorch-实现"><a href="#pytorch-实现" class="headerlink" title="pytorch 实现"></a>pytorch 实现</h3><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>1、<a href="http://yuxuanliang.com/assets/pdf/ijcai-18/paper.pdf" target="_blank" rel="external">原论文 GeoMAN: Multi-level Attention Networks for Geo-sensory Time Series Prediction</a><br>2、<a href="https://github.com/yoshall/GeoMAN" target="_blank" rel="external">官方Tensorflow实现</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">RNN</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/RNN//" class="article-tag-list-link color4">RNN</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/09/16/GeoMAN/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-seq2seq-for-time-series-prediction" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/08/seq2seq-for-time-series-prediction/">用Seq2Seq做时间序列预测</a>
+    </h1>
+  
+
+        
+        <a href="/2018/09/08/seq2seq-for-time-series-prediction/" class="archive-article-date">
+  	<time datetime="2018-09-08T04:08:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Useful-Blogs"><span class="toc-text">Useful Blogs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tips"><span class="toc-text">Tips</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AI-challenge-2018-天气预报赛题"><span class="toc-text">AI challenge 2018 天气预报赛题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一些尝试"><span class="toc-text">一些尝试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Baseline"><span class="toc-text">Baseline</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Seq2Seq的思路"><span class="toc-text">Seq2Seq的思路</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#数据分析"><span class="toc-text">数据分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#特征选择"><span class="toc-text">特征选择</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#模型建立"><span class="toc-text">模型建立</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#尝试改进措施"><span class="toc-text">尝试改进措施</span></a></li></ol></li></ol></li></ol></li></ol>
+</div>
+
+        <h2 id="Useful-Blogs"><a href="#Useful-Blogs" class="headerlink" title="Useful Blogs"></a>Useful Blogs</h2><p>1、<a href="https://github.com/LukeTonin/keras-seq-2-seq-signal-prediction" target="_blank" rel="external">keras-seq-2-seq-signal-prediction</a><br>2、<a href="https://github.com/guillaume-chevalier/seq2seq-signal-prediction" target="_blank" rel="external">seq2seq-signal-prediction</a><br>3、<a href="https://jeddy92.github.io/JEddy92.github.io/ts_seq2seq_intro/" target="_blank" rel="external">ts_seq2seq_intro/</a><br>4、<a href="https://github.com/Arturus/kaggle-web-traffic" target="_blank" rel="external">https://github.com/Arturus/kaggle-web-traffic</a><br>5、<a href="https://arxiv.org/pdf/1409.3215.pdf" target="_blank" rel="external">Sequence to Sequence Learning with Neural Networks Paper</a><br>6、<a href="https://arxiv.org/pdf/1706.03762.pdf" target="_blank" rel="external">Attention is All You Need paper</a><br>7、<a href="https://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html" target="_blank" rel="external">https://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html</a><br>8、<a href="https://github.com/Arturus/kaggle-web-traffic/blob/master/how_it_works.md" target="_blank" rel="external">https://github.com/Arturus/kaggle-web-traffic/blob/master/how_it_works.md</a><br>9、<a href="https://github.com/skyhuang1208/kaggle-web-traffic-time-series-forecasting" target="_blank" rel="external">https://github.com/skyhuang1208/kaggle-web-traffic-time-series-forecasting</a><br>10、<a href="https://www.analyticsvidhya.com/blog/2018/02/time-series-forecasting-methods/" target="_blank" rel="external">https://www.analyticsvidhya.com/blog/2018/02/time-series-forecasting-methods/</a><br>11、<a href="https://www.analyticsvidhya.com/blog/2018/08/auto-arima-time-series-modeling-python-r/" target="_blank" rel="external">https://www.analyticsvidhya.com/blog/2018/08/auto-arima-time-series-modeling-python-r/</a><br>12、<a href="http://chandlerzuo.github.io/blog/2017/11/darnn" target="_blank" rel="external">http://chandlerzuo.github.io/blog/2017/11/darnn</a><br>13、<a href="https://arxiv.org/pdf/1704.02971.pdf" target="_blank" rel="external">A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction</a><br>14、<a href="https://github.com/yoshall/GeoMAN" target="_blank" rel="external">https://github.com/yoshall/GeoMAN</a></p>
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>1、注意RNN中Many-to-Many 和 Encoder-Decoder模型的区别。Many-to-Many是一个整体的模型，而Encoder-Decoder是将模型分为不同的Encoder-Decoder两个部分。<br>2、尝试将Encoder和Decoder的结构设为不同，如将hidden_size以及layers设为不同，如果hidden_size设为不同，需要在Encoder最后加一个全连接层，将输出维度与Decoder的输入维度匹配。<br>3、尝试使用attention模块。<br>4、</p>
+<h2 id="AI-challenge-2018-天气预报赛题"><a href="#AI-challenge-2018-天气预报赛题" class="headerlink" title="AI challenge 2018 天气预报赛题"></a>AI challenge 2018 天气预报赛题</h2><h3 id="一些尝试"><a href="#一些尝试" class="headerlink" title="一些尝试"></a>一些尝试</h3><h4 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h4><p>使用fbprophet根据年、日变化特征预测</p>
+<h4 id="Seq2Seq的思路"><a href="#Seq2Seq的思路" class="headerlink" title="Seq2Seq的思路"></a>Seq2Seq的思路</h4><h5 id="数据分析"><a href="#数据分析" class="headerlink" title="数据分析"></a>数据分析</h5><p>分析t2m_obs,rh2m_obs,w10m_obs三个特征的变化趋势，以及与其他特征之间的一些关系</p>
+<h5 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h5><p>初步：9个obs特征+时刻特征+月份特征+31个M特征<br>其中时刻特征和月份特征因为涉及到循环，如23时和0时应该在数值上相邻，于是使用cos，sin来编码。<br>如下面这样：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hour_period = <span class="number">24</span> / (<span class="number">2</span> * np.pi)</div><div class="line">validation_data[<span class="string">'hour_cos'</span>] = np.cos(validation_data.index.hour / hour_period)</div><div class="line">validation_data[<span class="string">'hour_sin'</span>] = np.sin(validation_data.index.hour / hour_period)</div></pre></td></tr></table></figure></p>
+<h5 id="模型建立"><a href="#模型建立" class="headerlink" title="模型建立"></a>模型建立</h5><p>使用Encoder-Decoder组成的Seq2Seq结构，以前108个时间段的所有特征作为输入，以待预测的推移36个时间段的3个目标特征作为输出。<br>Encoder阶段使用LSTM 第一步：将输入维度变化到与LSTM的隐藏层相同，一种思路是使用全连接层，一种是使用LSTM input_size=输入维度，hidden_size=LSTM。第二步：使用多层LSTM stack。尝试过3层，5层。<br>Decoder阶段：以Encoder阶段的最后一个隐藏层输入作为隐藏层，Input目前选择初始化为全零。也是多层LSTM,最后使用Decoder阶段的output作为输入的一部分。<br><strong>Attention Module</strong>：加入attention module，将Encoder阶段的outputs，与Decoder中的LSTM的outputs作为attention模块输入，输出最后的output。<br>加上一层全连接层将维度进行转换。</p>
+<p>目前的测试结果来看：效果不理想，存在过拟合的现象，训练loss降低的情况下，验证的loss反而升高了。尝试dropout，似乎对结果没有提升。</p>
+<h5 id="尝试改进措施"><a href="#尝试改进措施" class="headerlink" title="尝试改进措施"></a>尝试改进措施</h5><p>1、尝试Decoder阶段的Input不为零，改用其它有意义的信息，需要再看资料解决。（Decoder inputs in Seq2Seq Model）（input特征已经加入，正在尝试效果）应该实现位移一位？<br>2、参数初始化问题<br>3、一个可能的思路：最后输出之前，加入待预测特征的前一年同一时刻(24<em>365-1h到24</em>365+1h)前后共3小时的观测数据值、前一天（23-25h前）前后3小时的观测数据值、用fbprophet预测的该时刻的观测值。这些特征与输出拼接起来，再加入一个全连接层，作为最后的输出。（相当于手动加入历史数据及变化趋势数据并线性组合起来）：已经加入了前一天的观测数据作为辅助，fbprophet预测的数据尚未加入。</p>
+<p>最新模型想法：<br>以fbprophet预测的t2m,rh2m,w10m数据作为Decoder的inputs。<br>最后一层融合的数据包括 前一天（23-25h之前）的观测数据，以及fbprophet预测的观测值。<br>即把fbprophet预测的值用在了两个地方，一是作为Decoder部分的输入，一是作为最后融合特征的一部分。<br>先尝试这个模型的效果。</p>
+<p>然后考虑进一步的优化方向：<br>1、加入更多的数据特征，（即将M类信息也作为特征输入）<br>2、考虑更鲁棒的填充缺失值算法。如使用prophet辅助填充缺失值。<br>3、考虑取出outliners，将太过明显的噪声滤掉，替换为更平滑的数据。</p>
+<p>最新模型的特点：Encoder-Decoder作为基础结构，以input sequence作为decoder的input输入<br>新的想法：分析各个因素之间的相关性，添加相关性较强的特征作为因素</p>
+<p>Decoder Inputs选用当前 input的 t2m_obs,rh2m_obs,w10m_obs,t2m_M,rh2m_M,w10m_M,t2m_prophet,rh2m_prophet,w10m_prophet,hour_sin,hour_cos,month_sin,month_sin作为输入。<br>Decoder output之后，将等待预测时刻的t2m_M,rh2m_M,w10m_M,t2m_prophet,rh2m_prophet,w10m_prophet与output融合，作为最后输出。（使用depth_wise 1D conv实现融合）<br>融合策略如何改进？</p>
+<p>改进措施：<br>比较MinMaxScaler和StandardScaler</p>
+<p>分析数据，去掉outlines</p>
+<p>尝试GeoMAN中的attention方法</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">rnn</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/rnn//" class="article-tag-list-link color4">rnn</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/09/08/seq2seq-for-time-series-prediction/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-use-pandas" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/02/use-pandas/">pandas的一些操作记录</a>
+    </h1>
+  
+
+        
+        <a href="/2018/09/02/use-pandas/" class="archive-article-date">
+  	<time datetime="2018-09-02T02:12:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  
+</div>
+
+        <p>1、<strong>修改DataFrame列名</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 方法1 直接修改columns属性</span></div><div class="line">df.columns = [<span class="string">'A'</span>,<span class="string">'B'</span>] </div><div class="line"><span class="comment"># 方法2 使用rename方法</span></div><div class="line">df.rename(columns=&#123;<span class="string">'a'</span>:<span class="string">'A'</span>,<span class="string">'b'</span>:<span class="string">'B'</span>&#125;)</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">pandas</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/pandas//" class="article-tag-list-link color2">pandas</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/09/02/use-pandas/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
     <article id="post-HOMLWSLATF-ch4" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -2750,103 +3162,6 @@ ValueError: value must be  &gt; 0
 
 
   
-    <article id="post-effective-java-methods-common-to-all-objects" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/21/effective-java-methods-common-to-all-objects/">Effective Java -- Methods Common to All Objects</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/21/effective-java-methods-common-to-all-objects/" class="archive-article-date">
-  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-<div id="toc">
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Methods-Common-to-All-Objects"><span class="toc-text">Effective Java Items about Methods Common to All Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-10-Obey-the-general-contract-when-overriding-equals"><span class="toc-text">Item 10: Obey the general contract when overriding equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-11-Always-override-hashCode-when-you-override-equals"><span class="toc-text">Item 11: Always override hashCode when you override equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-12-Always-override-toString"><span class="toc-text">Item 12: Always override toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-13-Override-clone-judiciously"><span class="toc-text">Item 13: Override clone judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-14-Consider-implementing-Comparable"><span class="toc-text">Item 14: Consider implementing Comparable</span></a></li></ol></li></ol>
-</div>
-
-        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=483671599&auto=1&height=66"></iframe></p>
-<h2 id="Effective-Java-Items-about-Methods-Common-to-All-Objects"><a href="#Effective-Java-Items-about-Methods-Common-to-All-Objects" class="headerlink" title="Effective Java Items about Methods Common to All Objects"></a>Effective Java Items about Methods Common to All Objects</h2><p>设计Object类的目的是为了扩展，它所有的非final方法(equals, hashCode, toString, clone, finalize)都有着明确的通用约定，它们都被设计成要被覆盖的。任何一个类在覆盖这些方法时都要遵守一些通用规定。</p>
-<h3 id="Item-10-Obey-the-general-contract-when-overriding-equals"><a href="#Item-10-Obey-the-general-contract-when-overriding-equals" class="headerlink" title="Item 10: Obey the general contract when overriding equals"></a>Item 10: Obey the general contract when overriding equals</h3><p>equals方法实现了等价关系，主要要满足以下条件：自反性，对称性，传递性，一致性，非空性。为了高效编写符合要求的equals方法，书中总结了以下方法：<br>1、使用==操作符检查参数是否是这个对象的引用。<br>2、使用instanceof操作符检查“参数是否为正确的类型”。<br>3、把参数转换成正确的类型。<br>4、对于该类中的每个“关键”域,检查参数中的域是否与该对象中对应的域相匹配。<br>5、编写好equals方法之后，再仔细检查是否满足之前的几个条件。<br>6、覆盖equals时要同时覆盖hashCode<br>7、不要企图让equals方法过于智能。<br>8、不要将equals声明中的Object对象替换为其他的类型。</p>
-<h3 id="Item-11-Always-override-hashCode-when-you-override-equals"><a href="#Item-11-Always-override-hashCode-when-you-override-equals" class="headerlink" title="Item 11: Always override hashCode when you override equals"></a>Item 11: Always override hashCode when you override equals</h3><p>每个覆盖了equals方法的类中，也必须同时覆盖hashCode方法。</p>
-<h3 id="Item-12-Always-override-toString"><a href="#Item-12-Always-override-toString" class="headerlink" title="Item 12: Always override toString"></a>Item 12: Always override toString</h3><p>遵守toString的约定并不像遵守equals和hashCode的约定那么重要，但是提供好的toString实现可以使得类使用起来更为舒适。</p>
-<h3 id="Item-13-Override-clone-judiciously"><a href="#Item-13-Override-clone-judiciously" class="headerlink" title="Item 13: Override clone judiciously"></a>Item 13: Override clone judiciously</h3><h3 id="Item-14-Consider-implementing-Comparable"><a href="#Item-14-Consider-implementing-Comparable" class="headerlink" title="Item 14: Consider implementing Comparable"></a>Item 14: Consider implementing Comparable</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/21/effective-java-methods-common-to-all-objects/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-  
     <article id="post-tensorflow-programming-manage-your-experiments-in-tf" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -2934,6 +3249,103 @@ ValueError: value must be  &gt; 0
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/01/21/tensorflow-programming-manage-your-experiments-in-tf/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+  
+    <article id="post-effective-java-methods-common-to-all-objects" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/21/effective-java-methods-common-to-all-objects/">Effective Java -- Methods Common to All Objects</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/21/effective-java-methods-common-to-all-objects/" class="archive-article-date">
+  	<time datetime="2018-01-20T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+<div id="toc">
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Java-Items-about-Methods-Common-to-All-Objects"><span class="toc-text">Effective Java Items about Methods Common to All Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-10-Obey-the-general-contract-when-overriding-equals"><span class="toc-text">Item 10: Obey the general contract when overriding equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-11-Always-override-hashCode-when-you-override-equals"><span class="toc-text">Item 11: Always override hashCode when you override equals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-12-Always-override-toString"><span class="toc-text">Item 12: Always override toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-13-Override-clone-judiciously"><span class="toc-text">Item 13: Override clone judiciously</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-14-Consider-implementing-Comparable"><span class="toc-text">Item 14: Consider implementing Comparable</span></a></li></ol></li></ol>
+</div>
+
+        <p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=483671599&auto=1&height=66"></iframe></p>
+<h2 id="Effective-Java-Items-about-Methods-Common-to-All-Objects"><a href="#Effective-Java-Items-about-Methods-Common-to-All-Objects" class="headerlink" title="Effective Java Items about Methods Common to All Objects"></a>Effective Java Items about Methods Common to All Objects</h2><p>设计Object类的目的是为了扩展，它所有的非final方法(equals, hashCode, toString, clone, finalize)都有着明确的通用约定，它们都被设计成要被覆盖的。任何一个类在覆盖这些方法时都要遵守一些通用规定。</p>
+<h3 id="Item-10-Obey-the-general-contract-when-overriding-equals"><a href="#Item-10-Obey-the-general-contract-when-overriding-equals" class="headerlink" title="Item 10: Obey the general contract when overriding equals"></a>Item 10: Obey the general contract when overriding equals</h3><p>equals方法实现了等价关系，主要要满足以下条件：自反性，对称性，传递性，一致性，非空性。为了高效编写符合要求的equals方法，书中总结了以下方法：<br>1、使用==操作符检查参数是否是这个对象的引用。<br>2、使用instanceof操作符检查“参数是否为正确的类型”。<br>3、把参数转换成正确的类型。<br>4、对于该类中的每个“关键”域,检查参数中的域是否与该对象中对应的域相匹配。<br>5、编写好equals方法之后，再仔细检查是否满足之前的几个条件。<br>6、覆盖equals时要同时覆盖hashCode<br>7、不要企图让equals方法过于智能。<br>8、不要将equals声明中的Object对象替换为其他的类型。</p>
+<h3 id="Item-11-Always-override-hashCode-when-you-override-equals"><a href="#Item-11-Always-override-hashCode-when-you-override-equals" class="headerlink" title="Item 11: Always override hashCode when you override equals"></a>Item 11: Always override hashCode when you override equals</h3><p>每个覆盖了equals方法的类中，也必须同时覆盖hashCode方法。</p>
+<h3 id="Item-12-Always-override-toString"><a href="#Item-12-Always-override-toString" class="headerlink" title="Item 12: Always override toString"></a>Item 12: Always override toString</h3><p>遵守toString的约定并不像遵守equals和hashCode的约定那么重要，但是提供好的toString实现可以使得类使用起来更为舒适。</p>
+<h3 id="Item-13-Override-clone-judiciously"><a href="#Item-13-Override-clone-judiciously" class="headerlink" title="Item 13: Override clone judiciously"></a>Item 13: Override clone judiciously</h3><h3 id="Item-14-Consider-implementing-Comparable"><a href="#Item-14-Consider-implementing-Comparable" class="headerlink" title="Item 14: Consider implementing Comparable"></a>Item 14: Consider implementing Comparable</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/21/effective-java-methods-common-to-all-objects/">展开全文 >></a>
         </p>
       
 
@@ -6012,11 +6424,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">sklearn</a>
+                <a href="javascript:void(0)" class="js-tag color4">RNN</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">sklearn</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -6028,11 +6440,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
+                <a href="javascript:void(0)" class="js-tag color5">algorithm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -6040,11 +6452,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">cpp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -6052,11 +6464,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">paper</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">dl</a>
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -6064,7 +6472,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">dl</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">paper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">rnn</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -6073,6 +6493,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">pandas</a>
               </li>
              
               <li class="article-tag-list-item">
